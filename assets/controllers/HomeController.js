@@ -10,28 +10,19 @@
 	
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
-		'signupPrompter', 'customerMgmt', 'championshipMgmt',
-		'poolMgmt', 'reservationMgmt', 'entityMgmt', 'orderMgmt',
-		'deviceMgr'
+		'signupPrompter', 'customerMgmt', 'deviceMgr', 'trdMgmt'
 	];
 
 	function controller(
 		$scope, $http, $routeParams, $rootScope, $window,
-		signupPrompter, customerMgmt, championshipMgmt,
-		poolMgmt, reservationMgmt, entityMgmt, orderMgmt,
-		deviceMgr
+		signupPrompter, customerMgmt, deviceMgr, trdMgmt
 	) {
-
-		// listener for customer reserving
-		$scope.reserve = orderMgmt.reserve;
 
 		if(deviceMgr.isBigScreen()) {
 			$scope.bigScreen = true;
 		} else {
 			$scope.bigScreen = false;
 		}
-
-		var firstDataSet = true;
 
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
@@ -41,148 +32,48 @@
 				$scope.customerId = $rootScope.customerId;
 			}
 
-			var getChampionshipsPromise = championshipMgmt.getCurrentChampionships();
-			getChampionshipsPromise.then(function(championshipData) {
-				var completeData = [];
-				championshipData.forEach(function(championship) {
-					var championshipHotReservationsData = {
-						id: championship.id,
-						name: championship.name,
-						activity: championship.activity,
-						tagline: championship.tagline,
-						league: championship.league,
-						date: championship.date,
-						location: championship.location,
-						pools: [],
-					};
-					var getPoolsPromise = poolMgmt.getPools(championship.id);
-					getPoolsPromise.then(function(poolsData) {
-						poolsData.forEach(function(pool) {
-							var poolHotReservationData = {
-								id:  pool.id,
-								name: pool.name,
-								eligibleEntities: pool.eligibleEntities,
-								hotReservations: [],
-							};
-							var getHotReservationsPromise = reservationMgmt.getHotReservations(pool.id);
-							getHotReservationsPromise.then(function(hotReservationsData) {
-								if(typeof hotReservationsData !== 'undefined') {
-									hotReservationsData.forEach(function(hotReservation) {
-
-										var expectedOdds = 0;
-										poolHotReservationData.eligibleEntities.forEach(function(eligibleEntity) {
-											if(eligibleEntity.entityId === hotReservation[0].id) {
-												expectedOdds = eligibleEntity.expectedOdds;
-											}
-										});
-
-										var eeCount = poolHotReservationData.eligibleEntities.length;
-										var getCostByPEPromise = reservationMgmt.getCostByPE(
-											poolHotReservationData.id +'-p&e-'+ 
-											hotReservation[0].id +'-p&e-'+ 
-											expectedOdds +'-p&e-'+ 
-											eeCount
-										);
-										getCostByPEPromise.then(function(peData) {
-											var thisHotReservation = {
-												id: hotReservation[0].id,
-												name: hotReservation[0].name,
-												mascot: hotReservation[0].mascot,
-												leagueCode: hotReservation[0].leagueCode,
-												color1: hotReservation[0].color1,
-												color2: hotReservation[0].color2,
-												cost: peData.nextCost.toFixed(2),
-												eOds: expectedOdds,
-												eeCount: eeCount
-											};
-											if(hotReservation[0].color3) {
-												thisHotReservation.color3 = hotReservation[0].color3;
-											}
-											
-											poolHotReservationData.hotReservations.push(thisHotReservation);
-
-											// reorder the "hot" reservations
-											function compare(a,b) {
-												if(parseFloat(a.cost) < parseFloat(b.cost)) {
-													return -1;
-												} else if(parseFloat(a.cost) > parseFloat(b.cost)) {
-													return 1;
-												} else { 
-													return 0;
-												}
-											}
-											poolHotReservationData.hotReservations.sort(compare);
-											if(! deviceMgr.isBigScreen()) {
-												poolHotReservationData.hotReservations = poolHotReservationData.hotReservations.slice(0,4);
-											}
-										});
-									});
-								}
-							});
-						championshipHotReservationsData.pools.push(poolHotReservationData);
-						})
-					});
-
-					if(firstDataSet) {
-						championshipHotReservationsData.sportTab = 'sportTabLeft';
-						firstDataSet = false;
-					} else {
-						championshipHotReservationsData.sportTab = 'sportTabRight';
-					}
-
-					completeData.push(championshipHotReservationsData);
-
-					$scope.championshipData = completeData;
-					$scope.tabShow = completeData[0].id;
-				});
+			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
+			getTrdsByDatePromise.then(function(trdData) {
+				$scope.trdData = trdData;
+console.log('$scope.trdData:');
+console.log($scope.trdData);
 			});
 
-		}).catch(function(err) {
-			console.log('customerMgmt.getSession() failed');
-			console.log(err);
 		});
 
-		$scope.showTab = function(id) {
-			$scope.tabShow = id;
+		var distMap = [];
+		distMap[.5625] = '4 1/2F',
+		distMap[.625] = '5F',
+		distMap[.6875] = '5 1/2F',
+		distMap[.75] = '6F',
+		distMap[.8125] = '6 1/2F',
+		distMap[.875] = '7F',
+		distMap[.9375] = '7 1/2F',
+		distMap[1] = '1M',
+		distMap[1.070] = '1M 70Y',
+		distMap[1.125] = '1 1/8M',
+		distMap[1.25] = '1 1/4M',
+		distMap[1.375] = '1 3/8M',
+		distMap[1.5] = '1 1/2M',
+		distMap[1.625] = '1 5/8M',
+		distMap[1.75] = '1 3/4M',
+		distMap[1.875] = '1 7/8M',
+		distMap[2] = '2M'
+
+		$scope.convertDist = function(dist) {
+			return distMap[dist];
 		}
 
-		$scope.showChampionship = function(id) {
-			$window.location.href = location.origin + "/app/championship/" + id;
-		}
-
-		$scope.showReservation = function(id) {
-			$window.location.href = location.origin + "/app/championship/" + id;
-		}
-
-		$scope.tourStep = 2;
-
-		$scope.tourUp = function() {
-			$scope.tourStep ++;
-			$scope.checkStep();
-		}
-
-		$scope.tourDown = function() {
-			$scope.tourStep --;
-		}
-
-		$scope.tourEnd = function() {
-			$scope.tourStep = 0;
-			$scope.lightness();
-		}
-
-		$scope.darkness = true;
-		$('#menuDisplay').css('display','none');
-
-		$scope.lightness = function() {
-			$scope.darkness = false;
-			$('#menuDisplay').css('display','initial');
-			$('#darkness').css('display','none');
-		}
-
-		$scope.checkStep = function() {
-			if($scope.tourStep > 4) {
-				$window.location.href = location.origin + "/app/championship/" + $scope.tabShow+'-ts';
+		$scope.convertPostTime = function(postTime) {
+			var timePcs = postTime.toString().split(".");
+			if(timePcs[1].length < 2) {
+				timePcs[1] = timePcs[1]+'0';
 			}
+			return timePcs[0]+':'+timePcs[1];
+		}
+
+		$scope.showTrackRace = function(trackId, raceNum) {
+			$scope.trId = trackId+'-'+raceNum;
 		}
 
 	}

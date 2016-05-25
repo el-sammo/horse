@@ -6,39 +6,11 @@
 </div>
 
 <div id="tt-main-container" ng-cloak ng-controller="LayoutController" ng-show="bigScreen">
-  <div class="{{bgImg}}">
+  <div class="hr_wide">
   	<div id="tt-menu">
   		<div id="menuDisplay" class="menuDisplay">
-				<span class="footerLink reservationYellow" ng-click="showChampionship(league.id)" ng-repeat="league in leagues" track by $index>{{league.league}}</span>
-				<span ng-show="accessAccount" class="footerLink reservationYellow" ng-click="showAccount()">My Account</span>
-				<span ng-show='showLogout' class="footerLink reservationYellow" ng-click="logOut()">Log Out</span>
-				<span class="footerLink reservationYellow" ng-click="welcome()">How it Works</span>
-				<span class="footerLink reservationYellow" ng-click="contact()">Contact Us</span>
-				<span ng-show='!showLogout && !accessAccount' class="footerLink reservationYellow" ng-click="logIn()">Log In</span>
-				<iframe 
-					src="
-						//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2F1ticketstycoon&amp;
-						width&amp;
-						layout=button_count&amp;
-						action=like&amp;
-						show_faces=true&amp;
-						share=true&amp;
-						height=21&amp;
-						appId=310913685599001
-					"
-					scrolling="no"
-					frameborder="0"
-					style="
-						top: 4px;
-						border: none; 
-						overflow: hidden; 
-						height: 21px;
-						position: relative;
-						width: 130px;
-					"
-					allowTransparency="true"
-				>
-				</iframe>
+				<span class="footerLinkRed">Current Tracks: </span>
+				<span class="footerLink reservationYellow" ng-click="showTrack(track.id)" ng-repeat="track in tracks" track by $index>{{track.name}}</span>
 			</div>
   	</div>
     <div id="tt-main" ng-view>
@@ -51,7 +23,7 @@
   						<div class="row">
 								<div class="col-md-12">
 		  						<span class="siteNavHead reservationYellow" ng-click="home()">
-  									<img src="/images/golden_ticket.png" class="img-responsive">
+  									Fantasy Horse Daily
   								</span>
 		  					</div>
   						</div>
@@ -91,7 +63,7 @@
   						<div class="row">
   							<div class="col-md-12">
   								<span class="siteNavBasic reservationYellow" ng-click="about()">
-  									About Us
+  									About FHD
   								</span>
   							</div>
   						</div>
@@ -111,8 +83,8 @@
   						</div>
   						<div class="row">
   							<div class="col-md-12">
-  								<span class="siteNavBasic reservationYellow" ng-click="tos()">
-  									Privacy Policy
+  								<span class="siteNavBasic reservationYellow" ng-click="story()">
+  									Our Story
   								</span>
   							</div>
   						</div>
@@ -120,22 +92,25 @@
   					<div class="col-md-2">
   						<div class="row">
   							<div class="col-md-12">
-  								<span class="siteNavBasic reservationYellow" ng-click="contact()">
-  									Contact Us
+  								<span class="siteNavBasic reservationYellow" ng-click="showAccount()">
+  									My Account
   								</span>
   							</div>
   						</div>
   						<div class="row">
   							<div class="col-md-12">
-  								<span class="siteNavBasic reservationYellow" ng-click="welcome()">
-  									How it Works
-  								</span>
-  							</div>
+									<span ng-show='showLogout' class="siteNavBasic reservationYellow" ng-click="logOut()">
+										Log Out
+									</span>
+									<span ng-show='!showLogout && !accessAccount' class="siteNavBasic reservationYellow" ng-click="logIn()">
+										Log In
+									</span>
+								</div>
   						</div>
   						<div class="row">
   							<div class="col-md-12">
-  								<span class="siteNavBasic reservationYellow" ng-click="story()">
-  									Our Story
+  								<span class="siteNavBasic reservationYellow" ng-click="tos()">
+  									Privacy Policy
   								</span>
   							</div>
   						</div>
@@ -153,7 +128,7 @@
   	</div>
   	<div id="tt-footer">
   		<span class="copyright">
-  			© 2014-2016, Tickets Tycoon, Inc.
+  			© 2015-2016, Fantasy Horse Daily, Inc.
   		</span>
   	</div>
   </div>
@@ -189,7 +164,7 @@
 									weight: 700	!important;
 								"
 							>
-								Tickets Tycoon
+								Fantasy Horse Daily
 							</a>
 						</div>
 						<a 
@@ -215,8 +190,8 @@
 		<li style="background-color: grey">
 			<span>&nbsp;</span>
 		</li>
-		<li class="list-group-item" ng-repeat="league in leagues" track by $index>
-			<span class="managementLink" ng-click="showChampionship(league.id)">View {{league.league}} Ticket Reservation Fees</span><br/>
+		<li class="list-group-item" ng-repeat="track in tracks" track by $index>
+			<span class="managementLink" ng-click="showTrack(track.id)">{{track.name}}</span><br/>
 		</li>
 		<li class="list-group-item">
 			<span class="managementLink" ng-click="about()">About Us</span><br/>

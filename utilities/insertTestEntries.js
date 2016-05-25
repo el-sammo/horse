@@ -17,6 +17,44 @@ function insertTestEntryData() {
 			type: 'Maiden Special Weight',
 			claim: 0,
 			purse: 75000,
+			wagers: [
+				{
+					wager: 'Win',
+					min: 2
+				},
+				{
+					wager: 'Place',
+					min: 2
+				},
+				{
+					wager: 'Show',
+					min: 2
+				},
+				{
+					wager: 'Exacta',
+					min: 2
+				},
+				{
+					wager: 'Trifecta',
+					min: 1
+				},
+				{
+					wager: 'Superfecta',
+					min: .1
+				},
+				{
+					wager: 'Daily Double',
+					min: 2
+				},
+				{
+					wager: 'Pick 3',
+					min: 1
+				},
+				{
+					wager: 'Pick 5',
+					min: .5
+				}
+			],
 			entries: [
 				{
 					number: 1,
@@ -100,6 +138,44 @@ function insertTestEntryData() {
 			type: 'Claiming',
 			claim: 14000,
 			purse: 26000,
+			wagers: [
+				{
+					wager: 'Win',
+					min: 2
+				},
+				{
+					wager: 'Place',
+					min: 2
+				},
+				{
+					wager: 'Show',
+					min: 2
+				},
+				{
+					wager: 'Exacta',
+					min: 2
+				},
+				{
+					wager: 'Trifecta',
+					min: 1
+				},
+				{
+					wager: 'Superfecta',
+					min: .1
+				},
+				{
+					wager: 'Daily Double',
+					min: 2
+				},
+				{
+					wager: 'Pick 3',
+					min: 1
+				},
+				{
+					wager: 'Pick 4',
+					min: .5
+				}
+			],
 			entries: [
 				{
 					number: 1,
@@ -174,6 +250,40 @@ function insertTestEntryData() {
 			type: 'Allowance Optional Claiming',
 			claim: 62500,
 			purse: 80000,
+			wagers: [
+				{
+					wager: 'Win',
+					min: 2
+				},
+				{
+					wager: 'Place',
+					min: 2
+				},
+				{
+					wager: 'Show',
+					min: 2
+				},
+				{
+					wager: 'Exacta',
+					min: 2
+				},
+				{
+					wager: 'Trifecta',
+					min: 1
+				},
+				{
+					wager: 'Superfecta',
+					min: .1
+				},
+				{
+					wager: 'Daily Double',
+					min: 2
+				},
+				{
+					wager: 'Pick 3',
+					min: 1
+				}
+			],
 			entries: [
 				{
 					number: 1,
@@ -258,6 +368,36 @@ function insertTestEntryData() {
 			type: 'Starter Allowance',
 			claim: 0,
 			purse: 55000,
+			wagers: [
+				{
+					wager: 'Win',
+					min: 2
+				},
+				{
+					wager: 'Place',
+					min: 2
+				},
+				{
+					wager: 'Show',
+					min: 2
+				},
+				{
+					wager: 'Exacta',
+					min: 2
+				},
+				{
+					wager: 'Trifecta',
+					min: 1
+				},
+				{
+					wager: 'Superfecta',
+					min: .1
+				},
+				{
+					wager: 'Daily Double',
+					min: 2
+				}
+			],
 			entries: [
 				{
 					number: 1,
@@ -361,6 +501,32 @@ function insertTestEntryData() {
 			type: 'Maiden Claiming',
 			claim: 20000,
 			purse: 29000,
+			wagers: [
+				{
+					wager: 'Win',
+					min: 2
+				},
+				{
+					wager: 'Place',
+					min: 2
+				},
+				{
+					wager: 'Show',
+					min: 2
+				},
+				{
+					wager: 'Exacta',
+					min: 2
+				},
+				{
+					wager: 'Trifecta',
+					min: 1
+				},
+				{
+					wager: 'Superfecta',
+					min: .1
+				}
+			],
 			entries: [
 				{
 					number: 1,
@@ -458,7 +624,7 @@ function insertTestEntryData() {
 		},
 	];
 
-	db.trd.insert({
+	db.trds.insert({
 		name: trackName,
 		raceDate: raceDate,
 		races: races

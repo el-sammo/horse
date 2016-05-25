@@ -13,14 +13,14 @@
 	controller.$inject = [
 		'navMgr', 'pod', '$scope', '$window',
 		'$http', '$routeParams', '$modal', 'layoutMgmt',
-		'$rootScope', 'customerMgmt', 'championshipMgmt',
+		'$rootScope', 'customerMgmt', 'trdMgmt',
 		'signupPrompter', 'deviceMgr'
 	];
 
 	function controller(
 		navMgr, pod, $scope, $window,
 		$http, $routeParams, $modal, layoutMgmt,
-		$rootScope, customerMgmt, championshipMgmt,
+		$rootScope, customerMgmt, trdMgmt,
 		signupPrompter, deviceMgr
 	) {
 
@@ -100,25 +100,21 @@
 				$window.location.href = location.origin + "/app/account";
 			}
 
-			$scope.showChampionship = function(id) {
-				$window.location.href = location.origin + "/app/championship/" +id;
-			}
-
 			$scope.logIn = layoutMgmt.logIn;
 			$scope.logOut = layoutMgmt.logOut;
 			$scope.signUp = layoutMgmt.signUp;
 			$scope.feedback = layoutMgmt.feedback;
 
-			var currentChampionshipsPromise = championshipMgmt.getCurrentChampionships();
-			currentChampionshipsPromise.then(function(championshipsData) {
-				var leagues = [];
-				championshipsData.forEach(function(championship) {
-					leagues.push({
-						id: championship.id,
-						league: championship.league
+			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
+			getTrdsByDatePromise.then(function(trdsData) {
+				var tracks = [];
+				trdsData.forEach(function(trd) {
+					tracks.push({
+						id: trd.id,
+						name: trd.name
 					});
 				});
-				$scope.leagues = leagues;
+				$scope.tracks = tracks;
 			});
 		});
 
