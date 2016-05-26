@@ -60,6 +60,24 @@ console.log($scope.trdData);
 		distMap[1.875] = '1 7/8M',
 		distMap[2] = '2M'
 
+		var legMap = [];
+		legMap['Win'] = 1;
+		legMap['Place'] = 1;
+		legMap['Show'] = 1;
+		legMap['Exacta'] = 1;
+		legMap['Trifecta'] = 1;
+		legMap['Superfecta'] = 1;
+		legMap['Pentafecta'] = 1;
+		legMap['Daily Double'] = 2;
+		legMap['Pick 3'] = 3;
+		legMap['Pick 4'] = 4;
+		legMap['Pick 5'] = 5;
+		legMap['Pick 6'] = 6;
+		legMap['Pick 7'] = 7;
+		legMap['Pick 8'] = 8;
+		legMap['Pick 9'] = 9;
+		legMap['Pick 10'] = 10;
+
 		$scope.convertDist = function(dist) {
 			return distMap[dist];
 		}
@@ -75,6 +93,28 @@ console.log($scope.trdData);
 		$scope.showTrackRace = function(trackId, raceNum) {
 			$scope.trId = trackId+'-'+raceNum;
 		}
+
+		$scope.showRaceWager = function(trackId, raceNumber, wager) {
+			$scope.wagerTmpl = wager;
+
+			var track = $.grep($scope.trdData, function(e){ return e.id == trackId; });
+			var races = $.grep(track[0].races, function(e){ return e.number == raceNumber; });
+
+console.log('races:');
+console.log(races);
+
+			var wagerRunners = [];
+			wagerRunners.push(races[0].entries)
+
+console.log('wagerRunners:');
+console.log(wagerRunners);
+
+console.log('wagerRunners[0]:');
+console.log(wagerRunners[0]);
+
+			$scope.wagerRunners = wagerRunners;
+		}
+
 
 	}
 
