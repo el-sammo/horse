@@ -35,8 +35,6 @@
 			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
 			getTrdsByDatePromise.then(function(trdData) {
 				$scope.trdData = trdData;
-console.log('$scope.trdData:');
-console.log($scope.trdData);
 			});
 
 		});
@@ -106,18 +104,60 @@ console.log($scope.trdData);
 		$scope.showRaceWager = function(trackId, raceNumber, wager) {
 			$scope.wagerTmpl = wager;
 
-			var track = $.grep($scope.trdData, function(e){ return e.id == trackId; });
-			var races = $.grep(track[0].races, function(e){ return e.number == raceNumber; });
+			var track = $.grep(
+				$scope.trdData, function(e) { 
+					return e.id == trackId; 
+				}
+			);
+
+			var races = [];
+			if(legMap[wager] < 2) {
+				races.push(
+					(
+						$.grep(
+							track[0].races, function(e) { 
+								return e.number == raceNumber; 
+							}
+						)
+					)
+				[0]);
+			} else {
+				races.push(
+					(
+						$.grep(
+							track[0].races, function(e) { 
+								return e.number == raceNumber; 
+							}
+						)
+					)
+				[0]);
+				var nextLeg = races[0].number;
+				while(races.length < legMap[wager]) {
+					nextLeg ++;
+					races.push(
+						(
+							$.grep(
+								track[0].races, function(e) { 
+									return e.number == nextLeg; 
+								}
+							)
+						)
+					[0]);
+				}
+			}
 
 			var wagerRunners = [];
-			wagerRunners.push(races[0].entries)
+			races.forEach(function(race) {
+				wagerRunners.push(races[0].entries);
+			});
+
+console.log('wagerRunners:');
+console.log(wagerRunners);
 
 			$scope.legs = legMap[wager];
 			$scope.parts = partMap[wager];
 
 			$scope.singleDesc = 'To '+wager;
-
-console.log('$scope.legs: '+$scope.legs);
 
 			$scope.wagerRunners = wagerRunners;
 		}

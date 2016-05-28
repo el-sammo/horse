@@ -130,11 +130,24 @@
 							>
 								<div 
 									class="col-md-12"
-									ng-repeat="runners in wagerRunners"
 								>
 									<div class="row" ng-show="legs > 1">
 										<div class="col-md-12">
-											<span class="raceDetails">Multi-leg</span>
+											<div class="row">
+												<div 
+													class="col-md-1"
+													ng-repeat="runners in wagerRunners"
+													ng-init="legNumber = $index + 1"
+													track by $index
+												>
+													<span 
+														class="raceDetails"
+														ng-click="showLeg(legNumber)"
+													>
+														Leg {{legNumber}}
+													</span>
+												</div>
+											</div>
 										</div>
 									</div>
 									<div class="row" ng-show="legs < 2 && parts > 1">
@@ -160,8 +173,7 @@
 											</div>
 											<div 
 												class="row"
-												ng-repeat="entry in runners"
-												track by $index
+												ng-repeat="entry in wagerRunners[0]"
 											>
 												<div class="col-md-1">
 													<input 
