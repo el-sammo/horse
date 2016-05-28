@@ -129,6 +129,10 @@
 			$rootScope.$broadcast('orderChanged');
 		});
 
+		$scope.showTrack = function(trackId) {
+			$scope.trackShow = trackId;
+		}
+
 	}
 
 }());

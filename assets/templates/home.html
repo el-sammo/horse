@@ -7,6 +7,7 @@
 			<div 
 				class="row" 
 				ng-repeat="track in trdData"
+				ng-show="trackShow === track.id"
 			>
 				<div 
 					class="col-md-10 col-md-offset-1"
@@ -129,64 +130,78 @@
 							>
 								<div 
 									class="col-md-12"
-									ng-show="wagerTmpl === 'Win'"
+									ng-repeat="runners in wagerRunners"
 								>
-									<div class="row">
-										<div class="col-md-1">
-											<span class="raceDetails">To Win</span>
-										</div>
-										<div class="col-md-2">
-											<span class="raceDetails">Runner</span>
-										</div>
-										<div class="col-md-2">
-											<span class="raceDetails">Jockey</span>
-										</div>
-										<div class="col-md-2">
-											<span class="raceDetails">Trainer</span>
+									<div class="row" ng-show="legs > 1">
+										<div class="col-md-12">
+											<span class="raceDetails">Multi-leg</span>
 										</div>
 									</div>
-									<div 
-										class="row"
-										ng-repeat="entry in wagerRunners[0]"
-										track by $index
-									>
-										<div class="col-md-1">
-											<input 
-												type="checkbox"
-												ng-model="raceWagerId"
-												id="race.id+'-Win-'+entry.number"
-											>
-											<label 
-												for="{{race.id}}-Win-{{entry.number}}"
-												class="raceDetails"
-												style="top: -2px; position: relative;"
-												ng-show="entry.post && (entry.post !== entry.number)"
-											>
-												{{entry.number}} ({{entry.post}})
-											</label>
-											<label 
-												for="{{race.id}}-Win-{{entry.number}}"
-												class="raceDetails"
-												style="top: -2px; position: relative;"
-												ng-show="!entry.post || (entry.post === entry.number)"
-											>
-												{{entry.number}}
-											</label>
+									<div class="row" ng-show="legs < 2 && parts > 1">
+										<div class="col-md-12">
+											<span class="raceDetails">Multi-part</span>
 										</div>
-										<div class="col-md-2">
-											<span class="raceDetails">
-												{{entry.name}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="raceDetails">
-												{{entry.jockey}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="raceDetails">
-												{{entry.trainer}}
-											</span>
+									</div>
+									<div class="row" ng-show="legs < 2 && parts < 2">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="col-md-1">
+													<span class="raceDetails">{{singleDesc}}</span>
+												</div>
+												<div class="col-md-2">
+													<span class="raceDetails">Runner</span>
+												</div>
+												<div class="col-md-2">
+													<span class="raceDetails">Jockey</span>
+												</div>
+												<div class="col-md-2">
+													<span class="raceDetails">Trainer</span>
+												</div>
+											</div>
+											<div 
+												class="row"
+												ng-repeat="entry in runners"
+												track by $index
+											>
+												<div class="col-md-1">
+													<input 
+														type="checkbox"
+														ng-model="raceWagerId"
+														id="race.id+'-Win-'+entry.number"
+													>
+													<label 
+														for="{{race.id}}-Win-{{entry.number}}"
+														class="raceDetails"
+														style="top: -2px; position: relative;"
+														ng-show="entry.post && (entry.post !== entry.number)"
+													>
+														{{entry.number}} ({{entry.post}})
+													</label>
+													<label 
+														for="{{race.id}}-Win-{{entry.number}}"
+														class="raceDetails"
+														style="top: -2px; position: relative;"
+														ng-show="!entry.post || (entry.post === entry.number)"
+													>
+														{{entry.number}}
+													</label>
+												</div>
+												<div class="col-md-2">
+													<span class="raceDetails">
+														{{entry.name}}
+													</span>
+												</div>
+												<div class="col-md-2">
+													<span class="raceDetails">
+														{{entry.jockey}}
+													</span>
+												</div>
+												<div class="col-md-2">
+													<span class="raceDetails">
+														{{entry.trainer}}
+													</span>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
