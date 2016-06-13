@@ -19,7 +19,7 @@
 		var trd;
 		var getTrdPromise;
 		var getTrdsByDatePromise;
-		var todayDate = 20160527;
+		var todayDate = 20160727;
 
 		var service = {
 			getTrd: function(trdId) {

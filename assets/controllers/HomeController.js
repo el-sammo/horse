@@ -35,6 +35,8 @@
 			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
 			getTrdsByDatePromise.then(function(trdData) {
 				$scope.trdData = trdData;
+console.log('trdData:');				
+console.log(trdData);				
 			});
 
 		});

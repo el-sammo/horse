@@ -136,9 +136,8 @@
 											<div class="row">
 												<div 
 													class="col-md-1"
-													ng-repeat="runners in wagerRunners"
+													ng-repeat="runners in wagerRunners track by $index"
 													ng-init="legNumber = $index + 1"
-													track by $index
 												>
 													<span 
 														class="raceDetails"
@@ -245,7 +244,6 @@
 						<div 
 							class="col-sm-6 col-xs-6 col-sm-offset-3 col-xs-offset-3 sportTabLeftSm"
 							id="{{championship.id}}" 
-							track by $index
 						>
 							<span 
 								class="sportTabHeading reservationYellow" 
@@ -262,7 +260,6 @@
 							ng-show="tabShow === '{{championship.id}}'"
 							id="{{championship.id}}" 
 							ng-repeat="championship in championshipData" 
-							track by $index
 						>
 							<div class="row">
 								<div 
