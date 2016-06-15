@@ -33,10 +33,22 @@
 			}
 
 			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
-			getTrdsByDatePromise.then(function(trdData) {
-				$scope.trdData = trdData;
-console.log('trdData:');				
-console.log(trdData);				
+			getTrdsByDatePromise.then(function(trdsData) {
+
+				$scope.trdData = trdsData;
+
+				var tracks = [];
+				var firstTrack = true;
+				trdsData.forEach(function(trd) {
+					if(firstTrack) {
+						firstTrack = false;
+					}
+					tracks.push({
+						id: trd.id,
+						name: trd.name
+					});
+				});
+				$scope.tracks = tracks;
 			});
 
 		});
@@ -87,6 +99,12 @@ console.log(trdData);
 		partMap['Superfecta'] = 4;
 		partMap['Pentafecta'] = 5;
 
+		var amountMap = [];
+		amountMap[.1] = [.1,.2,.5,1,2,3,4,5,6,10,20,50,100];
+		amountMap[.5] = [.5,1,2,3,4,5,6,10,20,50,100];
+		amountMap[1] = [1,2,3,4,5,6,10,20,50,100];
+		amountMap[2] = [2,3,4,5,6,10,20,50,100];
+
 		$scope.convertDist = function(dist) {
 			return distMap[dist];
 		}
@@ -99,11 +117,23 @@ console.log(trdData);
 			return timePcs[0]+':'+timePcs[1];
 		}
 
-		$scope.showTrackRace = function(trackId, raceNum) {
-			$scope.trId = trackId+'-'+raceNum;
+		$scope.showTrack = function(trackId) {
+			$scope.trackShow = trackId;
+			$scope.showTrackRace(trackId, 1);
+			$scope.showRaceWager(trackId, 1, 'Win', 2);
 		}
 
-		$scope.showRaceWager = function(trackId, raceNumber, wager) {
+		$scope.showTrackRace = function(trackId, raceNum) {
+			$scope.trId = trackId+'-'+raceNum;
+			$scope.showRaceWager(trackId, raceNum, 'Win', 2);
+		}
+
+		$scope.showLeg = function(legNum) {
+			$scope.legShow = legNum;
+		}
+
+		$scope.showRaceWager = function(trackId, raceNumber, wager, min) {
+			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
 
 			var track = $.grep(
@@ -150,20 +180,25 @@ console.log(trdData);
 
 			var wagerRunners = [];
 			races.forEach(function(race) {
-				wagerRunners.push(races[0].entries);
+				wagerRunners.push(race.entries);
 			});
-
-console.log('wagerRunners:');
-console.log(wagerRunners);
 
 			$scope.legs = legMap[wager];
 			$scope.parts = partMap[wager];
 
-			$scope.singleDesc = 'To '+wager;
+			$scope.singleDesc = wager;
 
 			$scope.wagerRunners = wagerRunners;
+
+			$scope.showLeg(1);
+
+			$scope.amountOptions = amountMap[min];
 		}
 
+		$scope.submitWager = function() {
+console.log('$scope:');
+console.log($scope);
+		}
 
 	}
 

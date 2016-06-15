@@ -118,7 +118,7 @@
 										class="raceDetails"
 										style="padding-left: 8px; cursor: pointer;"
 										ng-repeat="wager in race.wagers"
-										ng-click="showRaceWager(track.id, race.number, wager.wager)"
+										ng-click="showRaceWager(track.id, race.number, wager.wager, wager.min)"
 									>
 										{{wager.wager}}
 									</span>
@@ -141,10 +141,95 @@
 												>
 													<span 
 														class="raceDetails"
+														style="cursor: pointer;"
 														ng-click="showLeg(legNumber)"
 													>
 														Leg {{legNumber}}
 													</span>
+												</div>
+											</div>
+											<br/>
+											<div class="row">
+												<div 
+													class="col-md-12" 
+													ng-show="legShow == legNumber"
+													ng-repeat="runners in wagerRunners track by $index"
+													ng-init="legNumber = $index + 1"
+												>
+													<div class="row">
+														<div class="col-md-12">
+															<div class="row">
+																<div class="col-md-1">
+																	<span class="raceDetails">Select</span>
+																</div>
+																<div class="col-md-3">
+																	<span class="raceDetails">Runner</span>
+																</div>
+																<div class="col-md-3">
+																	<span class="raceDetails">Jockey</span>
+																</div>
+																<div class="col-md-2">
+																	<span class="raceDetails">Trainer</span>
+																</div>
+															</div>
+															<div 
+																class="row"
+																ng-repeat="entry in wagerRunners[$index]"
+															>
+																<div class="col-md-1">
+																	<input 
+																		type="checkbox"
+																		ng-model="selectedRunners"
+																		id="race.id+'-leg{{legNumber}}-'+entry.number"
+																		value="entry.number"
+																	>
+																	<label 
+																		for="{{race.id}}-leg{{legNumber}}-{{entry.number}}"
+																		class="raceDetails"
+																		style="top: -2px; position: relative;"
+																		ng-show="entry.post && (entry.post !== entry.number)"
+																	>
+																		{{entry.number}} (Post: {{entry.post}})
+																	</label>
+																	<label 
+																		for="{{race.id}}-leg{{legNumber}}-{{entry.number}}"
+																		class="raceDetails"
+																		style="top: -2px; position: relative;"
+																		ng-show="!entry.post || (entry.post === entry.number)"
+																	>
+																		{{entry.number}}
+																	</label>
+																</div>
+																<div class="col-md-3">
+																	<span class="raceDetails" ng-show="!entry.meds && !entry.equip">
+																		{{entry.name}}
+																	</span>
+																	<span class="raceDetails" ng-show="entry.meds && !entry.equip">
+																		{{entry.name}} - {{entry.meds}}
+																	</span>
+																	<span class="raceDetails" ng-show="!entry.meds && entry.equip">
+																		{{entry.name}} - {{entry.equip}}
+																	</span>
+																	<span class="raceDetails" ng-show="entry.meds && entry.equip">
+																		{{entry.name}} - {{entry.meds}} - {{entry.equip}}
+																	</span>
+																</div>
+																<div class="col-md-3">
+																	<span class="raceDetails" ng-show="!entry.weight">
+																		{{entry.jockey}}
+																	</span>
+																	<span class="raceDetails" ng-show="entry.weight">
+																		{{entry.jockey}} ({{entry.weight}})
+																	</span>
+																</div>
+																<div class="col-md-2">
+																	<span class="raceDetails">
+																		{{entry.trainer}}
+																	</span>
+																</div>
+															</div>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -160,10 +245,10 @@
 												<div class="col-md-1">
 													<span class="raceDetails">{{singleDesc}}</span>
 												</div>
-												<div class="col-md-2">
+												<div class="col-md-3">
 													<span class="raceDetails">Runner</span>
 												</div>
-												<div class="col-md-2">
+												<div class="col-md-3">
 													<span class="raceDetails">Jockey</span>
 												</div>
 												<div class="col-md-2">
@@ -177,19 +262,17 @@
 												<div class="col-md-1">
 													<input 
 														type="checkbox"
-														ng-model="raceWagerId"
-														id="race.id+'-Win-'+entry.number"
+														ng-model="selectedRunners"
+														value="entry.number"
 													>
 													<label 
-														for="{{race.id}}-Win-{{entry.number}}"
 														class="raceDetails"
 														style="top: -2px; position: relative;"
 														ng-show="entry.post && (entry.post !== entry.number)"
 													>
-														{{entry.number}} ({{entry.post}})
+														{{entry.number}} (Post: {{entry.post}})
 													</label>
 													<label 
-														for="{{race.id}}-Win-{{entry.number}}"
 														class="raceDetails"
 														style="top: -2px; position: relative;"
 														ng-show="!entry.post || (entry.post === entry.number)"
@@ -197,14 +280,26 @@
 														{{entry.number}}
 													</label>
 												</div>
-												<div class="col-md-2">
-													<span class="raceDetails">
+												<div class="col-md-3">
+													<span class="raceDetails" ng-show="!entry.meds && !entry.equip">
 														{{entry.name}}
 													</span>
+													<span class="raceDetails" ng-show="entry.meds && !entry.equip">
+														{{entry.name}} - {{entry.meds}}
+													</span>
+													<span class="raceDetails" ng-show="!entry.meds && entry.equip">
+														{{entry.name}} - {{entry.equip}}
+													</span>
+													<span class="raceDetails" ng-show="entry.meds && entry.equip">
+														{{entry.name}} - {{entry.meds}} - {{entry.equip}}
+													</span>
 												</div>
-												<div class="col-md-2">
-													<span class="raceDetails">
+												<div class="col-md-3">
+													<span class="raceDetails" ng-show="!entry.weight">
 														{{entry.jockey}}
+													</span>
+													<span class="raceDetails" ng-show="entry.weight">
+														{{entry.jockey}} ({{entry.weight}})
 													</span>
 												</div>
 												<div class="col-md-2">
@@ -215,6 +310,27 @@
 											</div>
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col=md=12">
+							<div class="row=">
+								<div class="col-md-2">
+									<span class="raceDetails">Wager Amount</span>
+								</div>
+								<div class="col-md-3">
+									<span class="raceDetails">Wager Runners</span>
+								</div>
+								<div class="col-md-3">
+									<span class="raceDetails">Wager Confirmation</span>
+								</div>
+								<div class="col-md-2">
+									<button class="btn btn-danger btn-big" ng-click="submitWager()">
+										Submit Wager
+									</button>
 								</div>
 							</div>
 						</div>

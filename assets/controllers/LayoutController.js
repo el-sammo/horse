@@ -13,14 +13,14 @@
 	controller.$inject = [
 		'navMgr', 'pod', '$scope', '$window',
 		'$http', '$routeParams', '$modal', 'layoutMgmt',
-		'$rootScope', 'customerMgmt', 'trdMgmt',
+		'$rootScope', 'customerMgmt',
 		'signupPrompter', 'deviceMgr'
 	];
 
 	function controller(
 		navMgr, pod, $scope, $window,
 		$http, $routeParams, $modal, layoutMgmt,
-		$rootScope, customerMgmt, trdMgmt,
+		$rootScope, customerMgmt,
 		signupPrompter, deviceMgr
 	) {
 
@@ -105,17 +105,6 @@
 			$scope.signUp = layoutMgmt.signUp;
 			$scope.feedback = layoutMgmt.feedback;
 
-			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
-			getTrdsByDatePromise.then(function(trdsData) {
-				var tracks = [];
-				trdsData.forEach(function(trd) {
-					tracks.push({
-						id: trd.id,
-						name: trd.name
-					});
-				});
-				$scope.tracks = tracks;
-			});
 		});
 
 		function capitalizeFirstLetter(string) {
@@ -128,11 +117,6 @@
 			$scope.customerId = args;
 			$rootScope.$broadcast('orderChanged');
 		});
-
-		$scope.showTrack = function(trackId) {
-			$scope.trackShow = trackId;
-		}
-
 	}
 
 }());
