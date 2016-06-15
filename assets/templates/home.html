@@ -257,13 +257,15 @@
 											</div>
 											<div 
 												class="row"
-												ng-repeat="entry in wagerRunners[0]"
+												ng-repeat="(idx, entry) in wagerRunners[0]"
 											>
+											<!-- http://ticketstycoon.com:4677/app/ -->
 												<div class="col-md-1">
 													<input 
 														type="checkbox"
-														ng-model="selectedRunners"
-														value="entry.number"
+														ng-model="selectedRunners[idx]"
+														ng-true-value="{{entry.number}}"
+														ng-false-value="false"
 													>
 													<label 
 														class="raceDetails"

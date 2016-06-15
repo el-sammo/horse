@@ -133,6 +133,7 @@
 		}
 
 		$scope.showRaceWager = function(trackId, raceNumber, wager, min) {
+			$scope.clearSelectedRunners();
 			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
 
@@ -193,7 +194,14 @@
 			$scope.showLeg(1);
 
 			$scope.amountOptions = amountMap[min];
+
 		}
+
+		$scope.clearSelectedRunners = function() {
+			$scope.selectedRunners = [];
+		}
+
+		$scope.selectedRunners = [];
 
 		$scope.submitWager = function() {
 console.log('$scope:');
