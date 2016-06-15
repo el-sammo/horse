@@ -199,9 +199,39 @@
 
 		$scope.clearSelectedRunners = function() {
 			$scope.selectedRunners = [];
+			$scope.winRunners = [];
+			$scope.placeRunners = [];
+			$scope.showRunners = [];
+			$scope.fourthRunners = [];
+			$scope.fifthRunners = [];
+			$scope.leg1Runners = [];
+			$scope.leg2Runners = [];
+			$scope.leg3Runners = [];
+			$scope.leg4Runners = [];
+			$scope.leg5Runners = [];
+			$scope.leg6Runners = [];
+			$scope.leg7Runners = [];
+			$scope.leg8Runners = [];
+			$scope.leg9Runners = [];
+			$scope.leg10Runners = [];
 		}
 
 		$scope.selectedRunners = [];
+		$scope.winRunners = [];
+		$scope.placeRunners = [];
+		$scope.showRunners = [];
+		$scope.fourthRunners = [];
+		$scope.fifthRunners = [];
+		$scope.leg1Runners = [];
+		$scope.leg2Runners = [];
+		$scope.leg3Runners = [];
+		$scope.leg4Runners = [];
+		$scope.leg5Runners = [];
+		$scope.leg6Runners = [];
+		$scope.leg7Runners = [];
+		$scope.leg8Runners = [];
+		$scope.leg9Runners = [];
+		$scope.leg10Runners = [];
 
 		$scope.submitWager = function() {
 console.log('$scope:');

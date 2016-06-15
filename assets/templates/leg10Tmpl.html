@@ -1,0 +1,55 @@
+															<div 
+																class="row"
+																ng-show="legShow == 10"
+																ng-repeat="(idx, entry) in wagerRunners[9]"
+															>
+																<div class="col-md-1">
+																	<input 
+																		type="checkbox"
+																		ng-model="leg10Runners[idx]"
+																		ng-true-value="{{entry.number}}"
+																		ng-false-value="false"
+																	>
+																	<label 
+																		class="raceDetails"
+																		style="top: -2px; position: relative;"
+																		ng-show="entry.post && (entry.post !== entry.number)"
+																	>
+																		{{entry.number}} (Post: {{entry.post}})
+																	</label>
+																	<label 
+																		class="raceDetails"
+																		style="top: -2px; position: relative;"
+																		ng-show="!entry.post || (entry.post === entry.number)"
+																	>
+																		{{entry.number}}
+																	</label>
+																</div>
+																<div class="col-md-3">
+																	<span class="raceDetails" ng-show="!entry.meds && !entry.equip">
+																		{{entry.name}}
+																	</span>
+																	<span class="raceDetails" ng-show="entry.meds && !entry.equip">
+																		{{entry.name}} - {{entry.meds}}
+																	</span>
+																	<span class="raceDetails" ng-show="!entry.meds && entry.equip">
+																		{{entry.name}} - {{entry.equip}}
+																	</span>
+																	<span class="raceDetails" ng-show="entry.meds && entry.equip">
+																		{{entry.name}} - {{entry.meds}} - {{entry.equip}}
+																	</span>
+																</div>
+																<div class="col-md-3">
+																	<span class="raceDetails" ng-show="!entry.weight">
+																		{{entry.jockey}}
+																	</span>
+																	<span class="raceDetails" ng-show="entry.weight">
+																		{{entry.jockey}} ({{entry.weight}})
+																	</span>
+																</div>
+																<div class="col-md-2">
+																	<span class="raceDetails">
+																		{{entry.trainer}}
+																	</span>
+																</div>
+															</div>
