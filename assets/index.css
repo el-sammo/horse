@@ -453,7 +453,6 @@ td {
 	left: 5%;
 	width: 90%;
 	min-height: 80px;
-	max-height: 406px;
 	margin-left: 4px;
 	padding-bottom: 12px;
 	border: 1px solid black;
@@ -1600,7 +1599,6 @@ td {
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	height: 430px;
 	background: rgba(54, 25, 25, .5);
 	position: relative;
 }
@@ -1636,6 +1634,10 @@ td {
 }
 
 .hr_wide {
+	background-color: #ffffff;
+}
+
+.hr_wide_bak {
 	background-image: url("images/horse_racing_wide.jpg");
 	background-size: 100%;
 	background-repeat: no-repeat;

@@ -8,7 +8,8 @@
 																		type="checkbox"
 																		ng-model="leg1Runners[idx]"
 																		ng-true-value="{{entry.number}}"
-																		ng-false-value="false"
+																		ng-false-value=0
+																		ng-change="updateSelectedRunnersDisplay()"
 																	>
 																	<label 
 																		class="raceDetails"
