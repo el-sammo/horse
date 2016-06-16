@@ -199,12 +199,13 @@
 
 		$scope.updateSelectedRunnersDisplay = function() {
 			if($scope.legs > 1) {
+				$scope.formattedRunners = '';
 				if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
 					var first = true;
 					$scope.leg1Runners.forEach(function(runner) {
 						if(runner > 0) {
 							if(first) {
-								$scope.formattedRunners = runner;
+								$scope.formattedRunners += runner;
 								first = false;
 							} else {
 								$scope.formattedRunners += ',' + runner;
@@ -212,127 +213,153 @@
 						}
 					});
 				} 
+				$scope.formattedRunners += ' / ';
 				if($scope.leg2Runners && ($scope.leg2Runners.length > 0)) {
 					var first = true;
 					$scope.leg2Runners.forEach(function(runner) {
 						if(runner > 0) {
 							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
+								$scope.formattedRunners += runner;
 								first = false;
 							} else {
 								$scope.formattedRunners += ',' + runner;
 							}
 						}
 					});
-				} 
-				if($scope.leg3Runners && ($scope.leg3Runners.length > 0)) {
-					var first = true;
-					$scope.leg3Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+				}
+				if($scope.legs > 2) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg3Runners && ($scope.leg3Runners.length > 0)) {
+						var first = true;
+						$scope.leg3Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg4Runners && ($scope.leg4Runners.length > 0)) {
-					var first = true;
-					$scope.leg4Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 3) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg4Runners && ($scope.leg4Runners.length > 0)) {
+						var first = true;
+						$scope.leg4Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg5Runners && ($scope.leg5Runners.length > 0)) {
-					var first = true;
-					$scope.leg5Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 4) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg5Runners && ($scope.leg5Runners.length > 0)) {
+						var first = true;
+						$scope.leg5Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg6Runners && ($scope.leg6Runners.length > 0)) {
-					var first = true;
-					$scope.leg6Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 5) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg6Runners && ($scope.leg6Runners.length > 0)) {
+						var first = true;
+						$scope.leg6Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg7Runners && ($scope.leg7Runners.length > 0)) {
-					var first = true;
-					$scope.leg7Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 6) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg7Runners && ($scope.leg7Runners.length > 0)) {
+						var first = true;
+						$scope.leg7Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg8Runners && ($scope.leg8Runners.length > 0)) {
-					var first = true;
-					$scope.leg8Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 7) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg8Runners && ($scope.leg8Runners.length > 0)) {
+						var first = true;
+						$scope.leg8Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg9Runners && ($scope.leg9Runners.length > 0)) {
-					var first = true;
-					$scope.leg9Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 8) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg9Runners && ($scope.leg9Runners.length > 0)) {
+						var first = true;
+						$scope.leg9Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
-				if($scope.leg10Runners && ($scope.leg10Runners.length > 0)) {
-					var first = true;
-					$scope.leg10Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += ' / ' + runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
+						});
+					} 
+				}
+				if($scope.legs > 9) {
+					$scope.formattedRunners += ' / ';
+					if($scope.leg10Runners && ($scope.leg10Runners.length > 0)) {
+						var first = true;
+						$scope.leg10Runners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
 							}
-						}
-					});
-				} 
+						});
+					} 
+				}
 			}
 		}
 
 		$scope.clearSelectedRunners = function() {
+			$scope.formattedRunners = '';
 			$scope.selectedRunners = [];
 			$scope.winRunners = [];
 			$scope.placeRunners = [];
