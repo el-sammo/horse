@@ -199,6 +199,7 @@
 														ng-model="selectedRunners[idx]"
 														ng-true-value="{{entry.number}}"
 														ng-false-value="false"
+														ng-change="updateSelectedRunnersDisplay()"
 													>
 													<label 
 														class="raceDetails"
@@ -254,13 +255,25 @@
 						<div class="col=md=12">
 							<div class="row=">
 								<div class="col-md-2">
-									<span class="raceDetails">Wager Amount</span>
+									<select 
+										name="repeatSelect" 
+										id="repeatSelect" 
+										ng-model="wagerData.amount"
+										ng-change="updateSelectedRunnersDisplay()"
+									>
+										<option 
+											ng-repeat="option in amountOptions.availableOptions" 
+											value="{{option}}"
+										>
+											{{option}}
+										</option>
+									</select>
 								</div>
 								<div class="col-md-3">
-									<span class="raceDetails">{{formattedRunners}}</span>
+									<span class="raceDetails" ng-show="wager">{{wager}}: {{formattedRunners}}</span>
 								</div>
 								<div class="col-md-3">
-									<span class="raceDetails">Wager Confirmation</span>
+									<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>
 								</div>
 								<div class="col-md-2">
 									<button class="btn btn-danger btn-big" ng-click="submitWager()">

@@ -24,6 +24,8 @@
 			$scope.bigScreen = false;
 		}
 
+		$scope.wagerData = {};
+
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
 
@@ -100,10 +102,10 @@
 		partMap['Pentafecta'] = 5;
 
 		var amountMap = [];
-		amountMap[.1] = [.1,.2,.5,1,2,3,4,5,6,10,20,50,100];
-		amountMap[.5] = [.5,1,2,3,4,5,6,10,20,50,100];
-		amountMap[1] = [1,2,3,4,5,6,10,20,50,100];
-		amountMap[2] = [2,3,4,5,6,10,20,50,100];
+		amountMap[.1] = ['.10','.20','.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
+		amountMap[.5] = ['.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
+		amountMap[1] = ['1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
+		amountMap[2] = ['2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 
 		$scope.convertDist = function(dist) {
 			return distMap[dist];
@@ -136,6 +138,7 @@
 			$scope.clearSelectedRunners();
 			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
+			$scope.wager = wager;
 
 			var track = $.grep(
 				$scope.trdData, function(e) { 
@@ -193,13 +196,18 @@
 
 			$scope.showLeg(1);
 
-			$scope.amountOptions = amountMap[min];
+			$scope.amountOptions = {
+				repeatSelect: null,
+				availableOptions: amountMap[min]
+			}
 
 		}
 
 		$scope.updateSelectedRunnersDisplay = function() {
+			$scope.formattedRunners = '';
+			$scope.multiplier = 1;
 			if($scope.legs > 1) {
-				$scope.formattedRunners = '';
+				var trueLeg1Count = 1;
 				if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
 					var first = true;
 					$scope.leg1Runners.forEach(function(runner) {
@@ -209,11 +217,14 @@
 								first = false;
 							} else {
 								$scope.formattedRunners += ',' + runner;
+								trueLeg1Count ++;
 							}
 						}
 					});
+					$scope.multiplier = $scope.multiplier * trueLeg1Count;
 				} 
 				$scope.formattedRunners += ' / ';
+				var trueLeg2Count = 1;
 				if($scope.leg2Runners && ($scope.leg2Runners.length > 0)) {
 					var first = true;
 					$scope.leg2Runners.forEach(function(runner) {
@@ -223,12 +234,15 @@
 								first = false;
 							} else {
 								$scope.formattedRunners += ',' + runner;
+								trueLeg2Count ++;
 							}
 						}
 					});
+					$scope.multiplier = $scope.multiplier * trueLeg2Count;
 				}
 				if($scope.legs > 2) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg3Count = 1;
 					if($scope.leg3Runners && ($scope.leg3Runners.length > 0)) {
 						var first = true;
 						$scope.leg3Runners.forEach(function(runner) {
@@ -238,13 +252,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg3Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg3Count;
 					} 
 				}
 				if($scope.legs > 3) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg4Count = 1;
 					if($scope.leg4Runners && ($scope.leg4Runners.length > 0)) {
 						var first = true;
 						$scope.leg4Runners.forEach(function(runner) {
@@ -254,13 +271,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg4Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg4Count;
 					} 
 				}
 				if($scope.legs > 4) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg5Count = 1;
 					if($scope.leg5Runners && ($scope.leg5Runners.length > 0)) {
 						var first = true;
 						$scope.leg5Runners.forEach(function(runner) {
@@ -270,13 +290,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg5Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg5Count;
 					} 
 				}
 				if($scope.legs > 5) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg6Count = 1;
 					if($scope.leg6Runners && ($scope.leg6Runners.length > 0)) {
 						var first = true;
 						$scope.leg6Runners.forEach(function(runner) {
@@ -286,13 +309,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg6Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg6Count;
 					} 
 				}
 				if($scope.legs > 6) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg7Count = 1;
 					if($scope.leg7Runners && ($scope.leg7Runners.length > 0)) {
 						var first = true;
 						$scope.leg7Runners.forEach(function(runner) {
@@ -302,13 +328,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg7Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg7Count;
 					} 
 				}
 				if($scope.legs > 7) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg8Count = 1;
 					if($scope.leg8Runners && ($scope.leg8Runners.length > 0)) {
 						var first = true;
 						$scope.leg8Runners.forEach(function(runner) {
@@ -318,13 +347,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg8Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg8Count;
 					} 
 				}
 				if($scope.legs > 8) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg9Count = 1;
 					if($scope.leg9Runners && ($scope.leg9Runners.length > 0)) {
 						var first = true;
 						$scope.leg9Runners.forEach(function(runner) {
@@ -334,13 +366,16 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg9Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg9Count;
 					} 
 				}
 				if($scope.legs > 9) {
 					$scope.formattedRunners += ' / ';
+					var trueLeg10Count = 1;
 					if($scope.leg10Runners && ($scope.leg10Runners.length > 0)) {
 						var first = true;
 						$scope.leg10Runners.forEach(function(runner) {
@@ -350,10 +385,30 @@
 									first = false;
 								} else {
 									$scope.formattedRunners += ',' + runner;
+									trueLeg10Count ++;
 								}
 							}
 						});
+						$scope.multiplier = $scope.multiplier * trueLeg10Count;
 					} 
+				}
+				$scope.ticketCost = $scope.multiplier * parseFloat($scope.wagerData.amount);
+			} else {
+				if(partMap[$scope.wager] > 1) {
+					// multipart
+				} else {
+					// WPS
+					var first = true;
+					$scope.selectedRunners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners = runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+							}
+						}
+					});
 				}
 			}
 		}
