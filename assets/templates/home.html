@@ -169,7 +169,7 @@
 									</div>
 									<div class="row" ng-show="legs < 2 && parts > 1">
 										<div class="col-md-12">
-											<span class="raceDetails">Multi-part</span>
+											<ng-include src="'/templates/multiPartTmpl.html'"></ng-include>
 										</div>
 									</div>
 									<div class="row" ng-show="legs < 2 && parts < 2">
@@ -192,7 +192,6 @@
 												class="row"
 												ng-repeat="(idx, entry) in wagerRunners[0]"
 											>
-											<!-- http://ticketstycoon.com:4677/app/ -->
 												<div class="col-md-1">
 													<input 
 														type="checkbox"
@@ -276,7 +275,7 @@
 									<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>
 								</div>
 								<div class="col-md-2">
-									<button class="btn btn-danger btn-big" ng-click="submitWager()">
+									<button class="btn btn-danger btn-sm" ng-click="submitWager()">
 										Submit Wager
 									</button>
 								</div>

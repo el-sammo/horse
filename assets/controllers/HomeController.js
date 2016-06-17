@@ -139,6 +139,7 @@
 			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
 			$scope.wager = wager;
+			$scope.ticketCost = '';
 
 			var track = $.grep(
 				$scope.trdData, function(e) { 
@@ -205,6 +206,7 @@
 
 		$scope.updateSelectedRunnersDisplay = function() {
 			$scope.formattedRunners = '';
+			$scope.ticketCost = '';
 			$scope.multiplier = 1;
 			if($scope.legs > 1) {
 				var trueLeg1Count = 1;
@@ -392,13 +394,117 @@
 						$scope.multiplier = $scope.multiplier * trueLeg10Count;
 					} 
 				}
-				$scope.ticketCost = $scope.multiplier * parseFloat($scope.wagerData.amount);
+				if($scope.wagerData.amount) {
+					$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
+				} else {
+					$scope.ticketCost = ($scope.multiplier * 2).toFixed(2);
+				}
 			} else {
+				var firstRunnersTrueArray = [];
+				var secondRunnersTrueArray = [];
+				var thirdRunnersTrueArray = [];
+				var fourthRunnersTrueArray = [];
+				var fifthRunnersTrueArray = [];
 				if(partMap[$scope.wager] > 1) {
-					// multipart
+					if($scope.firstRunners && ($scope.firstRunners.length > 0)) {
+						var first = true;
+						$scope.firstRunners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
+								firstRunnersTrueArray.push(runner);
+							}
+						});
+					} 
+					$scope.formattedRunners += ' / ';
+					if($scope.secondRunners && ($scope.secondRunners.length > 0)) {
+						var first = true;
+						$scope.secondRunners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
+								secondRunnersTrueArray.push(runner);
+							}
+						});
+					}
+					if(partMap[$scope.wager] > 2) {
+						$scope.formattedRunners += ' / ';
+						if($scope.thirdRunners && ($scope.thirdRunners.length > 0)) {
+							var first = true;
+							$scope.thirdRunners.forEach(function(runner) {
+								if(runner > 0) {
+									if(first) {
+										$scope.formattedRunners += runner;
+										first = false;
+									} else {
+										$scope.formattedRunners += ',' + runner;
+									}
+									thirdRunnersTrueArray.push(runner);
+								}
+							});
+						}
+					}
+					if(partMap[$scope.wager] > 3) {
+						$scope.formattedRunners += ' / ';
+						if($scope.fourthRunners && ($scope.fourthRunners.length > 0)) {
+							var first = true;
+							$scope.fourthRunners.forEach(function(runner) {
+								if(runner > 0) {
+									if(first) {
+										$scope.formattedRunners += runner;
+										first = false;
+									} else {
+										$scope.formattedRunners += ',' + runner;
+									}
+									fourthRunnersTrueArray.push(runner);
+								}
+							});
+						}
+					}
+					if(partMap[$scope.wager] > 4) {
+						$scope.formattedRunners += ' / ';
+						if($scope.fifthRunners && ($scope.fifthRunners.length > 0)) {
+							var first = true;
+							$scope.fifthRunners.forEach(function(runner) {
+								if(runner > 0) {
+									if(first) {
+										$scope.formattedRunners += runner;
+										first = false;
+									} else {
+										$scope.formattedRunners += ',' + runner;
+									}
+									fifthRunnersTrueArray.push(runner);
+								}
+							});
+						}
+					}
+					var multiPartMultiplier = getMultiMulti(
+						firstRunnersTrueArray,
+						secondRunnersTrueArray,
+						thirdRunnersTrueArray,
+						fourthRunnersTrueArray,
+						fifthRunnersTrueArray
+					);
+					if(!multiPartMultiplier) {
+						multiPartMultiplier = 1;
+					}
+					if($scope.wagerData.amount) {
+						$scope.ticketCost = (multiPartMultiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
+					} else {
+						$scope.ticketCost = (multiPartMultiplier * 2).toFixed(2);
+					}
 				} else {
 					// WPS
 					var first = true;
+					var selectedRunnerCount = 1;
 					$scope.selectedRunners.forEach(function(runner) {
 						if(runner > 0) {
 							if(first) {
@@ -406,19 +512,72 @@
 								first = false;
 							} else {
 								$scope.formattedRunners += ',' + runner;
+								selectedRunnerCount ++;
 							}
 						}
 					});
+					if($scope.wagerData.amount) {
+						$scope.ticketCost = (selectedRunnerCount * parseFloat($scope.wagerData.amount)).toFixed(2);
+					} else {
+						$scope.ticketCost = (selectedRunnerCount * 2).toFixed(2);
+					}
 				}
+			}
+		}
+
+		var getMultiMulti = function(firsts, seconds, thirds, fourths, fifths) {
+			var usedNumbers = [];
+			var multiple = 0;
+
+			if(
+				firsts.length > 0 && 
+				seconds.length > 0 &&
+				thirds.length > 0
+				) {
+				firsts.forEach(function(first) {
+					usedNumbers.push(first);
+					seconds.forEach(function(second) {
+						if(usedNumbers.indexOf(second) < 0) {
+							usedNumbers.push(second);
+							thirds.forEach(function(third) {
+								if(usedNumbers.indexOf(third) < 0) {
+									usedNumbers.push(third);
+console.log('usedNumbers:');
+console.log(usedNumbers);
+									multiple ++;
+								}
+							});
+						}
+					});
+					usedNumbers = [];
+				});
+
+				return multiple;
+			}
+			if(
+				firsts.length > 0 && 
+				seconds.length > 0
+				) {
+				firsts.forEach(function(first) {
+					usedNumbers.push(first);
+					seconds.forEach(function(second) {
+						if(usedNumbers.indexOf(second) < 0) {
+							multiple ++;
+						}
+					});
+					usedNumbers = [];
+				});
+
+				return multiple;
 			}
 		}
 
 		$scope.clearSelectedRunners = function() {
 			$scope.formattedRunners = '';
 			$scope.selectedRunners = [];
-			$scope.winRunners = [];
-			$scope.placeRunners = [];
-			$scope.showRunners = [];
+			$scope.firstRunners = [];
+			$scope.secondRunners = [];
+			$scope.thirdRunners = [];
 			$scope.fourthRunners = [];
 			$scope.fifthRunners = [];
 			$scope.leg1Runners = [];
@@ -434,9 +593,9 @@
 		}
 
 		$scope.selectedRunners = [];
-		$scope.winRunners = [];
-		$scope.placeRunners = [];
-		$scope.showRunners = [];
+		$scope.firstRunners = [];
+		$scope.secondRunners = [];
+		$scope.thirdRunners = [];
 		$scope.fourthRunners = [];
 		$scope.fifthRunners = [];
 		$scope.leg1Runners = [];
@@ -451,8 +610,6 @@
 		$scope.leg10Runners = [];
 
 		$scope.submitWager = function() {
-console.log('$scope:');
-console.log($scope);
 		}
 
 	}
