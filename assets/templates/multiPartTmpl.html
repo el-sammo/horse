@@ -109,6 +109,7 @@
 														ng-true-value="{{entry.number}}"
 														ng-false-value="false"
 														ng-change="updateSelectedRunnersDisplay()"
+														ng-disabled="!entry.active"
 													>
 													<label 
 														class="raceDetails"
@@ -134,6 +135,7 @@
 														ng-true-value="{{entry.number}}"
 														ng-false-value="false"
 														ng-change="updateSelectedRunnersDisplay()"
+														ng-disabled="!entry.active"
 													>
 													<label 
 														class="raceDetails"
@@ -160,6 +162,7 @@
 														ng-true-value="{{entry.number}}"
 														ng-false-value="false"
 														ng-change="updateSelectedRunnersDisplay()"
+														ng-disabled="!entry.active"
 													>
 													<label 
 														class="raceDetails"
@@ -186,6 +189,7 @@
 														ng-true-value="{{entry.number}}"
 														ng-false-value="false"
 														ng-change="updateSelectedRunnersDisplay()"
+														ng-disabled="!entry.active"
 													>
 													<label 
 														class="raceDetails"
@@ -212,6 +216,7 @@
 														ng-true-value="{{entry.number}}"
 														ng-false-value="false"
 														ng-change="updateSelectedRunnersDisplay()"
+														ng-disabled="!entry.active"
 													>
 													<label 
 														class="raceDetails"
@@ -228,31 +233,5 @@
 														{{entry.number}}
 													</label>
 												</div>
-												<div class="col-md-3">
-													<span class="raceDetails" ng-show="!entry.meds && !entry.equip">
-														{{entry.name}}
-													</span>
-													<span class="raceDetails" ng-show="entry.meds && !entry.equip">
-														{{entry.name}} - {{entry.meds}}
-													</span>
-													<span class="raceDetails" ng-show="!entry.meds && entry.equip">
-														{{entry.name}} - {{entry.equip}}
-													</span>
-													<span class="raceDetails" ng-show="entry.meds && entry.equip">
-														{{entry.name}} - {{entry.meds}} - {{entry.equip}}
-													</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails" ng-show="!entry.weight">
-														{{entry.jockey}}
-													</span>
-													<span class="raceDetails" ng-show="entry.weight">
-														{{entry.jockey}} ({{entry.weight}})
-													</span>
-												</div>
-												<div class="col-md-2">
-													<span class="raceDetails">
-														{{entry.trainer}}
-													</span>
-												</div>
+												<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
 											</div>

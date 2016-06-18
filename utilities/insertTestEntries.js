@@ -5,7 +5,7 @@ insertTestEntryData();
 function insertTestEntryData() {
 
 	var trackName = 'Belmont';
-	var raceDate = 20160527;
+	var raceDate = 20160618;
 	var races = [
 		{
 			number: 1, 
@@ -59,6 +59,7 @@ function insertTestEntryData() {
 				{
 					number: 1,
 					post: 1,
+					active: true,
 					name: 'Helluva Choice',
 					jockey: 'Irad Ortiz, Jr.',
 					weight: 119,
@@ -69,6 +70,7 @@ function insertTestEntryData() {
 				{
 					number: 2,
 					post: 2,
+					active: true,
 					name: 'Made You Look',
 					jockey: 'Javier Castellano',
 					weight: 119,
@@ -79,6 +81,7 @@ function insertTestEntryData() {
 				{
 					number: 3,
 					post: 3,
+					active: true,
 					name: 'Red Lodge',
 					jockey: 'John Velazquez',
 					weight: 116,
@@ -89,6 +92,7 @@ function insertTestEntryData() {
 				{
 					number: 4,
 					post: 4,
+					active: false,
 					name: 'California Swing',
 					jockey: 'Jose Ortiz',
 					weight: 119,
@@ -99,6 +103,7 @@ function insertTestEntryData() {
 				{
 					number: 5,
 					post: 5,
+					active: true,
 					name: 'Lethal Shot',
 					jockey: 'Kendrick Carmouche',
 					weight: 119,
@@ -109,6 +114,7 @@ function insertTestEntryData() {
 				{
 					number: 6,
 					post: 6,
+					active: true,
 					name: 'Keep Quiet (FR)',
 					jockey: 'Luis Saez',
 					weight: 119,
@@ -119,6 +125,7 @@ function insertTestEntryData() {
 				{
 					number: 7,
 					post: 7,
+					active: true,
 					name: 'Dangerous Dan',
 					jockey: 'Joel Rosario',
 					weight: 119,
@@ -180,6 +187,7 @@ function insertTestEntryData() {
 				{
 					number: 1,
 					post: 1,
+					active: true,
 					name: 'Over My Head',
 					jockey: 'Jomar Torres',
 					weight: 114,
@@ -190,6 +198,7 @@ function insertTestEntryData() {
 				{
 					number: 2,
 					post: 2,
+					active: true,
 					name: 'Half Dreamin',
 					jockey: 'Cornelio Velasquez',
 					weight: 121,
@@ -200,6 +209,7 @@ function insertTestEntryData() {
 				{
 					number: 3,
 					post: 3,
+					active: false,
 					name: 'Reign',
 					jockey: 'Jacqueline Davis',
 					weight: 121,
@@ -210,6 +220,7 @@ function insertTestEntryData() {
 				{
 					number: 4,
 					post: 4,
+					active: true,
 					name: 'Just Sisters',
 					jockey: 'Kendrick Carmouche',
 					weight: 121,
@@ -220,6 +231,7 @@ function insertTestEntryData() {
 				{
 					number: 5,
 					post: 5,
+					active: true,
 					name: 'Valkimqua',
 					jockey: 'Jose Ortiz',
 					weight: 121,
@@ -230,6 +242,7 @@ function insertTestEntryData() {
 				{
 					number: 6,
 					post: 6,
+					active: false,
 					name: 'Spectacular Flash',
 					jockey: 'Irad Ortiz, Jr.',
 					weight: 121,
@@ -288,6 +301,7 @@ function insertTestEntryData() {
 				{
 					number: 1,
 					post: 1,
+					active: true,
 					name: 'Quest (GB)',
 					jockey: 'Joel Rosario',
 					weight: 122,
@@ -298,6 +312,7 @@ function insertTestEntryData() {
 				{
 					number: 2,
 					post: 2,
+					active: true,
 					name: 'Coming Attraction',
 					jockey: 'Javier Castellano',
 					weight: 122,
@@ -308,6 +323,7 @@ function insertTestEntryData() {
 				{
 					number: 3,
 					post: 3,
+					active: true,
 					name: 'Shopper',
 					jockey: 'Junior Alvarado',
 					weight: 120,
@@ -318,6 +334,7 @@ function insertTestEntryData() {
 				{
 					number: 4,
 					post: 4,
+					active: true,
 					name: 'My Cara Mia',
 					jockey: 'Manuel Franco',
 					weight: 120,
@@ -328,6 +345,7 @@ function insertTestEntryData() {
 				{
 					number: 5,
 					post: 5,
+					active: true,
 					name: 'Royal Temptress (IRE)',
 					jockey: 'Kendrick Carmouche',
 					weight: 120,
@@ -339,6 +357,7 @@ function insertTestEntryData() {
 				{
 					number: 6,
 					post: 6,
+					active: true,
 					name: 'Rachel\'s Temper',
 					jockey: 'Jose Ortiz',
 					weight: 120,
@@ -349,6 +368,7 @@ function insertTestEntryData() {
 				{
 					number: 7,
 					post: 7,
+					active: true,
 					name: 'Paige',
 					jockey: 'Jose Ortiz',
 					weight: 120,
@@ -402,6 +422,7 @@ function insertTestEntryData() {
 				{
 					number: 1,
 					post: 1,
+					active: true,
 					name: 'Completely Bonkers',
 					jockey: 'Cornerlio Velasquez',
 					weight: 119,
@@ -412,6 +433,7 @@ function insertTestEntryData() {
 				{
 					number: 2,
 					post: 2,
+					active: true,
 					name: 'Baltic Art (GER)',
 					jockey: 'Joel Rosario',
 					weight: 119,
@@ -422,6 +444,7 @@ function insertTestEntryData() {
 				{
 					number: 3,
 					post: 3,
+					active: true,
 					name: 'Bankers Holiday',
 					jockey: 'Luis Saez',
 					weight: 124,
@@ -432,6 +455,7 @@ function insertTestEntryData() {
 				{
 					number: 4,
 					post: 4,
+					active: true,
 					name: 'Kerry Boy',
 					jockey: 'Ruben Silvera',
 					weight: 121,
@@ -442,6 +466,7 @@ function insertTestEntryData() {
 				{
 					number: 5,
 					post: 5,
+					active: true,
 					name: 'Crescent Street',
 					jockey: 'John Velazquez',
 					weight: 121,
@@ -452,6 +477,7 @@ function insertTestEntryData() {
 				{
 					number: 6,
 					post: 6,
+					active: true,
 					name: 'Our Karma',
 					jockey: 'Angel Arroyo',
 					weight: 119,
@@ -462,6 +488,7 @@ function insertTestEntryData() {
 				{
 					number: 7,
 					post: 7,
+					active: true,
 					name: 'Cort',
 					jockey: 'Gabriel Saez',
 					weight: 121,
@@ -472,6 +499,7 @@ function insertTestEntryData() {
 				{
 					number: 8,
 					post: 8,
+					active: true,
 					name: 'Fratello Del Nord',
 					jockey: 'Manuel Franco',
 					weight: 124,
@@ -482,6 +510,7 @@ function insertTestEntryData() {
 				{
 					number: 9,
 					post: 9,
+					active: false,
 					name: 'Ross J Dawg',
 					jockey: 'Irad Ortiz, Jr.',
 					weight: 121,
@@ -531,6 +560,7 @@ function insertTestEntryData() {
 				{
 					number: 1,
 					post: 1,
+					active: true,
 					name: 'Lebowski',
 					jockey: 'Kendrick Carmouche',
 					weight: 118,
@@ -541,6 +571,7 @@ function insertTestEntryData() {
 				{
 					number: 2,
 					post: 2,
+					active: true,
 					name: 'Appealing Miss',
 					jockey: 'Eric Cancel',
 					weight: 124,
@@ -551,6 +582,7 @@ function insertTestEntryData() {
 				{
 					number: 3,
 					post: 3,
+					active: true,
 					name: 'Causeway Cutie',
 					jockey: 'Jacqueline Davis',
 					weight: 118,
@@ -561,6 +593,7 @@ function insertTestEntryData() {
 				{
 					number: 4,
 					post: 4,
+					active: true,
 					name: 'Tizthefastlaine',
 					jockey: 'Irad Ortiz, Jr.',
 					weight: 124,
@@ -572,6 +605,7 @@ function insertTestEntryData() {
 				{
 					number: 5,
 					post: 5,
+					active: true,
 					name: 'Hoosier Scout',
 					jockey: 'Luis Saez',
 					weight: 118,
@@ -583,6 +617,7 @@ function insertTestEntryData() {
 				{
 					number: 6,
 					post: 6,
+					active: true,
 					name: 'Warriors Diva',
 					jockey: 'Cornelio Velasquez',
 					weight: 118,
@@ -593,6 +628,7 @@ function insertTestEntryData() {
 				{
 					number: 7,
 					post: 7,
+					active: true,
 					name: 'Um Melakeh',
 					jockey: 'Manuel Franco',
 					weight: 118,
@@ -603,6 +639,7 @@ function insertTestEntryData() {
 				{
 					number: 8,
 					post: 8,
+					active: true,
 					name: 'Indygo Tigress',
 					jockey: 'Dylan Davis',
 					weight: 118,
@@ -613,6 +650,7 @@ function insertTestEntryData() {
 				{
 					number: 9,
 					post: 9,
+					active: true,
 					name: 'Modern Harmony',
 					jockey: 'Jomar Torres',
 					weight: 111,

@@ -797,6 +797,12 @@ td {
 	font-weight: 500;
 }
 
+.raceDetailsShade {
+	color: #000000;
+	font-size: 14px;
+	font-weight: 500;
+}
+
 .sportTabLeft {
 	top: 4px;
 	height: 22px;

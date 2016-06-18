@@ -1,0 +1,97 @@
+												<div class="col-md-3">
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active && !entry.meds && !entry.equip"
+													>
+														{{entry.name}}
+													</span>
+													<span 
+														class="raceDetailsShade"
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && !entry.meds && !entry.equip"
+													>
+														{{entry.name}}
+													</span>
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active && entry.meds && !entry.equip"
+													>
+														{{entry.name}} - {{entry.meds}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && entry.meds && !entry.equip"
+													>
+														{{entry.name}} - {{entry.meds}}
+													</span>
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active && !entry.meds && entry.equip"
+													>
+														{{entry.name}} - {{entry.equip}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && !entry.meds && entry.equip"
+													>
+														{{entry.name}} - {{entry.equip}}
+													</span>
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active && entry.meds && entry.equip"
+													>
+														{{entry.name}} - {{entry.meds}} - {{entry.equip}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && entry.meds && entry.equip"
+													>
+														{{entry.name}} - {{entry.meds}} - {{entry.equip}}
+													</span>
+												</div>
+												<div class="col-md-3">
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active && !entry.weight"
+													>
+														{{entry.jockey}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && !entry.weight"
+													>
+														{{entry.jockey}}
+													</span>
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active && entry.weight"
+													>
+														{{entry.jockey}} ({{entry.weight}})
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && entry.weight"
+													>
+														{{entry.jockey}} ({{entry.weight}})
+													</span>
+												</div>
+												<div class="col-md-2">
+													<span 
+														class="raceDetails" 
+														ng-show="entry.active"
+													>
+														{{entry.trainer}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active"
+													>
+														{{entry.trainer}}
+													</span>
+												</div>
