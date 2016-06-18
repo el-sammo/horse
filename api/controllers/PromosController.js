@@ -5,7 +5,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var ordersController = require('./OrdersController');
+// var ordersController = require('./OrdersController');
 
 module.exports = {
   datatables: function(req, res) {

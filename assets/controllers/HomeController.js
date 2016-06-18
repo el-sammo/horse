@@ -28,18 +28,20 @@
 
 		$scope.wagerData = {};
 
-		$scope.logIn = layoutMgmt.logIn();
+//		$scope.signUp = signupPrompter.prompt();
+
+		$scope.logIn = function() {
+			layoutMgmt.logIn();
+		}
+
 		$scope.logOut = function() {
-console.log('$scope.logOut() called');
-//			layoutMgmt.logOut();
+			layoutMgmt.logOut();
 		}
 
-		$scope.signUp = function() {
-			signupPrompter.prompt();
-		}
-
-		$scope.showLogout = false;
-		$scope.showLogin = false;
+		$rootScope.$on('customerLoggedIn', function(evt, args) {
+			$scope.showLogin = false;
+			$scope.showLogout = true;
+		});
 
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
@@ -702,7 +704,6 @@ console.log('$scope.logOut() called');
 
 		$scope.submitWager = function() {
 			if(!$scope.customerId) {
-console.log('should be calling layoutMgmt.logIn()');
 				layoutMgmt.logIn();
 			} else {
 				// wager schema

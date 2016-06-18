@@ -21,22 +21,8 @@
 		messenger, deviceMgr, customerMgmt
 	) {
 
-		var p = $http.get('/areas/');
-
 		$scope.badCreds = false;
 							
-		// if areas ajax fails...
-		p.error(function(err) {
-			console.log('layoutMgmt: areas ajax failed');
-			console.error(err);
-		});
-									
-		// if areas ajax succeeds...
-		p.then(function(res) {
-			$scope.areas = res.data;
-		});
-
-		$scope.areaName = $rootScope.areaName;
 		$scope.accessAccount = $rootScope.accessAccount;
 
 		$scope.credentials = {};
@@ -44,11 +30,6 @@
 		$scope.required = function(field) {
 			if(! $scope.submitted || field) return;
 			return 'error';
-		};
-
-		$scope.noAccount = function() {
-			$modalInstance.dismiss('cancel');
-			layoutMgmt.signUp($scope.areas);
 		};
 
 		$scope.submit = function(credentials) {
@@ -59,8 +40,6 @@
 				$rootScope.$broadcast('customerLoggedIn', data.customerId);
 				$rootScope.customerId = data.customerId;
 				$scope.customerId = data.customerId;
-console.log('$rootScope.customerId: '+$scope.customerId);
-console.log('$scope.customerId: '+$scope.customerId);
 				$modalInstance.dismiss('done');
 			}).error(function(err) {
 				console.log('we were NOT successful here - 1');
@@ -85,7 +64,6 @@ console.log('$scope.customerId: '+$scope.customerId);
 
 		$scope.sendFeedback = function() {
 			var feedback = {};
-			feedback.areaName = $scope.areaName;
 			feedback.email = $scope.email;
 			feedback.feedback = $scope.feedback;
 			feedback.name = $scope.name;
