@@ -208,7 +208,6 @@
 			$scope.formattedRunners = '';
 			$scope.ticketCost = '';
 			$scope.multiplier = 1;
-			$scope.wagerData.amount = $scope.amountOptions.availableOptions[0];
 			if($scope.legs > 1) {
 				var trueLeg1Count = 1;
 				if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
@@ -678,6 +677,16 @@
 		$scope.leg10Runners = [];
 
 		$scope.submitWager = function() {
+			// wager schema
+			var wagerSubmission = {
+				finalRaceId: $scope.trId,
+				wagerPool: $scope.wager,
+				wagerSelections: $scope.formattedRunners,
+				wagerAmount: $scope.wagerData.amount,
+				wagerTotal: $scope.ticketCost
+			}
+console.log('wagerSubmission:');
+console.log(wagerSubmission);
 		}
 
 	}
