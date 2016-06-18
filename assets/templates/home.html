@@ -269,7 +269,9 @@
 									</select>
 								</div>
 								<div class="col-md-3">
-									<span class="raceDetails" ng-show="wager">{{wager}}: {{formattedRunners}}</span>
+									<span class="raceDetails" ng-show="wager && wagerData.amount">${{wagerData.amount}} {{wager}}:</span>
+									<br/>
+									<span class="raceDetails" ng-show="wager">{{formattedRunners}}</span>
 								</div>
 								<div class="col-md-3">
 									<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>

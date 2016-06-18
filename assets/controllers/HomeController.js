@@ -208,6 +208,7 @@
 			$scope.formattedRunners = '';
 			$scope.ticketCost = '';
 			$scope.multiplier = 1;
+			$scope.wagerData.amount = $scope.amountOptions.availableOptions[0];
 			if($scope.legs > 1) {
 				var trueLeg1Count = 1;
 				if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
@@ -394,11 +395,7 @@
 						$scope.multiplier = $scope.multiplier * trueLeg10Count;
 					} 
 				}
-				if($scope.wagerData.amount) {
-					$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
-				} else {
-					$scope.ticketCost = ($scope.multiplier * 2).toFixed(2);
-				}
+				$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
 			} else {
 				var firstRunnersTrueArray = [];
 				var secondRunnersTrueArray = [];
@@ -534,7 +531,47 @@
 				firsts.length > 0 && 
 				seconds.length > 0 &&
 				thirds.length > 0 &&
-				fourths.length > 0
+				fourths.length > 0 &&
+				fifths.length > 0 &&
+				$scope.wager === 'Pentafecta' &&
+				multiple < 1
+				) {
+				firsts.forEach(function(first) {
+					usedNumbers.push(first);
+					seconds.forEach(function(second) {
+						if(usedNumbers.indexOf(second) < 0) {
+							usedNumbers.push(second);
+							thirds.forEach(function(third) {
+								if(usedNumbers.indexOf(third) < 0) {
+									usedNumbers.push(third);
+									fourths.forEach(function(fourth) {
+										if(usedNumbers.indexOf(fourth) < 0) {
+											usedNumbers.push(fourth);
+											fifths.forEach(function(fifth) {
+												if(usedNumbers.indexOf(fifth) < 0) {
+													multiple ++;
+													usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2], usedNumbers[3]];
+												}
+											});
+											usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2]];
+										}
+									});
+									usedNumbers = [usedNumbers[0], usedNumbers[1]];
+								}
+							});
+							usedNumbers = [usedNumbers[0]];
+						}
+					});
+					usedNumbers = [];
+				});
+			}
+			if(
+				firsts.length > 0 && 
+				seconds.length > 0 &&
+				thirds.length > 0 &&
+				fourths.length > 0 &&
+				$scope.wager === 'Superfecta' &&
+				multiple < 1
 				) {
 				firsts.forEach(function(first) {
 					usedNumbers.push(first);
@@ -558,13 +595,13 @@
 					});
 					usedNumbers = [];
 				});
-
-				return multiple;
 			}
 			if(
 				firsts.length > 0 && 
 				seconds.length > 0 &&
-				thirds.length > 0
+				thirds.length > 0 &&
+				$scope.wager === 'Trifecta' &&
+				multiple < 1
 				) {
 				firsts.forEach(function(first) {
 					usedNumbers.push(first);
@@ -583,12 +620,12 @@
 					});
 					usedNumbers = [];
 				});
-
-				return multiple;
 			}
 			if(
 				firsts.length > 0 && 
-				seconds.length > 0
+				seconds.length > 0 &&
+				$scope.wager === 'Exacta' &&
+				multiple < 1
 				) {
 				firsts.forEach(function(first) {
 					usedNumbers.push(first);
@@ -599,9 +636,8 @@
 					});
 					usedNumbers = [];
 				});
-
-				return multiple;
 			}
+			return multiple;
 		}
 
 		$scope.clearSelectedRunners = function() {
