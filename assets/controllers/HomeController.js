@@ -527,8 +527,40 @@
 
 		var getMultiMulti = function(firsts, seconds, thirds, fourths, fifths) {
 			var usedNumbers = [];
+			var wagerCombos = [];
 			var multiple = 0;
 
+			if(
+				firsts.length > 0 && 
+				seconds.length > 0 &&
+				thirds.length > 0 &&
+				fourths.length > 0
+				) {
+				firsts.forEach(function(first) {
+					usedNumbers.push(first);
+					seconds.forEach(function(second) {
+						if(usedNumbers.indexOf(second) < 0) {
+							usedNumbers.push(second);
+							thirds.forEach(function(third) {
+								if(usedNumbers.indexOf(third) < 0) {
+									usedNumbers.push(third);
+									fourths.forEach(function(fourth) {
+										if(usedNumbers.indexOf(fourth) < 0) {
+											multiple ++;
+											usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2]];
+										}
+									});
+									usedNumbers = [usedNumbers[0], usedNumbers[1]];
+								}
+							});
+							usedNumbers = [usedNumbers[0]];
+						}
+					});
+					usedNumbers = [];
+				});
+
+				return multiple;
+			}
 			if(
 				firsts.length > 0 && 
 				seconds.length > 0 &&
@@ -542,11 +574,11 @@
 							thirds.forEach(function(third) {
 								if(usedNumbers.indexOf(third) < 0) {
 									usedNumbers.push(third);
-console.log('usedNumbers:');
-console.log(usedNumbers);
 									multiple ++;
+									usedNumbers = [usedNumbers[0], usedNumbers[1]];
 								}
 							});
+							usedNumbers = [usedNumbers[0]];
 						}
 					});
 					usedNumbers = [];
