@@ -56,16 +56,12 @@
 				'/login', credentials
 			).success(function(data, status, headers, config) {
 				// if login ajax succeeds...
-				if(status >= 400) {
-					$rootScope.$broadcast('customerLoggedIn', data.customerId);
-					$modalInstance.dismiss('done');
-				} else if(status == 200) {
-					$rootScope.$broadcast('customerLoggedIn', data.customerId);
-					$modalInstance.dismiss('done');
-				} else {
-					$rootScope.$broadcast('customerLoggedIn', data.customerId);
-					$modalInstance.dismiss('done');
-				}
+				$rootScope.$broadcast('customerLoggedIn', data.customerId);
+				$rootScope.customerId = data.customerId;
+				$scope.customerId = data.customerId;
+console.log('$rootScope.customerId: '+$scope.customerId);
+console.log('$scope.customerId: '+$scope.customerId);
+				$modalInstance.dismiss('done');
 			}).error(function(err) {
 				console.log('we were NOT successful here - 1');
 				// if login ajax fails...

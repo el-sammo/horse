@@ -10,12 +10,14 @@
 	
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
-		'signupPrompter', 'customerMgmt', 'deviceMgr', 'trdMgmt'
+		'$modal', 'signupPrompter', 'deviceMgr', 'layoutMgmt',
+		'customerMgmt', 'trdMgmt'
 	];
 
 	function controller(
 		$scope, $http, $routeParams, $rootScope, $window,
-		signupPrompter, customerMgmt, deviceMgr, trdMgmt
+		$modal, signupPrompter, deviceMgr, layoutMgmt, 
+		customerMgmt, trdMgmt
 	) {
 
 		if(deviceMgr.isBigScreen()) {
@@ -26,12 +28,30 @@
 
 		$scope.wagerData = {};
 
+		$scope.logIn = layoutMgmt.logIn();
+		$scope.logOut = function() {
+console.log('$scope.logOut() called');
+//			layoutMgmt.logOut();
+		}
+
+		$scope.signUp = function() {
+			signupPrompter.prompt();
+		}
+
+		$scope.showLogout = false;
+		$scope.showLogin = false;
+
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
 
 			if(sessionData.customerId) {
 				$rootScope.customerId = sessionData.customerId;
 				$scope.customerId = $rootScope.customerId;
+				$scope.showLogin = false;
+				$scope.showLogout = true;
+			} else {
+				$scope.showLogin = true;
+				$scope.showLogout = false;
 			}
 
 			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
@@ -126,6 +146,7 @@
 		}
 
 		$scope.showTrackRace = function(trackId, raceNum) {
+			$scope.raceNum = raceNum;
 			$scope.trId = trackId+'-'+raceNum;
 			$scope.showRaceWager(trackId, raceNum, 'Win', 2);
 		}
@@ -209,6 +230,8 @@
 			$scope.ticketCost = '';
 			$scope.multiplier = 1;
 			if($scope.legs > 1) {
+				var trIdPcs = $scope.trId.split('-');
+				$scope.finalRaceId = trIdPcs[0] + '-' + (parseInt(trIdPcs[1]) + (parseInt($scope.legs) - 1));
 				var trueLeg1Count = 1;
 				if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
 					var first = true;
@@ -396,6 +419,7 @@
 				}
 				$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
 			} else {
+				$scope.finalRaceId = $scope.trId;
 				var firstRunnersTrueArray = [];
 				var secondRunnersTrueArray = [];
 				var thirdRunnersTrueArray = [];
@@ -677,16 +701,23 @@
 		$scope.leg10Runners = [];
 
 		$scope.submitWager = function() {
-			// wager schema
-			var wagerSubmission = {
-				finalRaceId: $scope.trId,
-				wagerPool: $scope.wager,
-				wagerSelections: $scope.formattedRunners,
-				wagerAmount: $scope.wagerData.amount,
-				wagerTotal: $scope.ticketCost
-			}
+			if(!$scope.customerId) {
+console.log('should be calling layoutMgmt.logIn()');
+				layoutMgmt.logIn();
+			} else {
+				// wager schema
+				var wagerSubmission = {
+					customerId: $scope.customerId,
+					trackRaceId: $scope.trId,
+					finalRaceId: $scope.finalRaceId,
+					wagerPool: $scope.wager,
+					wagerSelections: $scope.formattedRunners,
+					wagerAmount: $scope.wagerData.amount,
+					wagerTotal: $scope.ticketCost
+				}
 console.log('wagerSubmission:');
 console.log(wagerSubmission);
+			}
 		}
 
 	}
