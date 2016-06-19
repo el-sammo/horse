@@ -13,6 +13,7 @@
 				<span class="footerLink reservationYellow" ng-click="showTrack(track.id)" ng-repeat="track in tracks" track by $index>{{track.name}}</span>
 				<span class="footerLink reservationYellow pull-right" ng-show="showLogin && !showLogout" ng-click="logIn()">Log In</span>
 				<span class="footerLink reservationYellow pull-right" ng-show="showLogout && !showLogin" ng-click="logOut()">Log Out</span>
+				<span class="footerLink reservationYellow pull-right" ng-show="showLogout && !showLogin" ng-click="account()">${{balance}}</span>
 			</div>
   	</div>
     <div id="tt-main" ng-view>

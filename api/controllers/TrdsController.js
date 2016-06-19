@@ -18,6 +18,18 @@ module.exports = {
     });
   },
 
+	toValidate: function(req, res) {
+		var trId = req;
+		Trds.find({id: trId}).then(function(result) {
+//			res.send(result[0]);
+			res.send(JSON.stringify(44));
+		}).catch(function(err) {
+      return ({error: 'Server error'});
+      console.error(err);
+      throw err;
+		});
+	},
+
 	byDate: function(req, res) {
 		Trds.find({raceDate: req.params.id}).sort({name: 'asc'}).then(function(results) {
 			res.send(JSON.stringify(results));

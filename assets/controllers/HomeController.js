@@ -11,13 +11,13 @@
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
 		'$modal', 'signupPrompter', 'deviceMgr', 'layoutMgmt',
-		'customerMgmt', 'trdMgmt'
+		'customerMgmt', 'trdMgmt', 'wagerMgmt'
 	];
 
 	function controller(
 		$scope, $http, $routeParams, $rootScope, $window,
 		$modal, signupPrompter, deviceMgr, layoutMgmt, 
-		customerMgmt, trdMgmt
+		customerMgmt, trdMgmt, wagerMgmt
 	) {
 
 		if(deviceMgr.isBigScreen()) {
@@ -51,6 +51,11 @@
 				$scope.customerId = $rootScope.customerId;
 				$scope.showLogin = false;
 				$scope.showLogout = true;
+
+				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
+				getCustomerPromise.then(function(customer) {
+					$scope.balance = (customer.balance).toFixed(2);
+				});
 			} else {
 				$scope.showLogin = true;
 				$scope.showLogout = false;
@@ -712,12 +717,19 @@
 					trackRaceId: $scope.trId,
 					finalRaceId: $scope.finalRaceId,
 					wagerPool: $scope.wager,
+					legs: $scope.legs,
+					parts: $scope.parts,
 					wagerSelections: $scope.formattedRunners,
 					wagerAmount: $scope.wagerData.amount,
 					wagerTotal: $scope.ticketCost
 				}
-console.log('wagerSubmission:');
-console.log(wagerSubmission);
+				wagerMgmt.submitWager(wagerSubmission).then(function(acceptedWager) {
+					// TODO handle success/fail
+					if(acceptedWager.status == 200 && acceptedWager.statusText === 'OK') {
+						$rootScope.$broadcast('newWagerAccepted');
+					} else {
+					}
+				});
 			}
 		}
 

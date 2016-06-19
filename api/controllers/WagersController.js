@@ -9,13 +9,48 @@ var Promise = require('bluebird');
 var serverError = 'An error occurred. Please try again later.';
 var httpAdapter = 'http';
 
+var trdsController = require('./TrdsController');
+
 module.exports = {
   submitWager: function(req, res) {
     var isAjax = req.headers.accept.match(/application\/json/);
 
-		if(req.body && req.body.wagerData) {
+		if(
+			req.body && 
+			req.body.customerId &&
+			req.body.trackRaceId &&
+			req.body.finalRaceId &&
+			req.body.wagerPool &&
+			req.body.legs &&
+			req.body.parts &&
+			req.body.wagerSelections &&
+			req.body.wagerAmount &&
+			req.body.wagerTotal
+		) {
 			return validateWager(req, res);
 		}
+  },
+
+  addNewWager: function(req, res) {
+console.log('WagersControllerAPI.addNewWager() called with:');
+console.log(req);
+//		Wagers.insert({req.body}).then(function(result) {
+//			res.send(JSON.stringify(result));
+//		}).catch(function(err) {
+//      res.json({error: 'Server error'}, 500);
+//      console.error(err);
+//      throw err;
+//		});
+  },
+
+  cancelWager: function(req, res) {
+		Wagers.remove({id: req.params.id}).then(function(result) {
+			res.send(JSON.stringify(result));
+		}).catch(function(err) {
+      res.json({error: 'Server error'}, 500);
+      console.error(err);
+      throw err;
+		});
   },
 
 	byCustomerId: function(req, res) {
@@ -72,25 +107,81 @@ module.exports = {
   }
 };
 
-function createANetProfile(req, res, self) {
-  Customers.findOne(req.body.customerId).then(function(customer) {
-    if(! customer) {
-			console.log('customers ajax failed in CustomersController-createANetProfile() for CustomerID '+req.body.customerId);
+function validateWager(req, res, self) {
+	var wagerData = req.body;
+	var trIdPcs = wagerData.trackRaceId.split('-');
+  return WagersService.getTrd(trIdPcs[0]).then(function(trackData) {
+    if(! trackData) {
+			console.log('trackData ajax failed in WagerController-validateWager() for trackRaceId '+wagerData.trackRaceId);
 			// TODO: what should this return?
-	 		return errorHandler(customersError)();
+	 		return errorHandler(trdsError)();
 		}
 
-		AuthorizeCIM.createCustomerProfile({customerProfile: {
-				merchantCustomerId: 1521518,
-				description: customer.id,
-				email: customer.email
+		return trackData.trd.races.forEach(function(race) {
+			if(race.number == trIdPcs[1]) {
+				return race.wagers.forEach(function(wager) {
+					if(wagerData.wagerPool === wager.wager) {
+						if(parseFloat(wagerData.wagerAmount) >= wager.min) {
+							return WagersService.getCustomerBalance(wagerData.customerId).then(function(balanceData) {
+								if(balanceData.balance >= wagerData.wagerTotal) {
+									if(wagerData.legs > 1) {
+										// multi-leg
+									}
+									if(wagerData.parts > 1) {
+										// multi-part
+									}
+									// WPS
+									var allUsedNumbers = [];
+									var wsPcs = wagerData.wagerSelections.split(' / ');
+									// [ '2', '3,6,7', '1,3,6,7' ]
+									wsPcs.forEach(function(group) {
+										var groupPcs = group.split(',');
+										groupPcs.forEach(function(number) {
+											if(allUsedNumbers.indexOf(number) < 0) {
+												allUsedNumbers.push(number);
+											}
+										});
+									});
+									race.entries.forEach(function(entry) {
+										allUsedNumbers.forEach(function(number) {
+											if(parseInt(number) == entry.number) {
+												if(entry.active) {
+												} else {
+													return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
+												}
+											}
+										});
+									});
+									return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal).then(function(customerData) {
+										if(customerData.success) {
+											return Wagers.create(wagerData).then(function(confirmedWagerData) {
+												return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+											}).catch(function(err) {
+      									res.json({error: 'Server error'}, 500);
+									      console.error(err);
+									      throw err;
+											});
+										}
+										return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
+									}).catch(function(err) {
+      							res.json({error: 'Server error'}, 500);
+								    console.error(err);
+								    throw err;
+									});
+								} else {
+									return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
+								}
+							});
+						} else {
+							return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
+						}
+					} else {
+						return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
+					}
+				});
+			} else {
+				return res.send(JSON.stringify({success: false, failMsg: 'Invalid Race'}));
 			}
-    }, function(err, response) {
-			if(err) {
-				console.log('AuthorizeCIM.createCustomerProfile() FAILED for customerId: '+customer.id)
-				return errorHandler(err)();
-			}
-      return res.send(JSON.stringify({success: true, customerProfileId: response.customerProfileId}));
 		});
   });
 
