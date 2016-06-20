@@ -1,0 +1,29 @@
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; position: relative;"
+														ng-show="!entry.altRunner && entry.post && (entry.post !== entry.number)"
+													>
+														{{entry.number}} (PP: {{entry.post}})
+													</label>
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; position: relative;"
+														ng-show="!entry.altRunner && !entry.post || (entry.post === entry.number)"
+													>
+														{{entry.number}}
+													</label>
+													<br/ ng-show="entry.altRunner">
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; left: 17px; position: relative;"
+														ng-show="entry.altRunner.post && (entry.altRunner.post !== entry.altRunner.number)"
+													>
+														{{entry.altRunner.number}} (PP: {{entry.altRunner.post}})
+													</label>
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; left: 17px; position: relative;"
+														ng-show="!entry.altRunner.post || (entry.altRunner.post === entry.altRunner.number)"
+													>
+														{{entry.altRunner.number}}
+													</label>

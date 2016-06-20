@@ -127,15 +127,15 @@
 		partMap['Trifecta'] = 3;
 		partMap['Superfecta'] = 4;
 		partMap['Pentafecta'] = 5;
-		partMap['Daily Double'] = 99;
-		partMap['Pick 3'] = 99;
-		partMap['Pick 4'] = 99;
-		partMap['Pick 5'] = 99;
-		partMap['Pick 6'] = 99;
-		partMap['Pick 7'] = 99;
-		partMap['Pick 8'] = 99;
-		partMap['Pick 9'] = 99;
-		partMap['Pick 10'] = 99;
+		partMap['Daily Double'] = 1;
+		partMap['Pick 3'] = 1;
+		partMap['Pick 4'] = 1;
+		partMap['Pick 5'] = 1;
+		partMap['Pick 6'] = 1;
+		partMap['Pick 7'] = 1;
+		partMap['Pick 8'] = 1;
+		partMap['Pick 9'] = 1;
+		partMap['Pick 10'] = 1;
 
 		var amountMap = [];
 		amountMap[.1] = ['.10','.20','.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
@@ -732,11 +732,13 @@
 					wagerAmount: $scope.wagerData.amount,
 					wagerTotal: $scope.ticketCost
 				}
-				wagerMgmt.submitWager(wagerSubmission).then(function(acceptedWager) {
+				wagerMgmt.submitWager(wagerSubmission).then(function(response) {
 					// TODO handle success/fail
-					if(acceptedWager.status == 200 && acceptedWager.statusText === 'OK') {
+					if(response.data.success) { 
+console.log('wager processed successfully');
 						$rootScope.$broadcast('newWagerAccepted');
 					} else {
+console.log('wager NOT processed successfully: '+response.data.failMsg);
 					}
 				});
 			}

@@ -12,20 +12,7 @@
 																		ng-change="updateSelectedRunnersDisplay()"
 																		ng-disabled="!entry.active"
 																	>
-																	<label 
-																		class="raceDetails"
-																		style="top: -2px; position: relative;"
-																		ng-show="entry.post && (entry.post !== entry.number)"
-																	>
-																		{{entry.number}} (Post: {{entry.post}})
-																	</label>
-																	<label 
-																		class="raceDetails"
-																		style="top: -2px; position: relative;"
-																		ng-show="!entry.post || (entry.post === entry.number)"
-																	>
-																		{{entry.number}}
-																	</label>
+																	<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 																</div>
 																<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
 															</div>

@@ -111,19 +111,7 @@
 														ng-change="updateSelectedRunnersDisplay()"
 														ng-disabled="!entry.active"
 													>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="entry.post && (entry.post !== entry.number)"
-													>
-														{{entry.number}} (Post: {{entry.post}})
-													</label>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.post || (entry.post === entry.number)"
-													>
-														{{entry.number}}
+													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 													</label>
 												</div>
 												<div 
@@ -137,20 +125,7 @@
 														ng-change="updateSelectedRunnersDisplay()"
 														ng-disabled="!entry.active"
 													>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="entry.post && (entry.post !== entry.number)"
-													>
-														{{entry.number}} (Post: {{entry.post}})
-													</label>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.post || (entry.post === entry.number)"
-													>
-														{{entry.number}}
-													</label>
+													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 												</div>
 												<div 
 													class="col-md-1"
@@ -164,20 +139,7 @@
 														ng-change="updateSelectedRunnersDisplay()"
 														ng-disabled="!entry.active"
 													>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="entry.post && (entry.post !== entry.number)"
-													>
-														{{entry.number}} (Post: {{entry.post}})
-													</label>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.post || (entry.post === entry.number)"
-													>
-														{{entry.number}}
-													</label>
+													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 												</div>
 												<div 
 													class="col-md-1"
@@ -191,20 +153,7 @@
 														ng-change="updateSelectedRunnersDisplay()"
 														ng-disabled="!entry.active"
 													>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="entry.post && (entry.post !== entry.number)"
-													>
-														{{entry.number}} (Post: {{entry.post}})
-													</label>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.post || (entry.post === entry.number)"
-													>
-														{{entry.number}}
-													</label>
+													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 												</div>
 												<div 
 													class="col-md-1"
@@ -218,20 +167,7 @@
 														ng-change="updateSelectedRunnersDisplay()"
 														ng-disabled="!entry.active"
 													>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="entry.post && (entry.post !== entry.number)"
-													>
-														{{entry.number}} (Post: {{entry.post}})
-													</label>
-													<label 
-														class="raceDetails"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.post || (entry.post === entry.number)"
-													>
-														{{entry.number}}
-													</label>
+													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 												</div>
 												<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
 											</div>

@@ -44,7 +44,7 @@
 						if(status >= 400) {
 							return $q.reject(data);
 						}
-						return wager;
+						return data;
 					}
 				).catch(function(err) {
 					console.log('POST ' + url + ': ajax failed');

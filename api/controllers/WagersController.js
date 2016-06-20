@@ -126,90 +126,128 @@ console.log(' ');
 		trackData.trd.races.forEach(function(race) {
 			if(race.number == trIdPcs[1]) {
 				validStartingRace = true;
+				var validWagerPool = false;
+				var wagerMin = 2;
 				race.wagers.forEach(function(wager) {
-					if(wagerData.wagerPool !== wager.wager) {
-						return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
+					if(wagerData.wagerPool == wager.wager) {
+						validWagerPool = true;
+						wagerMin = wager.min;
+					} 
+				});
+				if(!validWagerPool) {
+console.log('Invalid Wager Pool');
+					return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
+				} 
+				if(parseFloat(wagerData.wagerAmount) < wagerMin) {
+console.log('Invalid Wager Amount');
+					return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
+				}
+				return WagersService.getCustomerBalance(wagerData.customerId).then(function(balanceData) {
+					if(balanceData.balance < wagerData.wagerTotal) {
+console.log('Insufficient Customer Balance');
+						return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
 					} else {
-						if(parseFloat(wagerData.wagerAmount) < wager.min) {
-							return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
-						} else {
-							return WagersService.getCustomerBalance(wagerData.customerId).then(function(balanceData) {
-								if(balanceData.balance < wagerData.wagerTotal) {
-									return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
-								} else {
-									if(wagerData.legs > 1) {
-										// multi-leg
-										var wsPcsCounter = 0;
-										var wsPcs = wagerData.wagerSelections.split(' / ');
-										var raceCounter = trIdPcs[1];
-										while(raceCounter < (parseInt(trIdPcs[1]) + wsPcs.length)) {
-											trackData.trd.races.forEach(function(race) {
-												if(race.number == raceCounter) {
-													var raceRunners = wsPcs[wsPcsCounter];
-													var rrPcs = raceRunners.split(',');
-													rrPcs.forEach(function(rr) {
-														race.entries.forEach(function(entry) {
-console.log('typeof entry.number: '+typeof entry.number);
-															var entryNumber;
-															if(typeof entry.number === '') {
-																entryNumber = entry.number.toString();
-															} else {
-																entryNumber = entry.number;
-															}
-															if(parseStr(entry.number) === parseStr(rr)) {
-																if(!entry.active) {
-																	return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
-																}
-															}
-														});
-													});
-													wsPcsCounter ++;
+
+						if(wagerData.legs > 1 && wagerData.parts < 2) {
+console.log('validating multi-leg');
+							// multi-leg
+							var wsPcsCounter = 0;
+							var wsPcs = wagerData.wagerSelections.split(' / ');
+							var raceCounter = trIdPcs[1];
+							if(wagerData.legs != wsPcs.length) {
+console.log('multi-leg Missing Runner');
+								return res.send(JSON.stringify({success: false, failMsg: 'Missing Leg Runner'}));
+							}
+							wsPcs.forEach(function(wsPc) {
+								if(wsPc.length < 1) {
+console.log('multi-leg Missing Runner');
+									return res.send(JSON.stringify({success: false, failMsg: 'Missing Leg Runner'}));
+								}
+							});
+							while(raceCounter < (parseInt(trIdPcs[1]) + wsPcs.length)) {
+								trackData.trd.races.forEach(function(race) {
+									if(race.number == raceCounter) {
+										var raceRunners = wsPcs[wsPcsCounter];
+										var rrPcs = raceRunners.split(',');
+										rrPcs.forEach(function(rr) {
+											race.entries.forEach(function(entry) {
+												if(entry.number == parseInt(rr)) {
+													if(!entry.active) {
+console.log('multi-leg Invalid Runner');
+														return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
+													}
 												}
 											});
-											raceCounter++;
-										}
-									}
-									if(wagerData.parts > 1) {
-										// multi-part
-									}
-									// WPS
-									var allUsedNumbers = [];
-									var wsPcs = wagerData.wagerSelections.split(' / ');
-									// [ '2', '3,6,7', '1,3,6,7' ]
-									wsPcs.forEach(function(group) {
-										var groupPcs = group.split(',');
-										groupPcs.forEach(function(number) {
-											if(allUsedNumbers.indexOf(number) < 0) {
-												allUsedNumbers.push(number);
-											}
 										});
-									});
-									race.entries.forEach(function(entry) {
-										allUsedNumbers.forEach(function(number) {
-											if(parseInt(number) == entry.number) {
-												if(!entry.active) {
-													return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
-												}
-											}
-										});
-									});
-									return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal).then(function(customerData) {
-										if(customerData.success) {
-											return Wagers.create(wagerData).then(function(confirmedWagerData) {
-												return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
-											}).catch(function(err) {
-      									res.json({error: 'Server error'}, 500);
-									      console.error(err);
-									      throw err;
-											});
-										}
-										return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
+										wsPcsCounter ++;
+									}
+								});
+								raceCounter++;
+							}
+console.log('appears to be a valid multi-leg wager');
+							return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal).then(function(customerData) {
+								if(customerData.success) {
+									return Wagers.create(wagerData).then(function(confirmedWagerData) {
+										return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
 									}).catch(function(err) {
-      							res.json({error: 'Server error'}, 500);
-								    console.error(err);
-								    throw err;
+										res.json({error: 'Server error'}, 500);
+										console.error(err);
+										throw err;
 									});
 								}
+								return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
+							}).catch(function(err) {
+								res.json({error: 'Server error'}, 500);
+								console.error(err);
+								throw err;
+							});
+						}
+
+						if(wagerData.legs < 2 && wagerData.parts > 1) {
+console.log('validating multi-part');
+							// multi-part
+						}
+
+						if(wagerData.legs < 2 && wagerData.parts < 2) {
+console.log('validating WPS');
+							// WPS
+							var allUsedNumbers = [];
+							var wsPcs = wagerData.wagerSelections.split(' / ');
+							// [ '2', '3,6,7', '1,3,6,7' ]
+							wsPcs.forEach(function(group) {
+								var groupPcs = group.split(',');
+								groupPcs.forEach(function(number) {
+									if(allUsedNumbers.indexOf(number) < 0) {
+										allUsedNumbers.push(number);
+									}
+								});
+							});
+							race.entries.forEach(function(entry) {
+								allUsedNumbers.forEach(function(number) {
+									if(parseInt(number) == entry.number) {
+										if(!entry.active) {
+console.log('WPS Invalid Runner');
+											return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
+										}
+									}
+								});
+							});
+console.log('appears to be a valid WPS wager');
+							return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal).then(function(customerData) {
+								if(customerData.success) {
+									return Wagers.create(wagerData).then(function(confirmedWagerData) {
+										return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+									}).catch(function(err) {
+										res.json({error: 'Server error'}, 500);
+										console.error(err);
+										throw err;
+									});
+								}
+								return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
+							}).catch(function(err) {
+								res.json({error: 'Server error'}, 500);
+								console.error(err);
+								throw err;
 							});
 						}
 					}
