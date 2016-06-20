@@ -108,6 +108,10 @@ console.log(req);
 };
 
 function validateWager(req, res, self) {
+console.log(' ');
+console.log('WagersControllerAPI.validateWager() called with:');
+console.log(req.body);
+console.log(' ');
 	var wagerData = req.body;
 	var trIdPcs = wagerData.trackRaceId.split('-');
   return WagersService.getTrd(trIdPcs[0]).then(function(trackData) {
@@ -117,15 +121,53 @@ function validateWager(req, res, self) {
 	 		return errorHandler(trdsError)();
 		}
 
-		return trackData.trd.races.forEach(function(race) {
+		var validStartingRace = false;
+
+		trackData.trd.races.forEach(function(race) {
 			if(race.number == trIdPcs[1]) {
-				return race.wagers.forEach(function(wager) {
-					if(wagerData.wagerPool === wager.wager) {
-						if(parseFloat(wagerData.wagerAmount) >= wager.min) {
+				validStartingRace = true;
+				race.wagers.forEach(function(wager) {
+					if(wagerData.wagerPool !== wager.wager) {
+						return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
+					} else {
+						if(parseFloat(wagerData.wagerAmount) < wager.min) {
+							return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
+						} else {
 							return WagersService.getCustomerBalance(wagerData.customerId).then(function(balanceData) {
-								if(balanceData.balance >= wagerData.wagerTotal) {
+								if(balanceData.balance < wagerData.wagerTotal) {
+									return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
+								} else {
 									if(wagerData.legs > 1) {
 										// multi-leg
+										var wsPcsCounter = 0;
+										var wsPcs = wagerData.wagerSelections.split(' / ');
+										var raceCounter = trIdPcs[1];
+										while(raceCounter < (parseInt(trIdPcs[1]) + wsPcs.length)) {
+											trackData.trd.races.forEach(function(race) {
+												if(race.number == raceCounter) {
+													var raceRunners = wsPcs[wsPcsCounter];
+													var rrPcs = raceRunners.split(',');
+													rrPcs.forEach(function(rr) {
+														race.entries.forEach(function(entry) {
+console.log('typeof entry.number: '+typeof entry.number);
+															var entryNumber;
+															if(typeof entry.number === '') {
+																entryNumber = entry.number.toString();
+															} else {
+																entryNumber = entry.number;
+															}
+															if(parseStr(entry.number) === parseStr(rr)) {
+																if(!entry.active) {
+																	return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
+																}
+															}
+														});
+													});
+													wsPcsCounter ++;
+												}
+											});
+											raceCounter++;
+										}
 									}
 									if(wagerData.parts > 1) {
 										// multi-part
@@ -145,8 +187,7 @@ function validateWager(req, res, self) {
 									race.entries.forEach(function(entry) {
 										allUsedNumbers.forEach(function(number) {
 											if(parseInt(number) == entry.number) {
-												if(entry.active) {
-												} else {
+												if(!entry.active) {
 													return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
 												}
 											}
@@ -168,21 +209,16 @@ function validateWager(req, res, self) {
 								    console.error(err);
 								    throw err;
 									});
-								} else {
-									return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
 								}
 							});
-						} else {
-							return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
 						}
-					} else {
-						return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
 					}
 				});
-			} else {
-				return res.send(JSON.stringify({success: false, failMsg: 'Invalid Race'}));
 			}
 		});
+		if(!validStartingRace) {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid Race'}));
+		}
   });
 
   ///

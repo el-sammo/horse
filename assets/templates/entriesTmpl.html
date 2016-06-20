@@ -1,6 +1,6 @@
-												<div class="col-md-3">
+												<div class="col-md-3" ng-show="!entry.altRunner">
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active && !entry.meds && !entry.equip"
 													>
 														{{entry.name}}
@@ -13,7 +13,7 @@
 														{{entry.name}}
 													</span>
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active && entry.meds && !entry.equip"
 													>
 														{{entry.name}} - {{entry.meds}}
@@ -26,7 +26,7 @@
 														{{entry.name}} - {{entry.meds}}
 													</span>
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active && !entry.meds && entry.equip"
 													>
 														{{entry.name}} - {{entry.equip}}
@@ -39,7 +39,7 @@
 														{{entry.name}} - {{entry.equip}}
 													</span>
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active && entry.meds && entry.equip"
 													>
 														{{entry.name}} - {{entry.meds}} - {{entry.equip}}
@@ -54,7 +54,7 @@
 												</div>
 												<div class="col-md-3">
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active && !entry.weight"
 													>
 														{{entry.jockey}}
@@ -67,7 +67,7 @@
 														{{entry.jockey}}
 													</span>
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active && entry.weight"
 													>
 														{{entry.jockey}} ({{entry.weight}})
@@ -82,7 +82,7 @@
 												</div>
 												<div class="col-md-2">
 													<span 
-														class="raceDetails" 
+														class="raceDetailsSmaller" 
 														ng-show="entry.active"
 													>
 														{{entry.trainer}}

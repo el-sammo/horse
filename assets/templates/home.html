@@ -188,11 +188,12 @@
 													<span class="raceDetails">Trainer</span>
 												</div>
 											</div>
+											<br/>
 											<div 
 												class="row"
 												ng-repeat="(idx, entry) in wagerRunners[0]"
 											>
-												<div class="col-md-1">
+												<div class="col-md-1" ng-show="!entry.altRunner">
 													<input 
 														type="checkbox"
 														ng-model="selectedRunners[idx]"
@@ -202,18 +203,57 @@
 														ng-disabled="!entry.active"
 													>
 													<label 
-														class="raceDetails"
+														class="raceDetailsSmaller"
 														style="top: -2px; position: relative;"
 														ng-show="entry.post && (entry.post !== entry.number)"
 													>
-														{{entry.number}} (Post: {{entry.post}})
+														{{entry.number}} (PP: {{entry.post}})
 													</label>
 													<label 
-														class="raceDetails"
+														class="raceDetailsSmaller"
 														style="top: -2px; position: relative;"
 														ng-show="!entry.post || (entry.post === entry.number)"
 													>
 														{{entry.number}}
+													</label>
+												</div>
+												<div class="col-md-1" ng-show="entry.altRunner">
+													<input 
+														type="checkbox"
+														ng-model="selectedRunners[idx]"
+														ng-true-value="{{entry.number}}"
+														ng-false-value="false"
+														ng-change="updateSelectedRunnersDisplay()"
+														ng-disabled="!entry.active"
+													>
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; position: relative;"
+														ng-show="entry.post && (entry.post !== entry.number)"
+													>
+														{{entry.number}} (PP: {{entry.post}})
+													</label>
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; position: relative;"
+														ng-show="!entry.post || (entry.post === entry.number)"
+													>
+														{{entry.number}}
+													</label>
+													<br/>
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; left: 17px; position: relative;"
+														ng-show="entry.altRunner.post && (entry.altRunner.post !== entry.altRunner.number)"
+													>
+														{{entry.altRunner.number}} (PP: {{entry.altRunner.post}})
+													</label>
+													<label 
+														class="raceDetailsSmaller"
+														style="top: -2px; left: 17px; position: relative;"
+														ng-show="!entry.altRunner.post || (entry.altRunner.post === entry.altRunner.number)"
+													>
+														{{entry.altRunner.number}}
 													</label>
 												</div>
 												<ng-include src="'/templates/entriesTmpl.html'"></ng-include>

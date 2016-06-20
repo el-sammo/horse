@@ -5,7 +5,7 @@ insertTestEntryData();
 function insertTestEntryData() {
 
 	var trackName = 'Belmont';
-	var raceDate = 20160618;
+	var raceDate = 20160620;
 	var races = [
 		{
 			number: 1, 
@@ -65,7 +65,18 @@ function insertTestEntryData() {
 					weight: 119,
 					trainer: 'Steve Asmussen',
 					claim: 0,
-					meds: 'FTL'
+					meds: 'FTL',
+					altRunner: {
+						number: '1A',
+						post: 7,
+						active: true,
+						name: 'Ah Shit',
+						jockey: 'El Sammo',
+						weight: 119,
+						trainer: 'Del Toro',
+						claim: 0,
+						meds: 'FTL'
+					}
 				},
 				{
 					number: 2,
