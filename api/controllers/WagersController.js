@@ -148,7 +148,7 @@ console.log('Insufficient Customer Balance');
 						return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
 					} else {
 
-						if(wagerData.legs > 1 && wagerData.parts < 2) {
+						if(wagerData.legs > 1) {
 console.log('validating multi-leg');
 							// multi-leg
 							var wsPcsCounter = 0;
@@ -201,38 +201,35 @@ console.log('appears to be a valid multi-leg wager');
 								console.error(err);
 								throw err;
 							});
-						}
-
-						if(wagerData.legs < 2 && wagerData.parts > 1) {
-console.log('validating multi-part');
-							// multi-part
-						}
-
-						if(wagerData.legs < 2 && wagerData.parts < 2) {
-console.log('validating WPS');
-							// WPS
+						} else {
+console.log('validating wps or multi-part');
+							// wps or multi-part
 							var allUsedNumbers = [];
-							var wsPcs = wagerData.wagerSelections.split(' / ');
-							// [ '2', '3,6,7', '1,3,6,7' ]
-							wsPcs.forEach(function(group) {
-								var groupPcs = group.split(',');
-								groupPcs.forEach(function(number) {
-									if(allUsedNumbers.indexOf(number) < 0) {
-										allUsedNumbers.push(number);
-									}
+							if(typeof wagerData.wagerSelections === 'number') {
+								allUsedNumbers.push(wagerData.wagerSelections);
+							} else {
+								var wsPcs = wagerData.wagerSelections.split(' / ');
+								// [ '2', '3,6,7', '1,3,6,7' ]
+								wsPcs.forEach(function(group) {
+									var groupPcs = group.split(',');
+									groupPcs.forEach(function(number) {
+										if(allUsedNumbers.indexOf(number) < 0) {
+											allUsedNumbers.push(number);
+										}
+									});
 								});
-							});
+							}
 							race.entries.forEach(function(entry) {
 								allUsedNumbers.forEach(function(number) {
 									if(parseInt(number) == entry.number) {
 										if(!entry.active) {
-console.log('WPS Invalid Runner');
+console.log('wps or multi-part Invalid Runner');
 											return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
 										}
 									}
 								});
 							});
-console.log('appears to be a valid WPS wager');
+console.log('appears to be a valid wps or multi-part wager');
 							return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal).then(function(customerData) {
 								if(customerData.success) {
 									return Wagers.create(wagerData).then(function(confirmedWagerData) {

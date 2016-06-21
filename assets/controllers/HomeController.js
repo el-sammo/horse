@@ -41,7 +41,20 @@
 		$rootScope.$on('customerLoggedIn', function(evt, args) {
 			$scope.showLogin = false;
 			$scope.showLogout = true;
+			updateBalance();
 		});
+
+		var updateBalance = function() {
+			var getSessionPromise = customerMgmt.getSession();
+			getSessionPromise.then(function(sessionData) {
+				if(sessionData.customerId) {
+					var getCustomerPromise = customerMgmt.getCustomer(sessionData.customerId);
+					getCustomerPromise.then(function(customer) {
+						$scope.customer = customer;
+					});
+				}
+			});
+		}
 
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
@@ -54,7 +67,7 @@
 
 				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
 				getCustomerPromise.then(function(customer) {
-					$scope.balance = (customer.balance).toFixed(2);
+					$scope.customer = customer;
 				});
 			} else {
 				$scope.showLogin = true;
@@ -736,7 +749,7 @@
 					// TODO handle success/fail
 					if(response.data.success) { 
 console.log('wager processed successfully');
-						$rootScope.$broadcast('newWagerAccepted');
+						updateBalance();
 					} else {
 console.log('wager NOT processed successfully: '+response.data.failMsg);
 					}

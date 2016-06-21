@@ -16,7 +16,11 @@ module.exports = {
 		return Customers.find(
 			{id: customerId}
 		).then(function(trds) {
-			return {success: true, balance: trds[0].balance};
+			var balance = 0;
+			if(trds[0].balance) {
+				balance = trds[0].balance;
+			}
+			return {success: true, balance: balance};
 		}).catch(function(err) {
 			return {success: false, reason: 'invalid customerId'};
 		});

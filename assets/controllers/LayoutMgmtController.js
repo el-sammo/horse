@@ -48,6 +48,11 @@
 			});
 		};
 
+		$scope.noAccount = function() {
+			$modalInstance.dismiss('cancel');
+			layoutMgmt.signUp($scope.areas);
+		};
+
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
 		}

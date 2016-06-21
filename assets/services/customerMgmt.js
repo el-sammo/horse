@@ -21,9 +21,9 @@
 
 		var service = {
 			getCustomer: function(customerId) {
-				if(getCustomerPromise) {
-					return getCustomerPromise;
-				}
+//				if(getCustomerPromise) {
+//					return getCustomerPromise;
+//				}
 
 				var url = '/customers/' + customerId;
 				getCustomerPromise = $http.get(url).then(function(res) {
