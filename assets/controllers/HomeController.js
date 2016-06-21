@@ -749,9 +749,14 @@
 					// TODO handle success/fail
 					if(response.data.success) { 
 console.log('wager processed successfully');
+console.log('response.data:');
+console.log(response.data);
 						updateBalance();
 					} else {
 console.log('wager NOT processed successfully: '+response.data.failMsg);
+						if(response.data.failMsg === 'Incomplete Wager Data') {
+console.log(response.data.missingPcs);
+						}
 					}
 				});
 			}
