@@ -748,18 +748,24 @@
 				wagerMgmt.submitWager(wagerSubmission).then(function(response) {
 					// TODO handle success/fail
 					if(response.data.success) { 
-console.log('wager processed successfully');
-console.log('response.data:');
-console.log(response.data);
+						$scope.successfulWager = response.data.confirmedWager;
+						$scope.wagerError = '';
 						updateBalance();
 					} else {
-console.log('wager NOT processed successfully: '+response.data.failMsg);
 						if(response.data.failMsg === 'Incomplete Wager Data') {
-console.log(response.data.missingPcs);
+							$scope.successfulWager = '';
+							$scope.wagerError = 'General Wager Error - Please Refresh Your Browser';
+							if(response.data.missingPcs.length < 2 && response.data.missingPcs.indexOf('wagerAmount') >=0) {
+								$scope.wagerError = 'Please Select a Wager Amount';
+							}
 						}
 					}
 				});
 			}
+		}
+
+		$scope.cancelWager = function(wagerId) {
+console.log('$scope.cancelWager() called with id: '+wagerId);
 		}
 
 	}

@@ -216,7 +216,9 @@
 					<div class="row">
 						<div class="col=md=12">
 							<div class="row=">
-								<div class="col-md-2">
+								<div class="col-md-1">
+									<span class="raceDetails">Amount:</span>
+									<br/>
 									<select 
 										name="repeatSelect" 
 										id="repeatSelect" 
@@ -231,18 +233,43 @@
 										</option>
 									</select>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-4">
 									<span class="raceDetails" ng-show="wager && wagerData.amount">${{wagerData.amount}} {{wager}}:</span>
 									<br/>
 									<span class="raceDetails" ng-show="wager">{{formattedRunners}}</span>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-2">
 									<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>
 								</div>
 								<div class="col-md-2">
-									<button class="btn btn-danger btn-sm" ng-click="submitWager()">
+									<button class="btn btn-primary btn-sm" ng-click="submitWager()">
 										Submit Wager
 									</button>
+								</div>
+								<div class="col-md-3" ng-show="wagerError">
+									<span class="raceDetailsRed">Wager Error</span>
+									<br/><br/>
+									<span class="raceDetailsSmaller">{{wagerError}}</span>
+								</div>
+								<div class="col-md-3" ng-show="successfulWager">
+									<span class="raceDetails">Wager Details</span>
+									<br/><br/>
+									<span class="raceDetailsSmaller">Type: {{successfulWager.wagerPool}}</span>
+									<br/>
+									<span class="raceDetailsSmaller">Amount: {{successfulWager.wagerAmount}}</span>
+									<br/>
+									<span class="raceDetailsSmaller">Runners: {{successfulWager.wagerSelections}}</span>
+									<br/>
+									<span class="raceDetailsSmaller">Total: {{successfulWager.wagerTotal}}</span>
+									<br/>
+									<span 
+										class="raceDetailsSmaller" 
+										style="cursor: pointer;"
+										ng-click="cancelWager(successfulWager.id)"
+									>
+										Cancel
+									</span>
+									<br/>
 								</div>
 							</div>
 						</div>

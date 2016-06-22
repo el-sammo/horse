@@ -58,8 +58,6 @@ module.exports = {
 			if(completeWager) {
 				return validateWager(req, res);
 			} else {
-console.log('missingPcs:');
-console.log(missingPcs);
 				return res.send(JSON.stringify({success: false, failMsg: 'Incomplete Wager Data', missingPcs: missingPcs}));
 			}
 		} else {
@@ -67,20 +65,8 @@ console.log(missingPcs);
 		}
   },
 
-  addNewWager: function(req, res) {
-console.log('WagersControllerAPI.addNewWager() called with:');
-console.log(req);
-//		Wagers.insert({req.body}).then(function(result) {
-//			res.send(JSON.stringify(result));
-//		}).catch(function(err) {
-//      res.json({error: 'Server error'}, 500);
-//      console.error(err);
-//      throw err;
-//		});
-  },
-
   cancelWager: function(req, res) {
-		Wagers.remove({id: req.params.id}).then(function(result) {
+		Wagers.update({id: req.params.id}, {$set: {cancelled: true}}, false, false).then(function(result) {
 			res.send(JSON.stringify(result));
 		}).catch(function(err) {
       res.json({error: 'Server error'}, 500);
@@ -145,6 +131,8 @@ console.log(req);
 
 function validateWager(req, res, self) {
 	var wagerData = req.body;
+	wagerData.cancelled = false;
+	wagerData.scored = false;
 	var trIdPcs = wagerData.trackRaceId.split('-');
   return WagersService.getTrd(trIdPcs[0]).then(function(trackData) {
     if(! trackData) {
