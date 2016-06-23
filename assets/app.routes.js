@@ -100,6 +100,16 @@
 
 
 		///
+		// Score
+		///
+
+		$routeProvider.when('/scoreRace/:id', {
+			controller: 'ScoreController',
+			templateUrl: '/templates/score.html'
+		});
+
+
+		///
 		// Story
 		///
 

@@ -1,0 +1,93 @@
+<div class="col-md-12" ng-show="bigScreen">
+	<div class="row" id="homeMain">
+		<div 
+			class="contentGreyBg"
+			style="top: 8px;"
+		>
+			<div class="row">
+				<div class="col-md-12">
+					<span class="raceDetails">Race {{raceNum}} Results</span>
+				</div>
+			</div>
+			<br/>
+			<br/>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-1">
+							<span class="raceDetails">
+								&nbsp;
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								Entry Number
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								Jockey
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								Win Amount
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								Place Amount
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								Show Amount
+							</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-1">
+							<span class="raceDetails">
+								&nbsp;
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								<input type="text" ng-model="winNumber">
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								<input type="text" ng-model="winJockey">
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+								<input type="text" ng-model="winWinPrice">
+							</span>
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+							</span>
+								<input type="text" ng-model="winPlacePrice">
+						</div>
+						<div class="col-md-2">
+							<span class="raceDetails">
+							</span>
+						</div>
+								<input type="text" ng-model="winShowPrice">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-sm-12 col-xs-12" ng-show="!bigScreen">
+	<div class="row" id="homeMain">
+		<div 
+			class="contentGreyBgSm"
+		>
+		</div>
+	</div>
+</div>

@@ -36,6 +36,15 @@
 							>
 								Race {{race.number}}
 							</span>
+							<span 
+								class="raceDetailsSmaller"
+								style="cursor: pointer;"
+								ng-click="scoreRace(track.id, race.number)"
+								ng-show="customer.admin"
+							>
+								<br/>
+								Score
+							</span>
 						</div>
 					</div>
 					<div 
