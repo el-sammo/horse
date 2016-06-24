@@ -5,7 +5,7 @@ insertTestEntryData();
 function insertTestEntryData() {
 
 	var trackName = 'Belmont';
-	var raceDate = 20160623;
+	var raceDate = 20160624;
 	var races = [
 		{
 			number: 1, 

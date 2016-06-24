@@ -5,7 +5,10 @@
 			style="top: 8px;"
 		>
 			<div class="row">
-				<div class="col-md-12">
+				<div 
+					class="col-md-12"
+					style="text-align: center;"
+				>
 					<span class="raceDetails">Race {{raceNum}} Results</span>
 				</div>
 			</div>
@@ -45,37 +48,470 @@
 							</span>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" ng-show="show1st">
 						<div class="col-md-1">
-							<span class="raceDetails">
-								&nbsp;
+							<span 
+								class="raceDetails pull-right"
+							>
+								1st
 							</span>
 						</div>
 						<div class="col-md-2">
-							<span class="raceDetails">
-								<input type="text" ng-model="winNumber">
+							<input type="text" ng-model="firstNumber" ng-change="getJockey('first')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="firstJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="firstWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="firstPlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="firstShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show1stFirstTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show1stFirstTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								1st
 							</span>
 						</div>
 						<div class="col-md-2">
-							<span class="raceDetails">
-								<input type="text" ng-model="winJockey">
+							<input type="text" ng-model="first1stTieNumber" ng-change="getJockey('first1stTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first1stTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first1stTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first1stTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first1stTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show1stSecondTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show1stSecondTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								1st
 							</span>
 						</div>
 						<div class="col-md-2">
-							<span class="raceDetails">
-								<input type="text" ng-model="winWinPrice">
+							<input type="text" ng-model="first2ndTieNumber" ng-change="getJockey('first2ndTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first2ndTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first2ndTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first2ndTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="first2ndTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							&nbsp;
+						</div>
+					</div>
+					<div class="row" ng-show="show2nd">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								2nd
 							</span>
 						</div>
 						<div class="col-md-2">
-							<span class="raceDetails">
-							</span>
-								<input type="text" ng-model="winPlacePrice">
+							<input type="text" ng-model="secondNumber" ng-change="getJockey('second')">
 						</div>
 						<div class="col-md-2">
-							<span class="raceDetails">
+							<input type="text" ng-model="secondJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="secondWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="secondPlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="secondShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show2ndFirstTie = true"
+							>
+								Add
 							</span>
 						</div>
-								<input type="text" ng-model="winShowPrice">
+					</div>
+					<div class="row" ng-show="show2ndFirstTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								2nd
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second1stTieNumber" ng-change="getJockey('second1stTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second1stTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second1stTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second1stTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second1stTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show2ndSecondTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show2ndSecondTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								2nd
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second2ndTieNumber" ng-change="getJockey('second2ndTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second2ndTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second2ndTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second2ndTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="second2ndTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							&nbsp;
+						</div>
+					</div>
+					<div class="row" ng-show="show3rd">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								3rd
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="thirdNumber" ng-change="getJockey('third')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="thirdJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="thirdWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="thirdPlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="thirdShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show3rdFirstTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show3rdFirstTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								3rd
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third1stTieNumber" ng-change="getJockey('third1stTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third1stTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third1stTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third1stTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third1stTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show3rdSecondTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show3rdSecondTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								3rd
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third2ndTieNumber" ng-change="getJockey('third2ndTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third2ndTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third2ndTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third2ndTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="third2ndTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							&nbsp;
+						</div>
+					</div>
+					<div class="row" ng-show="show4th">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								4th
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourthNumber" ng-change="getJockey('fourth')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourthJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourthWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourthPlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourthShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show4thFirstTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show4thFirstTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								4th
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth1stTieNumber" ng-change="getJockey('fourth1stTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth1stTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth1stTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth1stTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth1stTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show4thSecondTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show4thSecondTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								4th
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth2ndTieNumber" ng-change="getJockey('fourth2ndTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth2ndTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth2ndTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth2ndTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fourth2ndTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							&nbsp;
+						</div>
+					</div>
+					<div class="row" ng-show="show5th">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								5th
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifthNumber" ng-change="getJockey('fifth')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifthJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifthWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifthPlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifthShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show5thFirstTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show5thFirstTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								5th
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieNumber" ng-change="getJockey('fifth1stTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+								style="cursor: pointer;"
+								ng-click="show5thSecondTie = true"
+							>
+								Add
+							</span>
+						</div>
+					</div>
+					<div class="row" ng-show="show5thSecondTie">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								5th
+							</span>
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieNumber" ng-change="getJockey('fifth2ndTie')">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieJockey">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieWinPrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTiePlacePrice">
+						</div>
+						<div class="col-md-2">
+							<input type="text" ng-model="fifth1stTieShowPrice">
+						</div>
+						<div class="col-md-1">
+							&nbsp;
+						</div>
 					</div>
 				</div>
 			</div>
