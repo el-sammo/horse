@@ -27,6 +27,20 @@
 			$scope.bigScreen = false;
 		}
 
+		$scope.exacta = '';
+		$scope.trifecta = [];
+		$scope.superfecta = [];
+		$scope.pentafecta = [];
+		$scope.double = [];
+		$scope.pick3 = [];
+		$scope.pick4 = [];
+		$scope.pick5 = [];
+		$scope.pick6 = [];
+		$scope.pick7 = [];
+		$scope.pick8 = [];
+		$scope.pick9 = [];
+		$scope.pick10 = [];
+
 		$scope.show1st = false;
 		$scope.show1stFirstTie = false;
 		$scope.show1stSecondTie = false;
@@ -284,6 +298,118 @@ console.log($scope.race);
 			});
 		};
 
+		$scope.updateExotics = function(posAndVal) {
+console.log('$scope.updateExotics() called with: '+posAndVal);
+			var pavPcs = posAndVal.split('-');
+			var pos = pavPcs[0];
+			var val = pavPcs[1];
+console.log('pos: '+pos);
+console.log('val: '+val);
+
+			if(pos === 'first') {
+				if($scope.showExactaAA) {
+					$scope.updateExacta(pos, val);
+				}
+				if($scope.showTrifecta) {
+					updateTrifecta(pos, val);
+				}
+				if($scope.showSuperfecta) {
+					updateSuperfecta(pos, val);
+				}
+				if($scope.showPentafecta) {
+					updatePentafecta(pos, val);
+				}
+			}
+
+			if(pos === 'second') {
+				if($scope.showExactaAA) {
+					$scope.updateExacta(pos, val);
+				}
+				if($scope.showTrifecta) {
+					$scope.updateTrifecta(pos, val);
+				}
+				if($scope.showSuperfecta) {
+					$scope.updateSuperfecta(pos, val);
+				}
+				if($scope.showPentafecta) {
+					$scope.updatePentafecta(pos, val);
+				}
+			}
+
+			if(pos === 'third') {
+				if($scope.showTrifecta) {
+					$scope.updateTrifecta(pos, val);
+				}
+				if($scope.showSuperfecta) {
+					$scope.updateSuperfecta(pos, val);
+				}
+				if($scope.showPentafecta) {
+					$scope.updatePentafecta(pos, val);
+				}
+			}
+
+			if(pos === 'fourth') {
+				if($scope.showSuperfecta) {
+					$scope.updateSuperfecta(pos, val);
+				}
+				if($scope.showPentafecta) {
+					$scope.updatePentafecta(pos, val);
+				}
+			}
+
+			if(pos === 'fifth') {
+				if($scope.showPentafecta) {
+					$scope.updatePentafecta(pos, val);
+				}
+			}
+		}
+
+		$scope.updateExacta = function(pos, val) {
+			if($scope.exacta.length > 1){
+				$scope.exactaPcs = $scope.exacta.split('/');
+				if(pos === 'first') {
+					if(val === 'firstNumber') {
+						$scope.exactaPcs[0] = $scope.firstNumber;
+					}
+				}
+				if(pos === 'second') {
+					if(val === 'secondNumber') {
+						$scope.exactaPcs[1] = $scope.secondNumber;
+					}
+				}
+			} else {
+				$scope.exactaPcs = [];
+			}
+			if(pos === 'first') {
+				if(val === 'firstNumber') {
+					$scope.exactaPcs.push($scope.firstNumber);
+				}
+			}
+			if(pos === 'second') {
+				if(val === 'secondNumber') {
+					$scope.exactaPcs.push($scope.secondNumber);
+				}
+			}
+			$scope.exacta = $scope.exactaPcs[0] + '/' + $scope.exactaPcs[1];
+		}
+
+		$scope.updateTrifecta = function(pos, val) {
+console.log('$scope.updateTrifecta() called with pos: '+pos+' and val: '+val);
+console.log('$scope.exacta:');
+console.log($scope.exacta);
+		}
+
+		$scope.updateSuperfecta = function(pos, val) {
+console.log('$scope.updateSuperfecta() called with pos: '+pos+' and val: '+val);
+console.log('$scope.exacta:');
+console.log($scope.exacta);
+		}
+
+		$scope.updatePentfecta = function(pos, val) {
+console.log('$scope.updatePentfecta() called with pos: '+pos+' and val: '+val);
+console.log('$scope.exacta:');
+console.log($scope.exacta);
+		}
 
 	}
 }());

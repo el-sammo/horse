@@ -57,13 +57,21 @@
 							</span>
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="firstNumber" ng-change="getJockey('first')">
+							<input 
+								type="text" 
+								ng-model="firstNumber" 
+								ng-change="getJockey('first')"
+							>
 						</div>
 						<div class="col-md-2">
 							<input type="text" ng-model="firstJockey">
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="firstWinPrice">
+							<input 
+								type="text" 
+								ng-model="firstWinPrice" 
+								ng-change="updateExotics('first-firstNumber')"
+							>
 						</div>
 						<div class="col-md-2">
 							<input type="text" ng-model="firstPlacePrice">
@@ -150,7 +158,11 @@
 							</span>
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="secondNumber" ng-change="getJockey('second')">
+							<input 
+								type="text" 
+								ng-model="secondNumber" 
+								ng-change="getJockey('second')"
+							>
 						</div>
 						<div class="col-md-2">
 							<input type="text" ng-model="secondJockey">
@@ -159,7 +171,11 @@
 							<input type="text" ng-model="secondWinPrice">
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="secondPlacePrice">
+							<input 
+								type="text" 
+								ng-model="secondPlacePrice"
+								ng-change="updateExotics('second-secondNumber')"
+							>
 						</div>
 						<div class="col-md-2">
 							<input type="text" ng-model="secondShowPrice">
@@ -243,7 +259,11 @@
 							</span>
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="thirdNumber" ng-change="getJockey('third')">
+							<input 
+								type="text" 
+								ng-model="thirdNumber" 
+								ng-change="getJockey('third')"
+							>
 						</div>
 						<div class="col-md-2">
 							<input type="text" ng-model="thirdJockey">
@@ -255,7 +275,11 @@
 							<input type="text" ng-model="thirdPlacePrice">
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="thirdShowPrice">
+							<input 
+								type="text" 
+								ng-model="thirdShowPrice"
+								ng-change="updateExotics('third-thirdNumber')"
+							>
 						</div>
 						<div class="col-md-1">
 							<span 
@@ -339,16 +363,11 @@
 							<input type="text" ng-model="fourthNumber" ng-change="getJockey('fourth')">
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="fourthJockey">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourthWinPrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourthPlacePrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourthShowPrice">
+							<input 
+								type="text" 
+								ng-model="fourthJockey"
+								ng-change="updateExotics('fourth-fourthNumber')"
+							>
 						</div>
 						<div class="col-md-1">
 							<span 
@@ -374,15 +393,6 @@
 						<div class="col-md-2">
 							<input type="text" ng-model="fourth1stTieJockey">
 						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourth1stTieWinPrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourth1stTiePlacePrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourth1stTieShowPrice">
-						</div>
 						<div class="col-md-1">
 							<span 
 								class="raceDetails pull-left"
@@ -407,15 +417,6 @@
 						<div class="col-md-2">
 							<input type="text" ng-model="fourth2ndTieJockey">
 						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourth2ndTieWinPrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourth2ndTiePlacePrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fourth2ndTieShowPrice">
-						</div>
 						<div class="col-md-1">
 							&nbsp;
 						</div>
@@ -432,16 +433,11 @@
 							<input type="text" ng-model="fifthNumber" ng-change="getJockey('fifth')">
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="fifthJockey">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifthWinPrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifthPlacePrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifthShowPrice">
+							<input 
+								type="text" 
+								ng-model="fifthJockey"
+								ng-change="updateExotics('fifth-fifthNumber')"
+							>
 						</div>
 						<div class="col-md-1">
 							<span 
@@ -467,15 +463,6 @@
 						<div class="col-md-2">
 							<input type="text" ng-model="fifth1stTieJockey">
 						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifth1stTieWinPrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifth1stTiePlacePrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifth1stTieShowPrice">
-						</div>
 						<div class="col-md-1">
 							<span 
 								class="raceDetails pull-left"
@@ -500,19 +487,30 @@
 						<div class="col-md-2">
 							<input type="text" ng-model="fifth1stTieJockey">
 						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifth1stTieWinPrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifth1stTiePlacePrice">
-						</div>
-						<div class="col-md-2">
-							<input type="text" ng-model="fifth1stTieShowPrice">
-						</div>
 						<div class="col-md-1">
 							&nbsp;
 						</div>
 					</div>
+					<div class="row" ng-show="showExactaAA">
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								Exacta
+							</span>
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+							>
+								{{exacta}}
+							</span>
+						</div>
+						<div class="col-md-1">
+							<input type="text" ng-model="exactaPrice">
+						</div>
+					</div>
+					<br/>
 				</div>
 			</div>
 		</div>
