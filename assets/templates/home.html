@@ -40,10 +40,28 @@
 								class="raceDetailsSmaller"
 								style="cursor: pointer;"
 								ng-click="scoreRace(track.id, race.number)"
-								ng-show="customer.admin"
+								ng-show="customer.admin && !race.score"
 							>
 								<br/>
 								Score
+							</span>
+							<span 
+								class="raceDetailsSmaller"
+								style="cursor: pointer;"
+								ng-click="scoreRace(track.id, race.number)"
+								ng-show="race.closed && !race.score"
+							>
+								<br/>
+								Closed
+							</span>
+							<span 
+								class="raceDetailsSmaller"
+								style="cursor: pointer;"
+								ng-click="showResults(track.id, race.number)"
+								ng-show="race.score"
+							>
+								<br/>
+								Results
 							</span>
 						</div>
 					</div>

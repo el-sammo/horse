@@ -96,6 +96,7 @@
 						if(status >= 400) {
 							return $q.reject(data);
 						}
+						mergeIntoTrd(data, true);
 						return trd;
 					}
 				).catch(function(err) {

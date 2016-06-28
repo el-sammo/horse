@@ -164,7 +164,9 @@
 
 			var getTrdPromise = trdMgmt.getTrd(trId);
 			getTrdPromise.then(function(trdData) {
-				$scope.trdData = trdData;
+				$scope.trdData = trdData[0];
+console.log('$scope.trdData:');
+console.log($scope.trdData);
 				var checkDouble = false;
 				var checkPick3 = false;
 				var checkPick4 = false;
@@ -201,14 +203,81 @@
 				if(raceNum > 9) {
 					checkPick10 = true;
 				}
-				trdData.races.forEach(function(race) {
+				$scope.trdData.races.forEach(function(race) {
 					if(checkDouble) {
 console.log('checking double');
 						if(race.number == (raceNum - 1)) {
-console.log('double found: '+race.scores.firstNumber);
-							$scope.doubleFirst = race.scores.firstNumber;
+							race.wagers.forEach(function(wager) {
+								if(wager.wager === 'Daily Double') {
+console.log('double found: '+race.score.firstNumber);
+									$scope.doubleFirst = race.score.firstNumber;
+								}
+							});
 						}
 					}
+					if(checkPick3) {
+console.log('checking pick 3');
+						if(race.number == (raceNum - 2)) {
+							race.wagers.forEach(function(wager) {
+								if(wager.wager === 'Pick 3') {
+console.log('pick 3 first runner found: '+race.score.firstNumber);
+									$scope.pick3First = race.score.firstNumber;
+								}
+							});
+						}
+						if(race.number == (raceNum - 1)) {
+console.log('pick 3 second runner found: '+race.score.firstNumber);
+							$scope.pick3Second = race.score.firstNumber;
+						}
+					}
+					if(checkPick4) {
+console.log('checking pick 4');
+						if(race.number == (raceNum - 3)) {
+							race.wagers.forEach(function(wager) {
+								if(wager.wager === 'Pick 4') {
+console.log('pick 4 first runner found: '+race.score.firstNumber);
+									$scope.pick4First = race.score.firstNumber;
+								}
+							});
+						}
+						if(race.number == (raceNum - 2)) {
+console.log('pick 4 second runner found: '+race.score.firstNumber);
+							$scope.pick4Second = race.score.firstNumber;
+						}
+						if(race.number == (raceNum - 1)) {
+console.log('pick 4 third runner found: '+race.score.firstNumber);
+							$scope.pick3Third = race.score.firstNumber;
+						}
+					}
+					if(checkPick5) {
+console.log('checking pick 5');
+						if(race.number == (raceNum - 4)) {
+							race.wagers.forEach(function(wager) {
+								if(wager.wager === 'Pick 5') {
+console.log('pick 5 first runner found: '+race.score.firstNumber);
+									$scope.pick5First = race.score.firstNumber;
+								}
+							});
+						}
+						if(race.number == (raceNum - 3)) {
+console.log('pick 5 second runner found: '+race.score.firstNumber);
+							$scope.pick5Second = race.score.firstNumber;
+						}
+						if(race.number == (raceNum - 2)) {
+console.log('pick 5 third runner found: '+race.score.firstNumber);
+							$scope.pick5Third = race.score.firstNumber;
+						}
+						if(race.number == (raceNum - 1)) {
+console.log('pick 5 fourth runner found: '+race.score.firstNumber);
+							$scope.pick5Fourth = race.score.firstNumber;
+						}
+					}
+// TODO
+// Pick 6
+// Pick 7
+// Pick 8
+// Pick 9
+// Pick 10
 					if(race.number == raceNum) {
 						$scope.race = race;
 						race.wagers.forEach(function(wager) {
@@ -235,16 +304,16 @@ console.log('double found: '+race.scores.firstNumber);
 								$scope.show5th = true;
 								$scope.showPentafectaAAAAA = true;
 							}
-							if(wager.wager === 'Daily Double') {
-								$scope.show1st = true;
+							if($scope.doubleFirst) {
+								$scope.showDailyDouble = true;
 							}
-							if(wager.wager === 'Pick 3') {
+							if($scope.pick3First) {
 								$scope.showPickThree = true;
 							}
-							if(wager.wager === 'Pick 4') {
+							if($scope.pick4First) {
 								$scope.showPickFour = true;
 							}
-							if(wager.wager === 'Pick 5') {
+							if($scope.pick5First) {
 								$scope.showPickFive = true;
 							}
 							if(wager.wager === 'Pick 6') {
@@ -357,6 +426,10 @@ console.log('double found: '+race.scores.firstNumber);
 				}
 				if($scope.showPentafectaAAAAA) {
 					$scope.updatePentafecta(pos, val);
+				}
+
+				if($scope.showDailyDouble) {
+					$scope.updateDailyDouble();
 				}
 			}
 
@@ -719,6 +792,29 @@ console.log('double found: '+race.scores.firstNumber);
 			$scope.pentafecta = $scope.pentafectaPcs[0] + '/' + $scope.pentafectaPcs[1] + '/' + $scope.pentafectaPcs[2] + '/' + $scope.pentafectaPcs[3] + '/' + $scope.pentafectaPcs[4];
 		}
 
+		$scope.updateDailyDouble = function() {
+			$scope.dailyDouble = $scope.doubleFirst + '/' + $scope.firstNumber;
+		}
+
+		$scope.updatePick3 = function() {
+			$scope.pick3 = $scope.pick3First + '/' + $scope.pick3Second + '/' + $scope.firstNumber;
+		}
+
+		$scope.updatePick4 = function() {
+			$scope.pick4 = $scope.pick4First + '/' + $scope.pick4Second + '/' + $scope.pick4Third + '/' + $scope.firstNumber;
+		}
+
+		$scope.updatePick5 = function() {
+			$scope.pick5 = $scope.pick5First + '/' + $scope.pick5Second + '/' + $scope.pick5Third + '/' + $scope.pick5Fourth + '/' + $scope.firstNumber;
+		}
+
+// TODO
+// updatePick6
+// updatePick7
+// updatePick8
+// updatePick9
+// updatePick10
+
 		$scope.score = function() {
 			var score = {};
 			score.firstNumber = $scope.firstNumber;
@@ -808,11 +904,17 @@ console.log('double found: '+race.scores.firstNumber);
 
 			$scope.race.score = score;
 
+			var newRaces = [];
+
 			$scope.trdData.races.forEach(function(race) {
 				if(race.number === $scope.race.number) {
-					race = $scope.race;
+					newRaces.push($scope.race);
+				} else {
+					newRaces.push(race);
 				}
 			});
+
+			$scope.trdData.races = newRaces;
 
 			var updateTrdPromise = trdMgmt.updateTrd($scope.trdData);
 			updateTrdPromise.then(function(response) {

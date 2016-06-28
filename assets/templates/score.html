@@ -570,6 +570,46 @@
 							<input type="text" ng-model="pentafectaPrice">
 						</div>
 					</div>
+					<div class="row" ng-show="showDailyDouble">
+						<br/>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								DD
+							</span>
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+							>
+								{{dailyDouble}}
+							</span>
+						</div>
+						<div class="col-md-1">
+							<input type="text" ng-model="dailyDoublePrice">
+						</div>
+					</div>
+					<div class="row" ng-show="showPick3">
+						<br/>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								Pick 3
+							</span>
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+							>
+								{{pick3}}
+							</span>
+						</div>
+						<div class="col-md-1">
+							<input type="text" ng-model="pick3Price">
+						</div>
+					</div>
 					<br/>
 				</div>
 			</div>

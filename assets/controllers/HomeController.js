@@ -772,6 +772,10 @@ console.log('$scope.cancelWager() called with id: '+wagerId);
 			$window.location.href = location.origin + "/app/scoreRace/" + trId + '-' + raceNum;
 		};
 
+		$scope.showResults = function(trdId, raceNum) {
+console.log('$scope.showResults() called with trdId: '+trackId+' and race number: '+raceNum);
+		}
+
 	}
 
 }());
