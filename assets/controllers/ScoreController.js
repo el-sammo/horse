@@ -28,9 +28,9 @@
 		}
 
 		$scope.exacta = '';
-		$scope.trifecta = [];
-		$scope.superfecta = [];
-		$scope.pentafecta = [];
+		$scope.trifecta = '';
+		$scope.superfecta = '';
+		$scope.pentafecta = '';
 		$scope.double = [];
 		$scope.pick3 = [];
 		$scope.pick4 = [];
@@ -164,11 +164,53 @@
 
 			var getTrdPromise = trdMgmt.getTrd(trId);
 			getTrdPromise.then(function(trdData) {
+				$scope.trdData = trdData;
+				var checkDouble = false;
+				var checkPick3 = false;
+				var checkPick4 = false;
+				var checkPick5 = false;
+				var checkPick6 = false;
+				var checkPick7 = false;
+				var checkPick8 = false;
+				var checkPick9 = false;
+				var checkPick10 = false;
+				if(raceNum > 1) {
+					checkDouble = true;
+				}
+				if(raceNum > 2) {
+					checkPick3 = true;
+				}
+				if(raceNum > 3) {
+					checkPick4 = true;
+				}
+				if(raceNum > 4) {
+					checkPick5 = true;
+				}
+				if(raceNum > 5) {
+					checkPick6 = true;
+				}
+				if(raceNum > 6) {
+					checkPick7 = true;
+				}
+				if(raceNum > 7) {
+					checkPick8 = true;
+				}
+				if(raceNum > 8) {
+					checkPick9 = true;
+				}
+				if(raceNum > 9) {
+					checkPick10 = true;
+				}
 				trdData.races.forEach(function(race) {
+					if(checkDouble) {
+console.log('checking double');
+						if(race.number == (raceNum - 1)) {
+console.log('double found: '+race.scores.firstNumber);
+							$scope.doubleFirst = race.scores.firstNumber;
+						}
+					}
 					if(race.number == raceNum) {
 						$scope.race = race;
-console.log('$scope.race:');
-console.log($scope.race);
 						race.wagers.forEach(function(wager) {
 							if(wager.wager === 'Win') {
 								$scope.show1st = true;
@@ -299,25 +341,22 @@ console.log($scope.race);
 		};
 
 		$scope.updateExotics = function(posAndVal) {
-console.log('$scope.updateExotics() called with: '+posAndVal);
 			var pavPcs = posAndVal.split('-');
 			var pos = pavPcs[0];
 			var val = pavPcs[1];
-console.log('pos: '+pos);
-console.log('val: '+val);
 
 			if(pos === 'first') {
 				if($scope.showExactaAA) {
 					$scope.updateExacta(pos, val);
 				}
-				if($scope.showTrifecta) {
-					updateTrifecta(pos, val);
+				if($scope.showTrifectaAAA) {
+					$scope.updateTrifecta(pos, val);
 				}
-				if($scope.showSuperfecta) {
-					updateSuperfecta(pos, val);
+				if($scope.showSuperfectaAAAA) {
+					$scope.updateSuperfecta(pos, val);
 				}
-				if($scope.showPentafecta) {
-					updatePentafecta(pos, val);
+				if($scope.showPentafectaAAAAA) {
+					$scope.updatePentafecta(pos, val);
 				}
 			}
 
@@ -325,40 +364,40 @@ console.log('val: '+val);
 				if($scope.showExactaAA) {
 					$scope.updateExacta(pos, val);
 				}
-				if($scope.showTrifecta) {
+				if($scope.showTrifectaAAA) {
 					$scope.updateTrifecta(pos, val);
 				}
-				if($scope.showSuperfecta) {
+				if($scope.showSuperfectaAAAA) {
 					$scope.updateSuperfecta(pos, val);
 				}
-				if($scope.showPentafecta) {
+				if($scope.showPentafectaAAAAA) {
 					$scope.updatePentafecta(pos, val);
 				}
 			}
 
 			if(pos === 'third') {
-				if($scope.showTrifecta) {
+				if($scope.showTrifectaAAA) {
 					$scope.updateTrifecta(pos, val);
 				}
-				if($scope.showSuperfecta) {
+				if($scope.showSuperfectaAAAA) {
 					$scope.updateSuperfecta(pos, val);
 				}
-				if($scope.showPentafecta) {
+				if($scope.showPentafectaAAAAA) {
 					$scope.updatePentafecta(pos, val);
 				}
 			}
 
 			if(pos === 'fourth') {
-				if($scope.showSuperfecta) {
+				if($scope.showSuperfectaAAAA) {
 					$scope.updateSuperfecta(pos, val);
 				}
-				if($scope.showPentafecta) {
+				if($scope.showPentafectaAAAAA) {
 					$scope.updatePentafecta(pos, val);
 				}
 			}
 
 			if(pos === 'fifth') {
-				if($scope.showPentafecta) {
+				if($scope.showPentafectaAAAAA) {
 					$scope.updatePentafecta(pos, val);
 				}
 			}
@@ -384,31 +423,402 @@ console.log('val: '+val);
 				if(val === 'firstNumber') {
 					$scope.exactaPcs.push($scope.firstNumber);
 				}
+				if($scope.exactaPcs[1] === undefined) {
+					$scope.exactaPcs[1] = '';
+				}
 			}
 			if(pos === 'second') {
 				if(val === 'secondNumber') {
+					$scope.exactaPcs.push('');
 					$scope.exactaPcs.push($scope.secondNumber);
+				}
+				if($scope.exactaPcs[0] === undefined) {
+					$scope.exactaPcs[0] = '';
 				}
 			}
 			$scope.exacta = $scope.exactaPcs[0] + '/' + $scope.exactaPcs[1];
 		}
 
 		$scope.updateTrifecta = function(pos, val) {
-console.log('$scope.updateTrifecta() called with pos: '+pos+' and val: '+val);
-console.log('$scope.exacta:');
-console.log($scope.exacta);
+			if($scope.trifecta.length > 1){
+				$scope.trifectaPcs = $scope.trifecta.split('/');
+				if(pos === 'first') {
+					if(val === 'firstNumber') {
+						$scope.trifectaPcs[0] = $scope.firstNumber;
+					}
+				}
+				if(pos === 'second') {
+					if(val === 'secondNumber') {
+						$scope.trifectaPcs[1] = $scope.secondNumber;
+					}
+				}
+				if(pos === 'third') {
+					if(val === 'thirdNumber') {
+						$scope.trifectaPcs[2] = $scope.thirdNumber;
+					}
+				}
+			} else {
+				$scope.trifectaPcs = [];
+			}
+			if(pos === 'first') {
+				if(val === 'firstNumber') {
+					$scope.trifectaPcs.push($scope.firstNumber);
+				}
+				if($scope.trifectaPcs[1] === undefined) {
+					$scope.trifectaPcs[1] = '';
+				}
+				if($scope.trifectaPcs[2] === undefined) {
+					$scope.trifectaPcs[2] = '';
+				}
+			}
+			if(pos === 'second') {
+				if(val === 'secondNumber') {
+					$scope.trifectaPcs.push('');
+					$scope.trifectaPcs.push($scope.secondNumber);
+				}
+				if($scope.trifectaPcs[0] === undefined) {
+					$scope.trifectaPcs[0] = '';
+				}
+				if($scope.trifectaPcs[2] === undefined) {
+					$scope.trifectaPcs[2] = '';
+				}
+			}
+			if(pos === 'third') {
+				if(val === 'thirdNumber') {
+					$scope.trifectaPcs.push('');
+					$scope.trifectaPcs.push('');
+					$scope.trifectaPcs.push($scope.thirdNumber);
+				}
+				if($scope.trifectaPcs[0] === undefined) {
+					$scope.trifectaPcs[0] = '';
+				}
+				if($scope.trifectaPcs[1] === undefined) {
+					$scope.trifectaPcs[1] = '';
+				}
+			}
+			$scope.trifecta = $scope.trifectaPcs[0] + '/' + $scope.trifectaPcs[1] + '/' + $scope.trifectaPcs[2];
 		}
 
 		$scope.updateSuperfecta = function(pos, val) {
-console.log('$scope.updateSuperfecta() called with pos: '+pos+' and val: '+val);
-console.log('$scope.exacta:');
-console.log($scope.exacta);
+			if($scope.superfecta.length > 1){
+				$scope.superfectaPcs = $scope.superfecta.split('/');
+				if(pos === 'first') {
+					if(val === 'firstNumber') {
+						$scope.superfectaPcs[0] = $scope.firstNumber;
+					}
+				}
+				if(pos === 'second') {
+					if(val === 'secondNumber') {
+						$scope.superfectaPcs[1] = $scope.secondNumber;
+					}
+				}
+				if(pos === 'third') {
+					if(val === 'thirdNumber') {
+						$scope.superfectaPcs[2] = $scope.thirdNumber;
+					}
+				}
+				if(pos === 'fourth') {
+					if(val === 'fourthNumber') {
+						$scope.superfectaPcs[3] = $scope.fourthNumber;
+					}
+				}
+			} else {
+				$scope.superfectaPcs = [];
+			}
+			if(pos === 'first') {
+				if(val === 'firstNumber') {
+					$scope.superfectaPcs.push($scope.firstNumber);
+				}
+				if($scope.superfectaPcs[1] === undefined) {
+					$scope.superfectaPcs[1] = '';
+				}
+				if($scope.superfectaPcs[2] === undefined) {
+					$scope.superfectaPcs[2] = '';
+				}
+				if($scope.superfectaPcs[3] === undefined) {
+					$scope.superfectaPcs[3] = '';
+				}
+			}
+			if(pos === 'second') {
+				if(val === 'secondNumber') {
+					$scope.superfectaPcs.push('');
+					$scope.superfectaPcs.push($scope.secondNumber);
+				}
+				if($scope.superfectaPcs[0] === undefined) {
+					$scope.superfectaPcs[0] = '';
+				}
+				if($scope.superfectaPcs[2] === undefined) {
+					$scope.superfectaPcs[2] = '';
+				}
+				if($scope.superfectaPcs[3] === undefined) {
+					$scope.superfectaPcs[3] = '';
+				}
+			}
+			if(pos === 'third') {
+				if(val === 'thirdNumber') {
+					$scope.superfectaPcs.push('');
+					$scope.superfectaPcs.push('');
+					$scope.superfectaPcs.push($scope.thirdNumber);
+				}
+				if($scope.superfectaPcs[0] === undefined) {
+					$scope.superfectaPcs[0] = '';
+				}
+				if($scope.superfectaPcs[1] === undefined) {
+					$scope.superfectaPcs[1] = '';
+				}
+				if($scope.superfectaPcs[3] === undefined) {
+					$scope.superfectaPcs[3] = '';
+				}
+			}
+			if(pos === 'fourth') {
+				if(val === 'fourthNumber') {
+					$scope.superfectaPcs.push('');
+					$scope.superfectaPcs.push('');
+					$scope.superfectaPcs.push('');
+					$scope.superfectaPcs.push($scope.fourthNumber);
+				}
+				if($scope.superfectaPcs[0] === undefined) {
+					$scope.superfectaPcs[0] = '';
+				}
+				if($scope.superfectaPcs[1] === undefined) {
+					$scope.superfectaPcs[1] = '';
+				}
+				if($scope.superfectaPcs[2] === undefined) {
+					$scope.superfectaPcs[2] = '';
+				}
+			}
+			$scope.superfecta = $scope.superfectaPcs[0] + '/' + $scope.superfectaPcs[1] + '/' + $scope.superfectaPcs[2] + '/' + $scope.superfectaPcs[3];
 		}
 
 		$scope.updatePentfecta = function(pos, val) {
-console.log('$scope.updatePentfecta() called with pos: '+pos+' and val: '+val);
-console.log('$scope.exacta:');
-console.log($scope.exacta);
+			if($scope.pentafecta.length > 1){
+				$scope.pentafectaPcs = $scope.pentafecta.split('/');
+				if(pos === 'first') {
+					if(val === 'firstNumber') {
+						$scope.pentafectaPcs[0] = $scope.firstNumber;
+					}
+				}
+				if(pos === 'second') {
+					if(val === 'secondNumber') {
+						$scope.pentafectaPcs[1] = $scope.secondNumber;
+					}
+				}
+				if(pos === 'third') {
+					if(val === 'thirdNumber') {
+						$scope.pentafectaPcs[2] = $scope.thirdNumber;
+					}
+				}
+				if(pos === 'fourth') {
+					if(val === 'fourthNumber') {
+						$scope.pentafectaPcs[3] = $scope.fourthNumber;
+					}
+				}
+				if(pos === 'fifth') {
+					if(val === 'fifthNumber') {
+						$scope.pentafectaPcs[4] = $scope.fifthNumber;
+					}
+				}
+			} else {
+				$scope.pentafectaPcs = [];
+			}
+			if(pos === 'first') {
+				if(val === 'firstNumber') {
+					$scope.pentafectaPcs.push($scope.firstNumber);
+				}
+				if($scope.pentafectaPcs[1] === undefined) {
+					$scope.pentafectaPcs[1] = '';
+				}
+				if($scope.pentafectaPcs[2] === undefined) {
+					$scope.pentafectaPcs[2] = '';
+				}
+				if($scope.pentafectaPcs[3] === undefined) {
+					$scope.pentafectaPcs[3] = '';
+				}
+				if($scope.pentafectaPcs[4] === undefined) {
+					$scope.pentafectaPcs[4] = '';
+				}
+			}
+			if(pos === 'second') {
+				if(val === 'secondNumber') {
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push($scope.secondNumber);
+				}
+				if($scope.pentafectaPcs[0] === undefined) {
+					$scope.pentafectaPcs[0] = '';
+				}
+				if($scope.pentafectaPcs[2] === undefined) {
+					$scope.pentafectaPcs[2] = '';
+				}
+				if($scope.pentafectaPcs[3] === undefined) {
+					$scope.pentafectaPcs[3] = '';
+				}
+				if($scope.pentafectaPcs[4] === undefined) {
+					$scope.pentafectaPcs[4] = '';
+				}
+			}
+			if(pos === 'third') {
+				if(val === 'thirdNumber') {
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push($scope.thirdNumber);
+				}
+				if($scope.pentafectaPcs[0] === undefined) {
+					$scope.pentafectaPcs[0] = '';
+				}
+				if($scope.pentafectaPcs[1] === undefined) {
+					$scope.pentafectaPcs[1] = '';
+				}
+				if($scope.pentafectaPcs[3] === undefined) {
+					$scope.pentafectaPcs[3] = '';
+				}
+				if($scope.pentafectaPcs[4] === undefined) {
+					$scope.pentafectaPcs[4] = '';
+				}
+			}
+			if(pos === 'fourth') {
+				if(val === 'fourthNumber') {
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push($scope.fourthNumber);
+				}
+				if($scope.pentafectaPcs[0] === undefined) {
+					$scope.pentafectaPcs[0] = '';
+				}
+				if($scope.pentafectaPcs[1] === undefined) {
+					$scope.pentafectaPcs[1] = '';
+				}
+				if($scope.pentafectaPcs[2] === undefined) {
+					$scope.pentafectaPcs[2] = '';
+				}
+				if($scope.pentafectaPcs[4] === undefined) {
+					$scope.pentafectaPcs[4] = '';
+				}
+			}
+			if(pos === 'fifth') {
+				if(val === 'fifthNumber') {
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push('');
+					$scope.pentafectaPcs.push($scope.fifthNumber);
+				}
+				if($scope.pentafectaPcs[0] === undefined) {
+					$scope.pentafectaPcs[0] = '';
+				}
+				if($scope.pentafectaPcs[1] === undefined) {
+					$scope.pentafectaPcs[1] = '';
+				}
+				if($scope.pentafectaPcs[2] === undefined) {
+					$scope.pentafectaPcs[2] = '';
+				}
+				if($scope.pentafectaPcs[3] === undefined) {
+					$scope.pentafectaPcs[3] = '';
+				}
+			}
+			$scope.pentafecta = $scope.pentafectaPcs[0] + '/' + $scope.pentafectaPcs[1] + '/' + $scope.pentafectaPcs[2] + '/' + $scope.pentafectaPcs[3] + '/' + $scope.pentafectaPcs[4];
+		}
+
+		$scope.score = function() {
+			var score = {};
+			score.firstNumber = $scope.firstNumber;
+			score.firstJockey = $scope.firstJockey;
+			score.firstWinPrice = $scope.firstWinPrice;
+			if($scope.firstPlacePrice) {
+				score.firstPlacePrice = $scope.firstPlacePrice;
+			}
+			if($scope.firstShowPrice) {
+				score.firstShowPrice = $scope.firstShowPrice;
+			}
+			if($scope.secondNumber) {
+				score.secondNumber = $scope.secondNumber;
+				score.secondJockey = $scope.secondJockey;
+				score.secondPlacePrice = $scope.secondPlacePrice;
+				if($scope.secondShowPrice) {
+					score.secondShowPrice = $scope.secondShowPrice;
+				}
+				score.exacta = $scope.exacta;
+				score.exactaPrice = $scope.exactaPrice;
+			}
+			if($scope.thirdNumber) {
+				score.thirdNumber = $scope.thirdNumber;
+				score.thirdJockey = $scope.thirdJockey;
+				score.thirdShowPrice = $scope.thirdShowPrice;
+				score.trifecta = $scope.trifecta;
+				score.trifectaPrice = $scope.trifectaPrice;
+			}
+			if($scope.superfectaPrice) {
+				score.superfecta = $scope.superfecta;
+				score.superfectaPrice = $scope.superfectaPrice;
+			}
+			if($scope.pentafectaPrice) {
+				score.pentafecta = $scope.pentafecta;
+				score.pentafectaPrice = $scope.pentafectaPrice;
+			}
+
+			if($scope.dailyDoublePrice) {
+				score.dailyDouble = $scope.dailyDouble;
+				score.dailyDoublePrice = $scope.dailyDoublePrice;
+			}
+
+			if($scope.pick3Price) {
+				score.pick3 = $scope.pick3;
+				score.pick3Price = $scope.pick3Price;
+			}
+
+			if($scope.pick4Price) {
+				score.pick4 = $scope.pick4;
+				score.pick4Price = $scope.pick4Price;
+			}
+
+			if($scope.pick5Price) {
+				score.pick5 = $scope.pick5;
+				score.pick5Price = $scope.pick5Price;
+			}
+
+			if($scope.pick6Price) {
+				score.pick6 = $scope.pick6;
+				score.pick6Price = $scope.pick6Price;
+			}
+
+			if($scope.pick6ConsolationPrice) {
+				score.pick6Consolation = $scope.pick6Consolation;
+				score.pick6ConsolationPrice = $scope.pick6ConsolationPrice;
+			}
+
+			if($scope.pick7Price) {
+				score.pick7 = $scope.pick7;
+				score.pick7Price = $scope.pick7Price;
+			}
+
+			if($scope.pick8Price) {
+				score.pick8 = $scope.pick8;
+				score.pick8Price = $scope.pick8Price;
+			}
+
+			if($scope.pick9Price) {
+				score.pick9 = $scope.pick9;
+				score.pick9Price = $scope.pick9Price;
+			}
+
+			if($scope.pick10Price) {
+				score.pick10 = $scope.pick10;
+				score.pick10Price = $scope.pick10Price;
+			}
+
+			$scope.race.score = score;
+
+			$scope.trdData.races.forEach(function(race) {
+				if(race.number === $scope.race.number) {
+					race = $scope.race;
+				}
+			});
+
+			var updateTrdPromise = trdMgmt.updateTrd($scope.trdData);
+			updateTrdPromise.then(function(response) {
+console.log('response:');
+console.log(response);
+			});
 		}
 
 	}

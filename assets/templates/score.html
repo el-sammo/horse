@@ -360,13 +360,12 @@
 							</span>
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="fourthNumber" ng-change="getJockey('fourth')">
+							<input type="text" ng-model="fourthNumber" ng-change="getJockey('fourth');updateExotics('fourth-fourthNumber')">
 						</div>
 						<div class="col-md-2">
 							<input 
 								type="text" 
 								ng-model="fourthJockey"
-								ng-change="updateExotics('fourth-fourthNumber')"
 							>
 						</div>
 						<div class="col-md-1">
@@ -492,6 +491,7 @@
 						</div>
 					</div>
 					<div class="row" ng-show="showExactaAA">
+						<br/>
 						<div class="col-md-1">
 							<span 
 								class="raceDetails pull-right"
@@ -510,7 +510,75 @@
 							<input type="text" ng-model="exactaPrice">
 						</div>
 					</div>
+					<div class="row" ng-show="showTrifectaAAA">
+						<br/>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								Trifecta
+							</span>
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+							>
+								{{trifecta}}
+							</span>
+						</div>
+						<div class="col-md-1">
+							<input type="text" ng-model="trifectaPrice">
+						</div>
+					</div>
+					<div class="row" ng-show="showSuperfectaAAAA">
+						<br/>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								Superfecta
+							</span>
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+							>
+								{{superfecta}}
+							</span>
+						</div>
+						<div class="col-md-1">
+							<input type="text" ng-model="superfectaPrice">
+						</div>
+					</div>
+					<div class="row" ng-show="showPentafectaAAAAA">
+						<br/>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-right"
+							>
+								Pentafecta
+							</span>
+						</div>
+						<div class="col-md-1">
+							<span 
+								class="raceDetails pull-left"
+							>
+								{{pentafecta}}
+							</span>
+						</div>
+						<div class="col-md-1">
+							<input type="text" ng-model="pentafectaPrice">
+						</div>
+					</div>
 					<br/>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-md-12">
+					<button type="button" class="btn btn-success pull-right" ng-disabled="false" ng-click="score()">
+						<i class="fa fa-plus"></i> &nbsp; Score Race
+					</button>
 				</div>
 			</div>
 		</div>
