@@ -773,7 +773,7 @@ console.log('$scope.cancelWager() called with id: '+wagerId);
 		};
 
 		$scope.showResults = function(trdId, raceNum) {
-console.log('$scope.showResults() called with trdId: '+trackId+' and race number: '+raceNum);
+console.log('$scope.showResults() called with trdId: '+trdId+' and race number: '+raceNum);
 		}
 
 	}
