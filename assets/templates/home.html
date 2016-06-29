@@ -39,11 +39,20 @@
 							<span 
 								class="raceDetailsSmaller"
 								style="cursor: pointer;"
-								ng-click="scoreRace(track.id, race.number)"
-								ng-show="customer.admin && !race.score"
+								ng-click="closeRace(track.id, race.number)"
+								ng-show="customer.admin && !race.score && !race.closed"
 							>
 								<br/>
-								Score
+								Close Race
+							</span>
+							<span 
+								class="raceDetailsSmaller"
+								style="cursor: pointer;"
+								ng-click="scoreRace(track.id, race.number)"
+								ng-show="customer.admin && !race.score && race.closed"
+							>
+								<br/>
+								Score Race
 							</span>
 							<span 
 								class="raceDetailsSmaller"
@@ -58,7 +67,7 @@
 								class="raceDetailsSmaller"
 								style="cursor: pointer;"
 								ng-click="showResults(track.id, race.number)"
-								ng-show="race.score"
+								ng-show="race.closed && race.score"
 							>
 								<br/>
 								Results
@@ -228,6 +237,7 @@
 														ng-false-value="false"
 														ng-change="updateSelectedRunnersDisplay()"
 														ng-disabled="!entry.active"
+														ng-show="!race.closed"
 													>
 													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
 												</div>
@@ -269,7 +279,11 @@
 									<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>
 								</div>
 								<div class="col-md-2">
-									<button class="btn btn-primary btn-sm" ng-click="submitWager()">
+									<button 
+										class="btn btn-primary btn-sm" 
+										ng-click="submitWager()"
+										ng-disabled="race.closed"
+									>
 										Submit Wager
 									</button>
 								</div>

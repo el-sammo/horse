@@ -178,6 +178,15 @@
 			$scope.raceNum = raceNum;
 			$scope.trId = trackId+'-'+raceNum;
 			$scope.showRaceWager(trackId, raceNum, 'Win', 2);
+			$scope.trdData.forEach(function(trd) {
+				if(trd.id === trackId) {
+					trd.races.forEach(function(race) {
+						if(race.number == raceNum) {
+							$scope.race = race;
+						}
+					});
+				}
+			});
 		}
 
 		$scope.showLeg = function(legNum) {
@@ -768,8 +777,25 @@
 console.log('$scope.cancelWager() called with id: '+wagerId);
 		}
 
-		$scope.scoreRace = function(trId, raceNum) {
-			$window.location.href = location.origin + "/app/scoreRace/" + trId + '-' + raceNum;
+		$scope.scoreRace = function(trdId, raceNum) {
+			$window.location.href = location.origin + "/app/scoreRace/" + trdId + '-' + raceNum;
+		};
+
+		$scope.closeRace = function(trdId, raceNum) {
+			$scope.trdData.forEach(function(trd) {
+				if(trd.id === trdId) {
+					var newTrdData = trd;
+					newTrdData.races.forEach(function(race) {
+						if(race.number == raceNum) {
+							race.closed = true;
+						}
+					});
+					var updateTrdData = trdMgmt.updateTrd(newTrdData);
+					updateTrdData.then(function(response) {
+						$window.location.href = location.origin + "/app/";
+					});
+				}
+			});
 		};
 
 		$scope.showResults = function(trdId, raceNum) {
