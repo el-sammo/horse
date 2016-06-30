@@ -18,6 +18,8 @@
 	) {
 		var wager;
 		var getWagerPromise;
+		var getWagersByCustomerIdPromise;
+		var getLiveWagersByCustomerIdPromise;
 
 		var service = {
 			getWager: function(wagerId) {
@@ -35,6 +37,32 @@
 				});
 
 				return getWagerPromise;
+			},
+
+			getWagersByCustomerId: function(customerId) {
+				var url = '/wagers/byCustomerId/' + customerId;
+				getWagersByCustomerIdPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getWagersByCustomerIdPromise;
+			},
+
+			getLiveWagersByCustomerId: function(customerId) {
+				var url = '/wagers/byCustomerIdLive/' + customerId;
+				getLiveWagersByCustomerIdPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getLiveWagersByCustomerIdPromise;
 			},
 
 			submitWager: function(wagerData) {

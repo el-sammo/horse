@@ -37,6 +37,10 @@ body {
 	height: 70px;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
 input.error {
 	border: 1px solid red;
 }
@@ -791,6 +795,19 @@ td {
 	position: relative;
 }
 
+.boxHead {
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.raceInfo {
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: 300;
+}
+
 .raceDetails {
 	color: #FFFFFF;
 	font-size: 14px;
@@ -813,6 +830,12 @@ td {
 	color: #000000;
 	font-size: 11px;
 	font-weight: 300;
+}
+
+.historyDetails {
+	color: #FFFFFF;
+	font-size: 10px;
+	font-weight: 100;
 }
 
 .sportTabLeft {

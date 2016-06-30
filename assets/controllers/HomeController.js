@@ -76,8 +76,8 @@
 
 			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
 			getTrdsByDatePromise.then(function(trdsData) {
-
 				$scope.trdData = trdsData;
+//				$scope.showTrack(trdsData[0].id);
 
 				var tracks = [];
 				var firstTrack = true;
@@ -755,7 +755,7 @@
 					wagerTotal: $scope.ticketCost
 				}
 				wagerMgmt.submitWager(wagerSubmission).then(function(response) {
-					// TODO handle success/fail
+					$scope.tabShow = 'wagerResponse';
 					if(response.data.success) { 
 						$scope.successfulWager = response.data.confirmedWager;
 						$scope.wagerError = '';
@@ -767,6 +767,8 @@
 							if(response.data.missingPcs.length < 2 && response.data.missingPcs.indexOf('wagerAmount') >=0) {
 								$scope.wagerError = 'Please Select a Wager Amount';
 							}
+						} else {
+							$scope.wagerError = response.data.failMsg;
 						}
 					}
 				});
@@ -779,6 +781,56 @@ console.log('$scope.cancelWager() called with id: '+wagerId);
 
 		$scope.scoreRace = function(trdId, raceNum) {
 			$window.location.href = location.origin + "/app/scoreRace/" + trdId + '-' + raceNum;
+		};
+
+		$scope.showHistory = function() {
+			$scope.tabShow = 'wagerHistory';
+			var getWagersByCustomerId = wagerMgmt.getWagersByCustomerId($scope.customer.id);
+			getWagersByCustomerId.then(function(wagerHistory) {
+				var formattedHistory = [];
+				wagerHistory.forEach(function(wager) {
+					var formattedWager = {};
+					formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
+					formattedWager.track = wager.track;
+					var trIdPcs = wager.trackRaceId.split('-');
+					formattedWager.race = trIdPcs[1];
+					formattedWager.amount = wager.wagerAmount;
+					formattedWager.type = wager.wagerPool;
+					formattedWager.selection = wager.wagerSelections;
+					formattedWager.total = wager.wagerTotal;
+					var result;
+					if(wager.result) {
+						if(wager.result > 0) {
+							result = 'W';
+						} else if(wager.result < 0){
+							result = 'R';
+						} else {
+							result = 'L';
+						}
+					} else {
+						if(wager.cancelled) {
+							result = 'C';
+						} else {
+							result = '?';
+						}
+					}
+					formattedWager.result = result;
+					formattedHistory.push(formattedWager);
+				});
+				$scope.wagerHistory = formattedHistory;
+			});
+		};
+
+		$scope.showLive = function() {
+			$scope.tabShow = 'liveWagers';
+			var getLiveWagersByCustomerId = wagerMgmt.getLiveWagersByCustomerId($scope.customer.id);
+			getLiveWagersByCustomerId.then(function(liveWagers) {
+				$scope.liveWagers = liveWagers;
+			});
+		};
+
+		$scope.showConfirmation = function() {
+			$scope.tabShow === 'wagerResponse';
 		};
 
 		$scope.closeRace = function(trdId, raceNum) {
@@ -802,6 +854,28 @@ console.log('$scope.cancelWager() called with id: '+wagerId);
 console.log('$scope.showResults() called with trdId: '+trdId+' and race number: '+raceNum);
 		}
 
-	}
+		$scope.getWagerAbbrev = function(wager) {
+			var wagerAbbrevMap = [];
+			wagerAbbrevMap['Win'] = 'Win';
+			wagerAbbrevMap['Place'] = 'Place';
+			wagerAbbrevMap['Show'] = 'Show';
+			wagerAbbrevMap['Exacta'] = 'Exacta';
+			wagerAbbrevMap['Trifecta'] = 'Tri';
+			wagerAbbrevMap['Superfecta'] = 'Super';
+			wagerAbbrevMap['Pentafecta'] = 'SH5';
+			wagerAbbrevMap['Daily Double'] = 'DD';
+			wagerAbbrevMap['Pick 3'] = 'P3';
+			wagerAbbrevMap['Pick 4'] = 'P4';
+			wagerAbbrevMap['Pick 5'] = 'P5';
+			wagerAbbrevMap['Pick 6'] = 'P6';
+			wagerAbbrevMap['Pick 7'] = 'P7';
+			wagerAbbrevMap['Pick 8'] = 'P8';
+			wagerAbbrevMap['Pick 9'] = 'P9';
+			wagerAbbrevMap['Pick 10'] = 'P10';
 
+			return wagerAbbrevMap[wager];
+
+		}
+
+	}
 }());

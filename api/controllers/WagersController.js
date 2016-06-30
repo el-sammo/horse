@@ -76,7 +76,7 @@ module.exports = {
   },
 
 	byCustomerId: function(req, res) {
-		Wagers.find({username: req.params.id}).sort({
+		Wagers.find({customerId: req.params.id}).sort({
 			created: 'asc'
 		}).then(function(results) {
 			res.send(JSON.stringify(results));
@@ -137,7 +137,7 @@ function validateWager(req, res, self) {
   return WagersService.getTrd(trIdPcs[0]).then(function(trackData) {
     if(! trackData) {
 			console.log('trackData ajax failed in WagerController-validateWager() for trackRaceId '+wagerData.trackRaceId);
-			// TODO: what should this return?
+// TODO: what should this return?
 	 		return errorHandler(trdsError)();
 		}
 
@@ -145,6 +145,10 @@ function validateWager(req, res, self) {
 
 		trackData.trd.races.forEach(function(race) {
 			if(race.number == trIdPcs[1]) {
+				if(race.closed) {
+console.log('Race Closed');
+					return res.send(JSON.stringify({success: false, failMsg: 'Race Closed'}));
+				}
 				validStartingRace = true;
 				var validWagerPool = false;
 				var validWager = true;

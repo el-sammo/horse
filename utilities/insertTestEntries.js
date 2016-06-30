@@ -5,7 +5,7 @@ insertTestEntryData();
 function insertTestEntryData() {
 
 	var trackName = 'Belmont';
-	var raceDate = 20160629;
+	var raceDate = 20160630;
 	var races = [
 		{
 			number: 1, 
@@ -68,7 +68,7 @@ function insertTestEntryData() {
 					meds: 'FTL',
 					altRunner: {
 						number: '1A',
-						post: 7,
+						post: 8,
 						active: true,
 						name: 'Ah Shit',
 						jockey: 'El Sammo',

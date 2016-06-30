@@ -122,71 +122,71 @@
 														{{entry.altRunner.name}} - {{entry.altRunner.meds}} - {{entry.altRunner.equip}}
 													</span>
 												</div>
+												<div class="col-md-4" ng-show="!entry.altRunner">
+													<span 
+														class="raceDetailsSmaller" 
+														ng-show="entry.active && !entry.weight"
+													>
+														{{entry.jockey}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && !entry.weight"
+													>
+														{{entry.jockey}}
+													</span>
+													<span 
+														class="raceDetailsSmaller" 
+														ng-show="entry.active && entry.weight"
+													>
+														{{entry.jockey}} ({{entry.weight}})
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && entry.weight"
+													>
+														{{entry.jockey}} ({{entry.weight}})
+													</span>
+												</div>
+												<div class="col-md-4" ng-show="entry.altRunner">
+													<span 
+														class="raceDetailsSmaller" 
+														ng-show="entry.active && !entry.weight"
+													>
+														{{entry.jockey}}
+														<br/>
+														{{entry.altRunner.jockey}}
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && !entry.weight"
+													>
+														{{entry.jockey}}
+														<br/>
+														{{entry.altRunner.jockey}}
+													</span>
+													<span 
+														class="raceDetailsSmaller" 
+														ng-show="entry.active && entry.weight"
+													>
+														{{entry.jockey}} ({{entry.weight}})
+														<br/>
+														{{entry.altRunner.jockey}} ({{entry.altRunner.weight}})
+													</span>
+													<span 
+														class="raceDetailsShade" 
+														style="text-decoration: line-through;"
+														ng-show="!entry.active && entry.weight"
+													>
+														{{entry.jockey}} ({{entry.weight}})
+														<br/>
+														{{entry.altRunner.jockey}} ({{entry.altRunner.weight}})
+													</span>
+												</div>
 												<div class="col-md-3" ng-show="!entry.altRunner">
-													<span 
-														class="raceDetailsSmaller" 
-														ng-show="entry.active && !entry.weight"
-													>
-														{{entry.jockey}}
-													</span>
-													<span 
-														class="raceDetailsShade" 
-														style="text-decoration: line-through;"
-														ng-show="!entry.active && !entry.weight"
-													>
-														{{entry.jockey}}
-													</span>
-													<span 
-														class="raceDetailsSmaller" 
-														ng-show="entry.active && entry.weight"
-													>
-														{{entry.jockey}} ({{entry.weight}})
-													</span>
-													<span 
-														class="raceDetailsShade" 
-														style="text-decoration: line-through;"
-														ng-show="!entry.active && entry.weight"
-													>
-														{{entry.jockey}} ({{entry.weight}})
-													</span>
-												</div>
-												<div class="col-md-3" ng-show="entry.altRunner">
-													<span 
-														class="raceDetailsSmaller" 
-														ng-show="entry.active && !entry.weight"
-													>
-														{{entry.jockey}}
-														<br/>
-														{{entry.altRunner.jockey}}
-													</span>
-													<span 
-														class="raceDetailsShade" 
-														style="text-decoration: line-through;"
-														ng-show="!entry.active && !entry.weight"
-													>
-														{{entry.jockey}}
-														<br/>
-														{{entry.altRunner.jockey}}
-													</span>
-													<span 
-														class="raceDetailsSmaller" 
-														ng-show="entry.active && entry.weight"
-													>
-														{{entry.jockey}} ({{entry.weight}})
-														<br/>
-														{{entry.altRunner.jockey}} ({{entry.altRunner.weight}})
-													</span>
-													<span 
-														class="raceDetailsShade" 
-														style="text-decoration: line-through;"
-														ng-show="!entry.active && entry.weight"
-													>
-														{{entry.jockey}} ({{entry.weight}})
-														<br/>
-														{{entry.altRunner.jockey}} ({{entry.altRunner.weight}})
-													</span>
-												</div>
-												<div class="col-md-2" ng-show="!entry.altRunner">
 													<span 
 														class="raceDetailsSmaller" 
 														ng-show="entry.active"
@@ -201,7 +201,7 @@
 														{{entry.trainer}}
 													</span>
 												</div>
-												<div class="col-md-2" ng-show="entry.altRunner">
+												<div class="col-md-3" ng-show="entry.altRunner">
 													<span 
 														class="raceDetailsSmaller" 
 														ng-show="entry.active"

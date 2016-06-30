@@ -55,10 +55,6 @@
 			},
 
 			getTrdsByDate: function() {
-				if(getTrdsByDatePromise) {
-					return getTrdsByDatePromise;
-				}
-
 				var url = '/trds/byDate/' + todayDate;
 				getTrdsByDatePromise = $http.get(url).then(function(res) {
 					mergeIntoTrd(res.data);

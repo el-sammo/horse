@@ -1,4 +1,4 @@
-<div class="col-md-12" ng-show="bigScreen">
+<div class="col-md-12" ng-show="bigScreen" ng-cloak>
 	<div class="row" id="homeMain">
 		<div 
 			class="contentGreyBg"
@@ -10,7 +10,7 @@
 				ng-show="trackShow === track.id"
 			>
 				<div 
-					class="col-md-10 col-md-offset-1"
+					class="col-md-6 col-md-offset-1"
 				>
 					<div class="row">
 						<div 
@@ -34,7 +34,7 @@
 								class="raceHead" 
 								ng-click="showTrackRace(track.id, race.number)"
 							>
-								Race {{race.number}}
+								{{race.number}}
 							</span>
 							<span 
 								class="raceDetailsSmaller"
@@ -91,55 +91,56 @@
 							>
 								<div class="col-md-12">
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.time"
 									>
 										Post: {{convertPostTime(race.time)}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.distance"
 									>
 										| Distance: {{convertDist(race.distance)}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.surface"
 									>
 										| Surface: {{race.surface}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.sexes"
 									>
 										| {{race.sexes}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.ages"
 									>
 										| {{race.ages}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.type"
 									>
 										| {{race.type}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.claim"
 									>
 										| Claim: ${{race.claim}}
 									</span>
 									<span 
-										class="raceDetails"
+										class="raceInfo"
 										ng-show="race.purse"
 									>
 										| Purse: ${{race.purse}}
 									</span>
 								</div>
 							</div>
+							<br/>
 							<div 
 								class="row"
 								style="padding-top: 6px;"
@@ -147,19 +148,16 @@
 								<div class="col-md-12">
 									<span 
 										class="raceDetails"
-									>
-										Wager Type:
-									</span>
-									<span 
-										class="raceDetails"
-										style="padding-left: 8px; cursor: pointer;"
+										style="padding-right: 8px; cursor: pointer;"
 										ng-repeat="wager in race.wagers"
+										ng-init="wagerAbbrev = getWagerAbbrev(wager.wager)"
 										ng-click="showRaceWager(track.id, race.number, wager.wager, wager.min)"
 									>
-										{{wager.wager}}
+										{{wagerAbbrev}}
 									</span>
 								</div>
 							</div>
+							<br/>
 							<div 
 								class="row"
 								style="padding-top: 6px;"
@@ -211,16 +209,16 @@
 									<div class="row" ng-show="legs < 2 && parts < 2">
 										<div class="col-md-12">
 											<div class="row">
-												<div class="col-md-1">
+												<div class="col-md-2">
 													<span class="raceDetails">{{singleDesc}}</span>
 												</div>
 												<div class="col-md-3">
 													<span class="raceDetails">Runner</span>
 												</div>
-												<div class="col-md-3">
+												<div class="col-md-4">
 													<span class="raceDetails">Jockey</span>
 												</div>
-												<div class="col-md-2">
+												<div class="col-md-3">
 													<span class="raceDetails">Trainer</span>
 												</div>
 											</div>
@@ -229,7 +227,7 @@
 												class="row"
 												ng-repeat="(idx, entry) in wagerRunners[0]"
 											>
-												<div class="col-md-1">
+												<div class="col-md-2">
 													<input 
 														type="checkbox"
 														ng-model="selectedRunners[idx]"
@@ -250,12 +248,12 @@
 						</div>
 					</div>
 					<br/>
+					<br/>
+					<br/>
 					<div class="row">
-						<div class="col=md=12">
-							<div class="row=">
-								<div class="col-md-1">
-									<span class="raceDetails">Amount:</span>
-									<br/>
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-2">
 									<select 
 										name="repeatSelect" 
 										id="repeatSelect" 
@@ -270,7 +268,7 @@
 										</option>
 									</select>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-5">
 									<span class="raceDetails" ng-show="wager && wagerData.amount">${{wagerData.amount}} {{wager}}:</span>
 									<br/>
 									<span class="raceDetails" ng-show="wager">{{formattedRunners}}</span>
@@ -287,12 +285,57 @@
 										Submit Wager
 									</button>
 								</div>
-								<div class="col-md-3" ng-show="wagerError">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div 
+					class="col-md-5" 
+					style="
+						top: 45px;
+						position: relative;
+					"
+				>
+					<div class="row">
+						<div class="col-md-12">
+							<div
+								style="
+									width: 400px;
+									height: 300px;
+									border: 1px solid black;
+								"
+							>
+								video player???
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-3">
+									<span class="boxHead" ng-click="showHistory()">
+										Wager History
+									</span>
+								</div>
+								<div class="col-md-3">
+									<span class="boxHead" ng-click="showLive()">
+										Live Wagers
+									</span>
+								</div>
+								<div class="col-md-4">
+									<span class="boxHead" ng-click="showConfirmation()">
+										Wager Confirmation
+									</span>
+								</div>
+							</div>
+							<div class="row" ng-show="tabShow === 'wagerResponse'">
+								<div class="col-md-12" ng-show="wagerError">
 									<span class="raceDetailsRed">Wager Error</span>
 									<br/><br/>
 									<span class="raceDetailsSmaller">{{wagerError}}</span>
 								</div>
-								<div class="col-md-3" ng-show="successfulWager">
+								<div class="col-md-12" ng-show="successfulWager">
 									<span class="raceDetails">Wager Details</span>
 									<br/><br/>
 									<span class="raceDetailsSmaller">Type: {{successfulWager.wagerPool}}</span>
@@ -311,6 +354,177 @@
 										Cancel
 									</span>
 									<br/>
+								</div>
+							</div>
+							<div class="row" ng-show="tabShow === 'wagerHistory'">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Date
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Track
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetailsHead">
+												Race
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetailsHead">
+												Amount
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetailsHead">
+												Type
+											</span>
+										</div>
+										<div class="col-md-3">
+											<span class="historyDetailsHead">
+												Selection
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetailsHead">
+												Total
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetailsHead">
+												Result
+											</span>
+										</div>
+									</div>
+									<div class="row" ng-repeat="wager in wagerHistory">
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.date}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.track}}
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetails">
+												{{wager.race}}
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetails">
+												{{wager.amount}}
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetails">
+												{{wager.type}}
+											</span>
+										</div>
+										<div class="col-md-3">
+											<span class="historyDetails">
+												{{wager.selection}}
+											</span>
+										</div>
+										<div class="col-md-1">
+											<span class="historyDetails">
+												{{wager.total}}
+											</span>
+										</div>
+										<div class="col-md-1 pull-right">
+											<span class="historyDetails">
+												{{wager.result}}
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row" ng-show="tabShow === 'liveWagers'">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Date
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Track
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Race
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Amount
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Type
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Selection
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Total
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetailsHead">
+												Result
+											</span>
+										</div>
+									</div>
+									<div class="row" ng-repeat="wager in wagerHistory">
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.createdAt}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.track}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.trackRaceId}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.wagerAmount}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.wagerPool}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.wagerSelections}}
+											</span>
+										</div>
+										<div class="col-md-2">
+											<span class="historyDetails">
+												{{wager.wagerTotal}}
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
