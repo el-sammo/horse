@@ -776,7 +776,11 @@
 		}
 
 		$scope.cancelWager = function(wagerId) {
+			if(!$scope.customerId) {
+				layoutMgmt.logIn();
+			} else {
 console.log('$scope.cancelWager() called with id: '+wagerId);
+			}
 		}
 
 		$scope.scoreRace = function(trdId, raceNum) {
@@ -784,53 +788,70 @@ console.log('$scope.cancelWager() called with id: '+wagerId);
 		};
 
 		$scope.showHistory = function() {
-			$scope.tabShow = 'wagerHistory';
-			var getWagersByCustomerId = wagerMgmt.getWagersByCustomerId($scope.customer.id);
-			getWagersByCustomerId.then(function(wagerHistory) {
-				var formattedHistory = [];
-				wagerHistory.forEach(function(wager) {
-					var formattedWager = {};
-					formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
-					formattedWager.track = wager.track;
-					var trIdPcs = wager.trackRaceId.split('-');
-					formattedWager.race = trIdPcs[1];
-					formattedWager.amount = wager.wagerAmount;
-					formattedWager.type = wager.wagerPool;
-					formattedWager.selection = wager.wagerSelections;
-					formattedWager.total = wager.wagerTotal;
-					var result;
-					if(wager.result) {
-						if(wager.result > 0) {
-							result = 'W';
-						} else if(wager.result < 0){
-							result = 'R';
+			if(!$scope.customerId) {
+				layoutMgmt.logIn();
+			} else {
+				$scope.tabShow = 'wagerHistory';
+				var getWagersByCustomerId = wagerMgmt.getWagersByCustomerId($scope.customer.id);
+				getWagersByCustomerId.then(function(wagerHistory) {
+					var formattedHistory = [];
+					wagerHistory.forEach(function(wager) {
+						var formattedWager = {};
+						formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
+						formattedWager.track = wager.track;
+						var trIdPcs = wager.trackRaceId.split('-');
+						var trackId = trIdPcs[0];
+						var raceNumber = trIdPcs[1];
+						var getTrdPromise = trdMgmt.getTrd(trackId);
+						getTrdPromise.then(function(trdData) {
+							formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
+						});
+						formattedWager.amount = wager.wagerAmount;
+						formattedWager.type = $scope.getWagerAbbrev(wager.wagerPool);
+						formattedWager.selection = wager.wagerSelections;
+						formattedWager.total = wager.wagerTotal;
+						var result;
+						if(wager.result) {
+							if(wager.result > 0) {
+								result = 'W';
+							} else if(wager.result < 0){
+								result = 'R';
+							} else {
+								result = 'L';
+							}
 						} else {
-							result = 'L';
+							if(wager.cancelled) {
+								result = 'C';
+							} else {
+								result = '?';
+							}
 						}
-					} else {
-						if(wager.cancelled) {
-							result = 'C';
-						} else {
-							result = '?';
-						}
-					}
-					formattedWager.result = result;
-					formattedHistory.push(formattedWager);
+						formattedWager.result = result;
+						formattedHistory.push(formattedWager);
+					});
+					$scope.wagerHistory = formattedHistory;
 				});
-				$scope.wagerHistory = formattedHistory;
-			});
+			}
 		};
 
 		$scope.showLive = function() {
-			$scope.tabShow = 'liveWagers';
-			var getLiveWagersByCustomerId = wagerMgmt.getLiveWagersByCustomerId($scope.customer.id);
-			getLiveWagersByCustomerId.then(function(liveWagers) {
-				$scope.liveWagers = liveWagers;
-			});
+			if(!$scope.customerId) {
+				layoutMgmt.logIn();
+			} else {
+				$scope.tabShow = 'liveWagers';
+				var getLiveWagersByCustomerId = wagerMgmt.getLiveWagersByCustomerId($scope.customer.id);
+				getLiveWagersByCustomerId.then(function(liveWagers) {
+					$scope.liveWagers = liveWagers;
+				});
+			}
 		};
 
 		$scope.showConfirmation = function() {
-			$scope.tabShow === 'wagerResponse';
+			if(!$scope.customerId) {
+				layoutMgmt.logIn();
+			} else {
+				$scope.tabShow === 'wagerResponse';
+			}
 		};
 
 		$scope.closeRace = function(trdId, raceNum) {
