@@ -26,6 +26,9 @@
 			$scope.bigScreen = false;
 		}
 
+		$scope.leaderboardsShow = false;
+		$scope.horseCenterShow = true;
+
 		$scope.wagerData = {};
 
 //		$scope.signUp = signupPrompter.prompt();
@@ -843,16 +846,22 @@
 			}
 		};
 
-		$scope.showLive = function() {
-			if(!$scope.customerId) {
-				layoutMgmt.logIn();
-			} else {
-				$scope.tabShow = 'liveWagers';
-				var getLiveWagersByCustomerId = wagerMgmt.getLiveWagersByCustomerId($scope.customer.id);
-				getLiveWagersByCustomerId.then(function(liveWagers) {
-					$scope.liveWagers = liveWagers;
-				});
-			}
+		$scope.showHorseCenter = function() {
+			$scope.leaderboardsShow = false;
+			$scope.tournamentsShow = false;
+			$scope.horseCenterShow = true;
+		};
+
+		$scope.showLeaderboards = function() {
+			$scope.horseCenterShow = false;
+			$scope.tournamentsShow = false;
+			$scope.leaderboardsShow = true;
+		};
+
+		$scope.showTournaments = function() {
+			$scope.horseCenterShow = false;
+			$scope.leaderboardsShow = false;
+			$scope.tournamentsShow = true;
 		};
 
 		$scope.showConfirmation = function() {
