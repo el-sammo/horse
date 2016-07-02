@@ -779,7 +779,11 @@
 			if(!$scope.customerId) {
 				layoutMgmt.logIn();
 			} else {
-console.log('$scope.cancelWager() called with id: '+wagerId);
+				var cancelWagerPromise = wagerMgmt.cancelWager(wagerId);
+				cancelWagerPromise.then(function(response) {
+					$scope.successfulWager = response[0];
+					updateBalance();
+				});
 			}
 		}
 
@@ -792,8 +796,13 @@ console.log('$scope.cancelWager() called with id: '+wagerId);
 				layoutMgmt.logIn();
 			} else {
 				$scope.tabShow = 'wagerHistory';
-				var getWagersByCustomerId = wagerMgmt.getWagersByCustomerId($scope.customer.id);
-				getWagersByCustomerId.then(function(wagerHistory) {
+				var dateObj = new Date();
+				var ms = dateObj.getTime();
+				var msPerDay = 86400000;
+				var todayMill = ((ms - (ms % msPerDay)) + 21600000);
+				var params = $scope.customer.id + '-' + todayMill;
+				var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
+				getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
 					var formattedHistory = [];
 					wagerHistory.forEach(function(wager) {
 						var formattedWager = {};

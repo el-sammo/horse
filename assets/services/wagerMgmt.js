@@ -19,7 +19,9 @@
 		var wager;
 		var getWagerPromise;
 		var getWagersByCustomerIdPromise;
+		var getWagersByCustomerIdSinceMillisecondsPromise;
 		var getLiveWagersByCustomerIdPromise;
+		var cancelWagerPromise;
 
 		var service = {
 			getWager: function(wagerId) {
@@ -52,6 +54,19 @@
 				return getWagersByCustomerIdPromise;
 			},
 
+			getWagersByCustomerIdSinceMilliseconds: function(params) {
+				var url = '/wagers/byCustomerIdSinceMilliseconds/' + params;
+				getWagersByCustomerIdSinceMillisecondsPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getWagersByCustomerIdSinceMillisecondsPromise;
+			},
+
 			getLiveWagersByCustomerId: function(customerId) {
 				var url = '/wagers/byCustomerIdLive/' + customerId;
 				getLiveWagersByCustomerIdPromise = $http.get(url).then(function(res) {
@@ -81,20 +96,17 @@
 				});
 			},
 
-			cancelWager: function(wagerData) {
-				var url = '/wagers/cancelWager' + wagerData.id;
-				return $http.put(url, wagerData).success(
-					function(data, status, headers, config) {
-						if(status >= 400) {
-							return $q.reject(data);
-						}
-						return wager;
-					}
-				).catch(function(err) {
-					console.log('PUT ' + url + ': ajax failed');
+			cancelWager: function(wagerId) {
+				var url = '/wagers/cancelWager/' + wagerId;
+				cancelWagerPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
 					console.error(err);
 					return $q.reject(err);
 				});
+
+				return cancelWagerPromise;
 			}
 
 			// TODO - Get wager by username

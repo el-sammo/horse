@@ -26,8 +26,14 @@ module.exports = {
 		});
 	},
 
-	updateCustomerBalance: function(customerId, previousBalance, wagerAmount) {
-		var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(wagerAmount));
+	updateCustomerBalance: function(customerId, previousBalance, wagerAmount, doWhat) {
+console.log('updateCustomerBalance() called with customerId: '+customerId+', previousBalance: '+previousBalance+', wagerAmount: '+wagerAmount+', doWhat: '+doWhat);
+		if(doWhat === 'subtract') {
+			var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(wagerAmount));
+		}
+		if(doWhat === 'add') {
+			var newBalance = parseFloat(parseFloat(previousBalance) + parseFloat(wagerAmount));
+		}
 		return Customers.update(
 			{id: customerId},
 			{balance: newBalance},

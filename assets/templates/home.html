@@ -305,7 +305,7 @@
 									border: 1px solid black;
 								"
 							>
-								video player??? leaderboard?? both, with tabs?
+								HorseCenter!!!
 							</div>
 						</div>
 					</div>
@@ -331,12 +331,14 @@
 							</div>
 							<div class="row" ng-show="tabShow === 'wagerResponse'">
 								<div class="col-md-12" ng-show="wagerError">
+									<br/>
 									<span class="raceDetailsRed">Wager Error</span>
 									<br/><br/>
 									<span class="raceDetailsSmaller">{{wagerError}}</span>
 								</div>
 								<div class="col-md-12" ng-show="successfulWager">
-									<span class="raceDetails">Wager Details</span>
+									<br/>
+									<span class="raceDetails">Wager Placed</span>
 									<br/><br/>
 									<span class="raceDetailsSmaller">Type: {{successfulWager.wagerPool}}</span>
 									<br/>
@@ -350,8 +352,15 @@
 										class="raceDetailsSmaller" 
 										style="cursor: pointer;"
 										ng-click="cancelWager(successfulWager.id)"
+										ng-show="!successfulWager.cancelled"
 									>
 										Cancel
+									</span>
+									<span 
+										class="raceDetailsSmallerRed" 
+										ng-show="successfulWager.cancelled"
+									>
+										Cancelled
 									</span>
 									<br/>
 								</div>
