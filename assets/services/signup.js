@@ -93,6 +93,9 @@
 
 		$scope.createAccount = function() {
 			var customer = {
+				fName: $scope.fName,
+				lName: $scope.lName,
+				city: $scope.city,
 				email: $scope.email,
 				username: $scope.username,
 				password: $scope.password

@@ -15,7 +15,7 @@
 				<span class="footerLink reservationYellow pull-right" ng-show="showLogout && !showLogin" ng-click="logOut()">Log Out</span>
 				<span class="footerLink reservationYellow pull-right" ng-show="customer.dollars" ng-click="account()">Balance: {{customer.dollars}}</span>
 				<span class="footerLink reservationYellow pull-right" ng-show="customer.balance" ng-click="account()">Credits: {{customer.balance}}</span>
-				<span class="footerLink reservationYellow pull-right" ng-show="customer" ng-click="account()">Hi, {{customer.username}}!</span>
+				<span class="footerLink reservationYellow pull-right" ng-show="customer" ng-click="account()">Hi, {{customer.fName}}!</span>
 			</div>
   	</div>
     <div id="tt-main" ng-view>

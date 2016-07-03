@@ -292,7 +292,7 @@
 										ng-click="submitWager()"
 										ng-disabled="race.closed"
 									>
-										Submit Wager
+										Submit Ticket
 									</button>
 								</div>
 							</div>
@@ -365,25 +365,25 @@
 							<div class="row">
 								<div class="col-md-3">
 									<span class="boxHead" ng-click="showHistory()">
-										Wager History
+										Ticket History
 									</span>
 								</div>
 								<div class="col-md-4">
 									<span class="boxHead" ng-click="showConfirmation()">
-										Wager Confirmation
+										Ticket Confirmation
 									</span>
 								</div>
 							</div>
 							<div class="row" ng-show="tabShow === 'wagerResponse'">
 								<div class="col-md-12" ng-show="wagerError">
 									<br/>
-									<span class="raceDetailsRed">Wager Error</span>
+									<span class="raceDetailsRed">Ticket Error</span>
 									<br/><br/>
 									<span class="raceDetailsSmaller">{{wagerError}}</span>
 								</div>
 								<div class="col-md-12" ng-show="successfulWager">
 									<br/>
-									<span class="raceDetails">Wager Placed</span>
+									<span class="raceDetails">Ticket Placed</span>
 									<br/><br/>
 									<span class="raceDetailsSmaller">Type: {{successfulWager.wagerPool}}</span>
 									<br/>

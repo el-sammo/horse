@@ -1,6 +1,89 @@
 db = new Mongo().getDB('horse');
 
 insertTestEntryData();
+insertTournamentData();
+
+function insertTournamentData() {
+	var cursor = db.trds.find({name: 'Belmont', raceDate: 20160702});
+	while(cursor.hasNext()) {
+		var trdData = cursor.next();
+
+		var trackId = trdData._id;
+		var assocId = trackId.str;
+print('assocId: '+assocId);
+
+		var assocTournyId = assocId;
+		var tournamentName = 'Belmont Daily';
+		var tournamentMax = 100;
+		var entryFee = 10;
+		var siteFee = 1;
+		var closed = false;
+		var customers = [];
+	
+		db.tournaments.insert({
+			assocTournyId: assocTournyId,
+			name: tournamentName,
+			max: tournamentMax,
+			entryFee: entryFee,
+			siteFee: siteFee,
+			closed: closed,
+			customers: customers
+		});
+	}
+
+	var assocTournyId = 'ajaxdowns';
+	var tournamentName = 'Ajax Downs Daily';
+	var tournamentMax = 10;
+	var entryFee = 10;
+	var siteFee = 1;
+	var closed = false;
+	var customers = [
+		'57784c9eab57f32438ebe6aa',
+		'577852a3ab57f32438ebe6ab',
+		'57785312ab57f32438ebe6ac',
+		'57785346ab57f32438ebe6ad',
+		'57785378ab57f32438ebe6ae',
+		'577853baab57f32438ebe6af',
+		'57785409ab57f32438ebe6b0',
+		'57785437ab57f32438ebe6b1',
+		'57785498ab57f32438ebe6b2',
+		'577854c7ab57f32438ebe6b3'
+
+	];
+
+	db.tournaments.insert({
+		assocTournyId: assocTournyId,
+		name: tournamentName,
+		max: tournamentMax,
+		entryFee: entryFee,
+		siteFee: siteFee,
+		closed: closed,
+		customers: customers
+	});
+
+	var assocTournyId = 'churchilldowns';
+	var tournamentName = 'Churchill Downs Daily';
+	var tournamentMax = 5;
+	var entryFee = 10;
+	var siteFee = 1;
+	var closed = false;
+	var customers = [
+		'57784c9eab57f32438ebe6aa',
+		'577852a3ab57f32438ebe6ab',
+		'57785312ab57f32438ebe6ac',
+		'577854c7ab57f32438ebe6b3'
+	];
+
+	db.tournaments.insert({
+		assocTournyId: assocTournyId,
+		name: tournamentName,
+		max: tournamentMax,
+		entryFee: entryFee,
+		siteFee: siteFee,
+		closed: closed,
+		customers: customers
+	});
+}
 
 function insertTestEntryData() {
 
