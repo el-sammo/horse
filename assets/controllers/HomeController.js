@@ -11,13 +11,13 @@
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
 		'$modal', 'signupPrompter', 'deviceMgr', 'layoutMgmt',
-		'customerMgmt', 'trdMgmt', 'wagerMgmt'
+		'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt'
 	];
 
 	function controller(
 		$scope, $http, $routeParams, $rootScope, $window,
 		$modal, signupPrompter, deviceMgr, layoutMgmt, 
-		customerMgmt, trdMgmt, wagerMgmt
+		customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt
 	) {
 
 		if(deviceMgr.isBigScreen()) {
@@ -46,6 +46,21 @@
 			$scope.showLogout = true;
 			updateBalance();
 		});
+
+		var dateObj = new Date();
+		var year = dateObj.getFullYear();
+		var month = (dateObj.getMonth() + 1);
+		var date = dateObj.getDate();
+
+		if(month < 10) {
+			month = '0' + month;
+		}
+
+		if(date < 10) {
+			date = '0' + date;
+		}
+
+		var todayDate = year + month + date;
 
 		var updateBalance = function() {
 			var getSessionPromise = customerMgmt.getSession();
@@ -77,7 +92,7 @@
 				$scope.showLogout = false;
 			}
 
-			var getTrdsByDatePromise = trdMgmt.getTrdsByDate();
+			var getTrdsByDatePromise = trdMgmt.getTrdsByDate(todayDate);
 			getTrdsByDatePromise.then(function(trdsData) {
 				$scope.trdData = trdsData;
 //				$scope.showTrack(trdsData[0].id);
@@ -94,6 +109,11 @@
 					});
 				});
 				$scope.tracks = tracks;
+			});
+
+			var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
+			getTournamentsByDatePromise.then(function(tournamentsData) {
+				$scope.tournamentsData = tournamentsData;
 			});
 
 		});

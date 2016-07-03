@@ -15,7 +15,7 @@ module.exports = {
       required: true
 		},
     raceDate: {
-      type: 'integer',
+      type: 'number',
       required: true
 		}
   }

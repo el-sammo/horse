@@ -3,26 +3,33 @@ db = new Mongo().getDB('horse');
 insertTestEntryData();
 insertTournamentData();
 
-function insertTournamentData() {
+var useDate = 20160702;
+
+function insertTournamentData(useDate) {
 	var cursor = db.trds.find({name: 'Belmont', raceDate: 20160702});
 	while(cursor.hasNext()) {
 		var trdData = cursor.next();
 
 		var trackId = trdData._id;
 		var assocId = trackId.str;
-print('assocId: '+assocId);
 
 		var assocTournyId = assocId;
 		var tournamentName = 'Belmont Daily';
+		var tournyDate = useDate;
 		var tournamentMax = 100;
 		var entryFee = 10;
 		var siteFee = 1;
 		var closed = false;
-		var customers = [];
+		var customers = [
+			'577852a3ab57f32438ebe6ab',
+			'57785312ab57f32438ebe6ac',
+			'57785346ab57f32438ebe6ad'
+		];
 	
 		db.tournaments.insert({
 			assocTournyId: assocTournyId,
 			name: tournamentName,
+			tournyDate: tournyDate,
 			max: tournamentMax,
 			entryFee: entryFee,
 			siteFee: siteFee,
@@ -33,6 +40,7 @@ print('assocId: '+assocId);
 
 	var assocTournyId = 'ajaxdowns';
 	var tournamentName = 'Ajax Downs Daily';
+	var tournyDate = useDate;
 	var tournamentMax = 10;
 	var entryFee = 10;
 	var siteFee = 1;
@@ -54,6 +62,7 @@ print('assocId: '+assocId);
 	db.tournaments.insert({
 		assocTournyId: assocTournyId,
 		name: tournamentName,
+		tournyDate: tournyDate,
 		max: tournamentMax,
 		entryFee: entryFee,
 		siteFee: siteFee,
@@ -63,6 +72,7 @@ print('assocId: '+assocId);
 
 	var assocTournyId = 'churchilldowns';
 	var tournamentName = 'Churchill Downs Daily';
+	var tournyDate = useDate;
 	var tournamentMax = 5;
 	var entryFee = 10;
 	var siteFee = 1;
@@ -77,6 +87,7 @@ print('assocId: '+assocId);
 	db.tournaments.insert({
 		assocTournyId: assocTournyId,
 		name: tournamentName,
+		tournyDate: tournyDate,
 		max: tournamentMax,
 		entryFee: entryFee,
 		siteFee: siteFee,

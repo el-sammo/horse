@@ -20,21 +20,6 @@
 		var getTrdPromise;
 		var getTrdsByDatePromise;
 
-		var dateObj = new Date();
-		var year = dateObj.getFullYear();
-		var month = (dateObj.getMonth() + 1);
-		var date = dateObj.getDate();
-
-		if(month < 10) {
-			month = '0' + month;
-		}
-
-		if(date < 10) {
-			date = '0' + date;
-		}
-
-		var todayDate = year + month + date;
-
 		var service = {
 			getTrd: function(trdId) {
 				if(getTrdPromise) {
@@ -54,8 +39,8 @@
 				return getTrdPromise;
 			},
 
-			getTrdsByDate: function() {
-				var url = '/trds/byDate/' + todayDate;
+			getTrdsByDate: function(date) {
+				var url = '/trds/byDate/' + date;
 				getTrdsByDatePromise = $http.get(url).then(function(res) {
 					mergeIntoTrd(res.data);
 					return trd;
