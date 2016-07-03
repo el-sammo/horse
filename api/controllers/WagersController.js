@@ -87,9 +87,7 @@ module.exports = {
 		var rpIdPcs = req.params.id.split('-');
 		var customerId = rpIdPcs[0];
 		var mill = rpIdPcs[1];
-console.log('customerId: '+customerId);
-console.log('mill: '+mill);
-		Wagers.find({customerId: customerId, '>=': {wagerPlacedAt: mill}}).sort({
+		Wagers.find({customerId: customerId, wagerPlacedAt: {'gte': mill}}).sort({
 			created: 'asc'
 		}).then(function(results) {
 			res.send(JSON.stringify(results));

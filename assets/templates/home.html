@@ -298,6 +298,10 @@
 							</div>
 						</div>
 					</div>
+					<br/>
+					<br/>
+					<br/>
+					<br/>
 				</div>
 				<div 
 					class="col-md-6" 
@@ -374,17 +378,27 @@
 						<div class="col-md-12">
 							<div class="row">
 								<div class="col-md-3">
-									<span class="boxHead" ng-click="showHistory()">
+									<span 
+										class="boxHead" 
+										ng-click="showHistory()"
+									>
 										Ticket History
 									</span>
 								</div>
 								<div class="col-md-4">
-									<span class="boxHead" ng-click="showConfirmation()">
+									<span 
+										class="boxHead" 
+										ng-click="showConfirmation()"
+									>
 										Ticket Confirmation
 									</span>
 								</div>
 							</div>
-							<div class="row" ng-show="tabShow === 'wagerResponse'">
+							<div 
+								class="row"
+								style="border: 1px solid white;"
+								ng-show="tabShow === 'wagerResponse'"
+							>
 								<div class="col-md-12" ng-show="wagerError">
 									<br/>
 									<span class="raceDetailsRed">Ticket Error</span>
@@ -486,9 +500,20 @@
 										<div 
 											class="col-md-1"
 											style="text-align: right;"
+											ng-show="wager.result !== 'Pending'"
 										>
 											<span class="historyDetails">
 												{{wager.result}}
+											</span>
+										</div>
+										<div 
+											class="col-md-1"
+											style="text-align: right; cursor: pointer;"
+											ng-show="wager.result === 'Pending'"
+											ng-click="cancelWager(wager.id)"
+										>
+											<span class="historyDetails">
+												Cancel
 											</span>
 										</div>
 									</div>

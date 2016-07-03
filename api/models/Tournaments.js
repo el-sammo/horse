@@ -19,19 +19,19 @@ module.exports = {
       required: true
 		},
     tournyDate: {
-      type: 'number',
+      type: 'integer',
       required: true
 		},
     max: {
-      type: 'number',
+      type: 'integer',
       required: true
 		},
     entryFee: {
-      type: 'number',
+      type: 'float',
       required: true
 		},
     siteFee: {
-      type: 'number',
+      type: 'float',
       required: true
 		},
     closed: {

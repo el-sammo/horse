@@ -804,6 +804,7 @@
 			} else {
 				var cancelWagerPromise = wagerMgmt.cancelWager(wagerId);
 				cancelWagerPromise.then(function(response) {
+					$scope.tabShow = 'wagerResponse';
 					$scope.successfulWager = response[0];
 					updateBalance();
 				});
@@ -829,6 +830,7 @@
 					var formattedHistory = [];
 					wagerHistory.forEach(function(wager) {
 						var formattedWager = {};
+						formattedWager.id = wager.id;
 						formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
 						formattedWager.track = wager.track;
 						var trIdPcs = wager.trackRaceId.split('-');
@@ -843,19 +845,13 @@
 						formattedWager.selection = wager.wagerSelections;
 						formattedWager.total = wager.wagerTotal;
 						var result;
-						if(wager.result) {
-							if(wager.result > 0) {
-								result = 'W';
-							} else if(wager.result < 0){
-								result = 'R';
-							} else {
-								result = 'L';
-							}
+						if(wager.scored) {
+							result = wager.result;
 						} else {
 							if(wager.cancelled) {
 								result = 'C';
 							} else {
-								result = '?';
+								result = 'Pending';
 							}
 						}
 						formattedWager.result = result;

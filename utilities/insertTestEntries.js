@@ -1,12 +1,12 @@
 db = new Mongo().getDB('horse');
 
-insertTestEntryData();
-insertTournamentData();
+var useDate = 20160703;
 
-var useDate = 20160702;
+insertTestEntryData(useDate);
+insertTournamentData(useDate);
 
 function insertTournamentData(useDate) {
-	var cursor = db.trds.find({name: 'Belmont', raceDate: 20160702});
+	var cursor = db.trds.find({name: 'Belmont', raceDate: useDate});
 	while(cursor.hasNext()) {
 		var trdData = cursor.next();
 
@@ -96,10 +96,10 @@ function insertTournamentData(useDate) {
 	});
 }
 
-function insertTestEntryData() {
+function insertTestEntryData(useDate) {
 
 	var trackName = 'Belmont';
-	var raceDate = 20160702;
+	var raceDate = useDate;
 	var races = [
 		{
 			number: 1, 

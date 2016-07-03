@@ -22,6 +22,10 @@ module.exports = {
       type: 'string',
       required: true
 		},
+    wagerPlacedAt: {
+      type: 'integer',
+      required: true
+		}
   }
 
 };
