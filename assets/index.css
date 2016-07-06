@@ -838,6 +838,17 @@ td {
 	font-weight: 300;
 }
 
+.raceDetailsLegHead {
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.leftSpace {
+	left: 6px;
+	position: relative;
+}
+
 .historyDetails {
 	color: #FFFFFF;
 	font-size: 10px;

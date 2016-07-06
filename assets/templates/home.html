@@ -175,17 +175,20 @@
 									<div class="row" ng-show="legs > 1">
 										<div class="col-md-12">
 											<div class="row">
+												<div class="col-md-1">
+													<span class="raceDetails">Leg:</span>
+												</div>
 												<div 
 													class="col-md-1"
 													ng-repeat="runners in wagerRunners track by $index"
 													ng-init="legNumber = $index + 1"
 												>
 													<span 
-														class="raceDetails"
+														class="raceDetailsLegHead"
 														style="cursor: pointer;"
 														ng-click="showLeg(legNumber)"
 													>
-														Leg {{legNumber}}
+														{{legNumber}}
 													</span>
 												</div>
 											</div>
@@ -219,10 +222,10 @@
 												<div class="col-md-2">
 													<span class="raceDetails">{{singleDesc}}</span>
 												</div>
-												<div class="col-md-3">
+												<div class="col-md-4">
 													<span class="raceDetails">Runner</span>
 												</div>
-												<div class="col-md-4">
+												<div class="col-md-3">
 													<span class="raceDetails">Jockey</span>
 												</div>
 												<div class="col-md-3">
