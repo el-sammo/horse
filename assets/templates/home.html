@@ -31,15 +31,46 @@
 						"
 					>
 						<div 
-							class="col-md-1" 
+							class="col-md-1 whiteBottom" 
 							ng-repeat="race in track.races"
 						>
 							<span 
-								class="raceHead" 
+								class="raceHead raceNumberTabOff"
 								ng-click="showTrackRace(track.id, race.number)"
+								ng-show="raceNum != race.number"
 							>
 								{{race.number}}
 							</span>
+							<span 
+								class="raceHead raceNumberTabOn"
+								ng-click="showTrackRace(track.id, race.number)"
+								ng-show="raceNum == race.number"
+							>
+								{{race.number}}
+							</span>
+						</div>
+						<div 
+							class="whiteBottom"
+							style="top: 5px; position: relative;"
+						>
+							&nbsp;
+						</div>
+					</div>
+					<div 
+						class="row" 
+						style="
+							top: -20px;
+							padding-left: 12px;
+							padding-top: -6px;
+							text-align: left;
+							position: relative;
+						"
+					>
+						<div 
+							class="col-md-1"
+							style="text-align: center;"
+							ng-repeat="race in track.races"
+						>
 							<span 
 								class="raceDetailsSmaller"
 								style="cursor: pointer;"
@@ -47,7 +78,7 @@
 								ng-show="customer.admin && !race.score && !race.closed"
 							>
 								<br/>
-								Close Race
+								Close
 							</span>
 							<span 
 								class="raceDetailsSmaller"
@@ -56,7 +87,7 @@
 								ng-show="customer.admin && !race.score && race.closed"
 							>
 								<br/>
-								Score Race
+								Score
 							</span>
 							<span 
 								class="raceDetailsSmaller"
@@ -152,16 +183,33 @@
 								class="row"
 								style="padding-top: 6px;"
 							>
-								<div class="col-md-12">
+								<div 
+									class="col-md-1 whiteBottom"
+									ng-repeat="thisWager in race.wagers"
+									ng-init="wagerAbbrev = getWagerAbbrev(thisWager.wager)"
+								>
 									<span 
-										class="raceDetails"
-										style="padding-right: 8px; cursor: pointer;"
-										ng-repeat="wager in race.wagers"
-										ng-init="wagerAbbrev = getWagerAbbrev(wager.wager)"
-										ng-click="showRaceWager(track.id, race.number, wager.wager, wager.min)"
+										class="raceDetails wagerTypeTabOff"
+										style="cursor: pointer;"
+										ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+										ng-show="wager !== thisWager.wager"
 									>
 										{{wagerAbbrev}}
 									</span>
+									<span 
+										class="raceDetails wagerTypeTabOn"
+										style="cursor: pointer;"
+										ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+										ng-show="wager === thisWager.wager"
+									>
+										{{wagerAbbrev}}
+									</span>
+								</div>
+								<div 
+									class="whiteBottom"
+									style="width: 100%;"
+								>
+									&nbsp;
 								</div>
 							</div>
 							<br/>
@@ -175,21 +223,36 @@
 									<div class="row" ng-show="legs > 1">
 										<div class="col-md-12">
 											<div class="row">
-												<div class="col-md-1">
+												<div class="col-md-1 whiteBottom">
 													<span class="raceDetails">Leg:</span>
 												</div>
 												<div 
-													class="col-md-1"
+													class="col-md-1 whiteBottom"
 													ng-repeat="runners in wagerRunners track by $index"
 													ng-init="legNumber = $index + 1"
 												>
 													<span 
-														class="raceDetailsLegHead"
+														class="raceDetailsLegHead legNumberTabOff"
 														style="cursor: pointer;"
 														ng-click="showLeg(legNumber)"
+														ng-show="legShow != legNumber"
 													>
 														{{legNumber}}
 													</span>
+													<span 
+														class="raceDetailsLegHead legNumberTabOn"
+														style="cursor: pointer;"
+														ng-click="showLeg(legNumber)"
+														ng-show="legShow == legNumber"
+													>
+														{{legNumber}}
+													</span>
+												</div>
+												<div 
+													class="whiteBottom"
+													style="width: 100%;"
+												>
+													&nbsp;
 												</div>
 											</div>
 											<br/>
