@@ -402,22 +402,58 @@
 					"
 				>
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-11 col-md-offset-1">
 							<div class="row">
-								<div class="col-md-3">
-									<span class="boxHead" ng-click="showHorseCenter()">
+								<div class="col-md-3 whiteBottom">
+									<span 
+										class="boxHead contentTabOff" 
+										ng-click="showHorseCenter()"
+										ng-show="!horseCenterShow"
+									>
+										HorseCenter
+									</span>
+									<span 
+										class="boxHead contentTabOn" 
+										ng-click="showHorseCenter()"
+										ng-show="horseCenterShow"
+									>
 										HorseCenter
 									</span>
 								</div>
-								<div class="col-md-3">
-									<span class="boxHead" ng-click="showLeaderboards()">
+								<div class="col-md-3 whiteBottom">
+									<span 
+										class="boxHead contentTabOff" 
+										ng-click="showLeaderboards()"
+										ng-show="!leaderboardsShow"
+									>
+										Leaderboards
+									</span>
+									<span 
+										class="boxHead contentTabOn" 
+										ng-click="showLeaderboards()"
+										ng-show="leaderboardsShow"
+									>
 										Leaderboards
 									</span>
 								</div>
-								<div class="col-md-3">
-									<span class="boxHead" ng-click="showTournaments()">
+								<div class="col-md-3 whiteBottom">
+									<span 
+										class="boxHead contentTabOff" 
+										ng-click="showTournaments()"
+										ng-show="!tournamentsShow"
+									>
 										Tournaments
 									</span>
+									<span 
+										class="boxHead contentTabOn" 
+										ng-click="showTournaments()"
+										ng-show="tournamentsShow"
+									>
+										Tournaments
+									</span>
+								</div>
+								<div class="col-md-2 whiteBottom">
+									&nbsp;
 								</div>
 							</div>
 						</div>
@@ -425,14 +461,14 @@
 					<br/>
 					<div class="row">
 						<div 
-							class="col-md-12"
+							class="col-md-11 col-md-offset-1"
 							ng-show="horseCenterShow && !leaderboardsShow && !tournamentsShow"
 						>
 							<!--
 							<iframe 
 								src="http://player.twitch.tv/?channel=zombiunicorn" 
-								height="324" 
-								width="576" 
+								height="284" 
+								width="500" 
 								frameborder="0" 
 								scrolling="no"
 								allowfullscreen="true">
@@ -440,7 +476,7 @@
 							-->
 						</div>
 						<div 
-							class="col-md-12"
+							class="col-md-11 col-md-offset-1"
 							ng-show="leaderboardsShow && !horseCenterShow && !tournamentsShow"
 						>
 							<div class="row">
@@ -448,48 +484,77 @@
 							</div>
 						</div>
 						<div 
-							class="col-md-12"
+							class="col-md-11 col-md-offset-1"
 							ng-show="tournamentsShow && !leaderboardsShow && !horseCenterShow"
 						>
 							<div class="row">
-								<span class="leaderboardHead">Tournaments</span>
+								<div class="col-md-4">
+									<span class="tournamentHead">Tournament</span>
+								</div>
+								<div class="col-md-4">
+									<span class="tournamentHead">Entry Fee</span>
+								</div>
+								<div class="col-md-4">
+									<span class="tournamentHead">Entries</span>
+								</div>
 							</div>
 							<br/>
-							<div class="row">
-								<div class="col-md-12">
-									<div class="row" ng-repeat="tournament in tournamentsData">
-										<div class="col-md-3">
-											<span class="tournamentDetails">{{tournament.name}}</span>
-										</div>
-									</div>
+							<div class="row" ng-repeat="tournament in tournamentsData">
+								<div class="col-md-4">
+									<span class="tournamentDetails">{{tournament.name}}</span>
+								</div>
+								<div class="col-md-4">
+									<span class="tournamentDetails">${{tournament.entryFee}} + {{tournament.siteFee}}</span>
+								</div>
+								<div class="col-md-4">
+									<span class="tournamentDetails">{{tournament.customersCount}}/{{tournament.max}}</span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<br/>
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-11 col-md-offset-1">
 							<div class="row">
-								<div class="col-md-3">
+								<div class="col-md-3 whiteBottom">
 									<span 
-										class="boxHead" 
+										class="boxHead ticketTabOff" 
 										ng-click="showHistory()"
+										ng-show="tabShow !== 'wagerHistory'"
+									>
+										Ticket History
+									</span>
+									<span 
+										class="boxHead ticketTabOn" 
+										ng-click="showHistory()"
+										ng-show="tabShow === 'wagerHistory'"
 									>
 										Ticket History
 									</span>
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-4 whiteBottom">
 									<span 
-										class="boxHead" 
+										class="boxHead ticketTabOff" 
 										ng-click="showConfirmation()"
+										ng-show="tabShow !== 'wagerResponse'"
+									>
+										Ticket Confirmation
+									</span>
+									<span 
+										class="boxHead ticketTabOn" 
+										ng-click="showConfirmation()"
+										ng-show="tabShow === 'wagerResponse'"
 									>
 										Ticket Confirmation
 									</span>
 								</div>
+								<div class="col-md-4 whiteBottom">
+									&nbsp;
+								</div>
 							</div>
+							<br/>
 							<div 
 								class="row"
-								style="border: 1px solid white;"
 								ng-show="tabShow === 'wagerResponse'"
 							>
 								<div class="col-md-12" ng-show="wagerError">

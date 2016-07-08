@@ -37,14 +37,20 @@
 			layoutMgmt.logIn();
 		}
 
+		$scope.signUp = function() {
+			layoutMgmt.signUp();
+		}
+
 		$scope.logOut = function() {
 			layoutMgmt.logOut();
 		}
 
 		$rootScope.$on('customerLoggedIn', function(evt, args) {
+			$scope.customerId = args;
 			$scope.showLogin = false;
 			$scope.showLogout = true;
 			updateBalance();
+			$scope.showHistory();
 		});
 
 		var dateObj = new Date();
@@ -81,6 +87,7 @@
 				$rootScope.customerId = sessionData.customerId;
 				$scope.customerId = $rootScope.customerId;
 				$scope.showLogin = false;
+				$scope.showSignup = false;
 				$scope.showLogout = true;
 
 				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
@@ -89,6 +96,7 @@
 				});
 			} else {
 				$scope.showLogin = true;
+				$scope.showSignup = true;
 				$scope.showLogout = false;
 			}
 
@@ -113,7 +121,17 @@
 
 			var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
 			getTournamentsByDatePromise.then(function(tournamentsData) {
-				$scope.tournamentsData = tournamentsData;
+				var tournaments = [];
+				tournamentsData.forEach(function(tournament) {
+					var tournamentData = {};
+					tournamentData.name = tournament.name;
+					tournamentData.entryFee = tournament.entryFee;
+					tournamentData.siteFee = tournament.siteFee;
+					tournamentData.customersCount = tournament.customers.length;
+					tournamentData.max = tournament.max;
+					tournaments.push(tournamentData);
+				});
+				$scope.tournamentsData = tournaments;
 			});
 
 		});
@@ -816,15 +834,16 @@
 		};
 
 		$scope.showHistory = function() {
-			if(!$scope.customerId) {
+			if(!$scope.customerId && !$scope.customer) {
 				layoutMgmt.logIn();
 			} else {
 				$scope.tabShow = 'wagerHistory';
+				var customerId = $scope.customerId || $scope.customer.id;
 				var dateObj = new Date();
 				var ms = dateObj.getTime();
 				var msPerDay = 86400000;
 				var todayMill = ((ms - (ms % msPerDay)) + 21600000);
-				var params = $scope.customer.id + '-' + todayMill;
+				var params = customerId + '-' + todayMill;
 				var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
 				getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
 					var formattedHistory = [];
@@ -857,7 +876,11 @@
 						formattedWager.result = result;
 						formattedHistory.push(formattedWager);
 					});
-					$scope.wagerHistory = formattedHistory;
+					if($scope.wagerHistory && $scope.wagerHistory.length > 0) {
+						$scope.wagerHistory = formattedHistory;
+					}	else {
+						$scope.wagerHistory = [{race: 'No Wagers'}];
+					}
 				});
 			}
 		};
@@ -930,6 +953,13 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 
 			return wagerAbbrevMap[wager];
 
+		}
+
+		if($scope.customerId) {
+			$scope.showHistory();
+		} else {
+			$scope.wagerHistory = [{race: 'No Wagers'}];
+			$scope.tabShow = 'wagerHistory';
 		}
 
 	}

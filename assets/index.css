@@ -878,6 +878,50 @@ td {
 	position: relative;
 }
 
+.contentTabOn {
+	top: 1px;
+	padding-left: 12px;
+	padding-right: 12px;
+	text-align: center;
+	border-left: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	border-bottom: 1px solid #5E4747;
+	position: relative;
+	z-index: 99;
+}
+
+.contentTabOff {
+	top: 1px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #FFFFFF;
+	position: relative;
+	z-index: 99;
+}
+
+.ticketTabOn {
+	top: 1px;
+	padding-left: 12px;
+	padding-right: 12px;
+	text-align: center;
+	border-left: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	border-bottom: 1px solid #5E4747;
+	position: relative;
+	z-index: 99;
+}
+
+.ticketTabOff {
+	top: 1px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #FFFFFF;
+	position: relative;
+	z-index: 99;
+}
+
 .raceDetails {
 	color: #FFFFFF;
 	font-size: 14px;
@@ -912,6 +956,18 @@ td {
 	color: #FFFFFF;
 	font-size: 14px;
 	font-weight: 500;
+}
+
+.tournamentDetails {
+	color: #FFFFFF;
+	font-size: 10px;
+	font-weight: 200;
+}
+
+.tournamentHead {
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: 400;
 }
 
 .leftSpace {
