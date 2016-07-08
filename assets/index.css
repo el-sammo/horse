@@ -828,7 +828,6 @@ td {
 
 .raceNumberTabOff {
 	top: 1px;
-	text-align: center;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
 	border-bottom-color: #FFFFFF;
@@ -838,9 +837,8 @@ td {
 
 .wagerTypeTabOn {
 	top: 1px;
-	padding-left: 12px;
-	padding-right: 12px;
-	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
 	border-left: 1px solid #FFFFFF;
 	border-top: 1px solid #FFFFFF;
 	border-right: 1px solid #FFFFFF;
@@ -851,8 +849,6 @@ td {
 
 .wagerTypeTabOff {
 	top: 1px;
-	padding-left: 12px;
-	padding-right: 12px;
 	text-align: center;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
