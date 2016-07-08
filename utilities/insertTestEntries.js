@@ -21,9 +21,9 @@ function insertTournamentData(useDate) {
 		var siteFee = 1;
 		var closed = false;
 		var customers = [
-			'577852a3ab57f32438ebe6ab',
-			'57785312ab57f32438ebe6ac',
-			'57785346ab57f32438ebe6ad'
+			{customerId: '577852a3ab57f32438ebe6ab', credits: 1583},
+			{customerId: '57785312ab57f32438ebe6ac', credits: 322},
+			{customerId: '57785346ab57f32438ebe6ad', credits: 686}
 		];
 	
 		db.tournaments.insert({
@@ -46,17 +46,16 @@ function insertTournamentData(useDate) {
 	var siteFee = 1;
 	var closed = false;
 	var customers = [
-		'57784c9eab57f32438ebe6aa',
-		'577852a3ab57f32438ebe6ab',
-		'57785312ab57f32438ebe6ac',
-		'57785346ab57f32438ebe6ad',
-		'57785378ab57f32438ebe6ae',
-		'577853baab57f32438ebe6af',
-		'57785409ab57f32438ebe6b0',
-		'57785437ab57f32438ebe6b1',
-		'57785498ab57f32438ebe6b2',
-		'577854c7ab57f32438ebe6b3'
-
+		{customerId: '57784c9eab57f32438ebe6aa', credits: 14021},
+		{customerId: '577852a3ab57f32438ebe6ab', credits: 1109},
+		{customerId: '57785312ab57f32438ebe6ac', credits: 0},
+		{customerId: '57785346ab57f32438ebe6ad', credits: 83},
+		{customerId: '57785378ab57f32438ebe6ae', credits: 440},
+		{customerId: '577853baab57f32438ebe6af', credits: 711},
+		{customerId: '57785409ab57f32438ebe6b0', credits: 1003},
+		{customerId: '57785437ab57f32438ebe6b1', credits: 44},
+		{customerId: '57785498ab57f32438ebe6b2', credits: 6886},
+		{customerId: '577854c7ab57f32438ebe6b3', credits: 4503}
 	];
 
 	db.tournaments.insert({
@@ -78,10 +77,10 @@ function insertTournamentData(useDate) {
 	var siteFee = 1;
 	var closed = false;
 	var customers = [
-		'57784c9eab57f32438ebe6aa',
-		'577852a3ab57f32438ebe6ab',
-		'57785312ab57f32438ebe6ac',
-		'577854c7ab57f32438ebe6b3'
+		{customerId: '57784c9eab57f32438ebe6aa', credits: 1201},
+		{customerId: '577852a3ab57f32438ebe6ab', credits: 729},
+		{customerId: '57785312ab57f32438ebe6ac', credits: 488},
+		{customerId: '577854c7ab57f32438ebe6b3', credits: 1127}
 	];
 
 	db.tournaments.insert({

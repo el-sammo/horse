@@ -18,6 +18,7 @@
 	) {
 		var tournament;
 		var getTournamentPromise;
+		var registerTournamentPromise;
 		var getTournamentsByDatePromise;
 
 		var service = {
@@ -39,8 +40,21 @@
 				return getTournamentPromise;
 			},
 
-			getTournamentsByDate: function(date) {
+			registerTournament: function(tournamentId, customerId) {
+				var params = tournamentId +'-'+ customerId;
+				var url = '/tournaments/register/' + params;
+				registerTournamentPromise = $http.get(url).then(function(res) {
+					return res;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
 
+				return registerTournamentPromise;
+			},
+
+			getTournamentsByDate: function(date) {
 				var url = '/tournaments/byDate/' + date;
 				getTournamentsByDatePromise = $http.get(url).then(function(res) {
 					return res.data;

@@ -27,7 +27,6 @@ module.exports = {
 	},
 
 	updateCustomerBalance: function(customerId, previousBalance, wagerAmount, doWhat) {
-console.log('updateCustomerBalance() called with customerId: '+customerId+', previousBalance: '+previousBalance+', wagerAmount: '+wagerAmount+', doWhat: '+doWhat);
 		if(doWhat === 'subtract') {
 			var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(wagerAmount));
 		}

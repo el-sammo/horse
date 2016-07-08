@@ -124,6 +124,7 @@
 				var tournaments = [];
 				tournamentsData.forEach(function(tournament) {
 					var tournamentData = {};
+					tournamentData.id = tournament.id;
 					tournamentData.name = tournament.name;
 					tournamentData.entryFee = tournament.entryFee;
 					tournamentData.siteFee = tournament.siteFee;
@@ -889,18 +890,21 @@
 			$scope.leaderboardsShow = false;
 			$scope.tournamentsShow = false;
 			$scope.horseCenterShow = true;
+			$scope.showTournament = false;
 		};
 
 		$scope.showLeaderboards = function() {
 			$scope.horseCenterShow = false;
 			$scope.tournamentsShow = false;
 			$scope.leaderboardsShow = true;
+			$scope.showTournament = false;
 		};
 
 		$scope.showTournaments = function() {
 			$scope.horseCenterShow = false;
 			$scope.leaderboardsShow = false;
 			$scope.tournamentsShow = true;
+			$scope.showTournament = false;
 		};
 
 		$scope.showConfirmation = function() {
@@ -953,6 +957,26 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 
 			return wagerAbbrevMap[wager];
 
+		}
+
+		$scope.showTournamentDetails = function(tournyId) {
+			var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
+			getTournamentPromise.then(function(tournamentData) {
+				$scope.tournamentData = tournamentData;
+			});
+			$scope.showTournament = true;
+		}
+
+		$scope.tournamentRegister = function(tournyId) {
+			if(!$scope.customerId) {
+				layoutMgmt.logIn();
+			} else {
+				var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
+				registerTournamentPromise.then(function(response) {
+console.log('response.data[0]:');
+console.log(response.data[0]);
+				});
+			}
 		}
 
 		if($scope.customerId) {
