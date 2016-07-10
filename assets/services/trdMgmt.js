@@ -87,6 +87,24 @@
 				});
 			},
 
+			scoreTrd: function(scoreData) {
+				var url = '/trds/score/' + scoreData.trdData.id;
+				return $http.put(url, scoreData).success(
+					function(data, status, headers, config) {
+						if(status >= 400) {
+							return $q.reject(data);
+						}
+console.log('data:');
+console.log(data);
+						return data;
+					}
+				).catch(function(err) {
+					console.log('PUT ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+			},
+
 			// TODO: This probably can be replaced with client-side only code
 			logout: function() {
 				var url = '/trds/logout';

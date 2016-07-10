@@ -1038,6 +1038,8 @@ console.log($scope.trdData);
 
 		$scope.score = function() {
 			var score = {};
+			score.trId = $scope.trId;
+			score.raceNum = $scope.raceNum;
 			score.firstNumber = $scope.firstNumber;
 			score.firstJockey = $scope.firstJockey;
 			score.firstWinPrice = $scope.firstWinPrice;
@@ -1137,9 +1139,11 @@ console.log($scope.trdData);
 
 			$scope.trdData.races = newRaces;
 
-			var updateTrdPromise = trdMgmt.updateTrd($scope.trdData);
-			updateTrdPromise.then(function(response) {
-				$window.location.href = location.origin + "/app/";
+			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum});
+			scoreTrdPromise.then(function(response) {
+console.log('response:');
+console.log(response);
+//				$window.location.href = location.origin + "/app/";
 			});
 		}
 

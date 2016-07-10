@@ -137,7 +137,11 @@
 							tournamentData.tournamentStatus = 'In Progress';
 						}
 					} else {
-						tournamentData.tournamentStatus = 'Registering';
+						if(tournament.customers.length == tournament.max) {
+							tournamentData.tournamentStatus = 'Full';
+						} else {
+							tournamentData.tournamentStatus = 'Registering';
+						}
 					}
 					tournaments.push(tournamentData);
 				});
