@@ -130,6 +130,15 @@
 					tournamentData.siteFee = tournament.siteFee;
 					tournamentData.customersCount = tournament.customers.length;
 					tournamentData.max = tournament.max;
+					if(tournament.closed) {
+						if(tournament.scored) {
+							tournamentData.tournamentStatus = 'Final';
+						} else {
+							tournamentData.tournamentStatus = 'In Progress';
+						}
+					} else {
+						tournamentData.tournamentStatus = 'Registering';
+					}
 					tournaments.push(tournamentData);
 				});
 				$scope.tournamentsData = tournaments;
@@ -891,6 +900,7 @@
 			$scope.tournamentsShow = false;
 			$scope.horseCenterShow = true;
 			$scope.showTournament = false;
+			$scope.showLeaders = false;
 		};
 
 		$scope.showLeaderboards = function() {
@@ -898,6 +908,7 @@
 			$scope.tournamentsShow = false;
 			$scope.leaderboardsShow = true;
 			$scope.showTournament = false;
+			$scope.showLeaders = false;
 		};
 
 		$scope.showTournaments = function() {
@@ -905,6 +916,7 @@
 			$scope.leaderboardsShow = false;
 			$scope.tournamentsShow = true;
 			$scope.showTournament = false;
+			$scope.showLeaders = false;
 		};
 
 		$scope.showConfirmation = function() {
@@ -964,7 +976,32 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 			getTournamentPromise.then(function(tournamentData) {
 				$scope.tournamentData = tournamentData;
 			});
-			$scope.showTournament = true;
+			if(!$scope.showLeaders) {
+				$scope.showTournament = true;
+			}
+		}
+
+		$scope.showTournamentLeaders = function(tournyId) {
+			$scope.showLeaders = true;
+			var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
+			getLeadersPromise.then(function(leadersData) {
+				var leaderBoardData = [];
+				leadersData.forEach(function(leader) {
+					var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
+					getCustomerPromise.then(function(customerData) {
+						var thisLeader = {};
+						thisLeader.id = leader.customerId;
+						thisLeader.fName = customerData.fName;
+						thisLeader.lName = customerData.lName;
+						thisLeader.city = customerData.city;
+						thisLeader.username = customerData.username;
+						thisLeader.credits = leader.credits;
+						leaderBoardData.push(thisLeader);
+					});
+				});
+				$scope.leadersData = leaderBoardData;
+			});
+			$scope.showTournamentDetails(tournyId);
 		}
 
 		$scope.tournamentRegister = function(tournyId) {

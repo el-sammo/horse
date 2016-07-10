@@ -970,6 +970,12 @@ td {
 	font-weight: 400;
 }
 
+.historyDetailsHead {
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: 400;
+}
+
 .leftSpace {
 	left: 6px;
 	position: relative;

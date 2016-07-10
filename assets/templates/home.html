@@ -477,10 +477,80 @@
 						</div>
 						<div 
 							class="col-md-11 col-md-offset-1"
-							ng-show="leaderboardsShow && !horseCenterShow && !tournamentsShow"
+							ng-show="leaderboardsShow && !horseCenterShow && !tournamentsShow && !showLeaders"
 						>
 							<div class="row">
-								<span class="leaderboardHead">Leaderboards</span>
+								<div 
+									class="col-md-7"
+									style="text-align: left;"
+								>
+									<span class="tournamentHead">Tournament</span>
+								</div>
+								<div 
+									class="col-md-3 col-md-offset-1"
+									style="text-align: right;"
+								>
+									<span class="tournamentHead">Status</span>
+								</div>
+							</div>
+							<br/>
+							<div 
+								class="row" 
+								ng-repeat="tournament in tournamentsData"
+							>
+								<div 
+									class="col-md-7"
+									style="text-align: left; cursor: pointer;"
+									ng-click="showTournamentLeaders(tournament.id)"
+								>
+									<span class="tournamentDetails">{{tournament.name}}</span>
+								</div>
+								<div 
+									class="col-md-3 col-md-offset-1"
+									style="text-align: right; cursor: pointer;"
+									ng-click="showTournamentLeaders(tournament.id)"
+								>
+									<span class="tournamentDetails">{{tournament.tournamentStatus}}</span>
+								</div>
+							</div>
+						</div>
+						<div 
+							class="col-md-11 col-md-offset-1"
+							ng-show="showLeaders"
+						>
+							<div class="row">
+								<div class="col-md-11">
+									<span class="tournamentHead">{{tournamentData.name}}</span>
+								</div>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-md-7">
+									<span class="tournamentDetails">Name</span>
+								</div>
+								<div class="col-md-2">
+									<span class="tournamentDetails">City</span>
+								</div>
+								<div 
+									class="col-md-2"
+									class="text-align: right;"
+								>
+									<span class="tournamentDetails">Credits</span>
+								</div>
+							</div>
+							<div class="row" ng-repeat="leader in leadersData">
+								<div class="col-md-7">
+									<span class="tournamentDetails">{{leader.fName}} {{leader.lName}} ({{leader.username}})</span>
+								</div>
+								<div class="col-md-2">
+									<span class="tournamentDetails">{{leader.city}}</span>
+								</div>
+								<div 
+									class="col-md-2"
+									class="text-align: right;"
+								>
+									<span class="tournamentDetails">{{leader.credits}}</span>
+								</div>
 							</div>
 						</div>
 						<div 

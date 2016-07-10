@@ -230,7 +230,7 @@ console.log('Invalid Wager Amount');
 					if(balanceData.balance < wagerData.wagerTotal) {
 						validWager = false;
 console.log('Insufficient Customer Balance');
-						return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Customer Balance'}));
+						return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Funds'}));
 					} else {
 						if(wagerData.legs > 1) {
 

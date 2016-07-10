@@ -20,6 +20,7 @@
 		var getTournamentPromise;
 		var registerTournamentPromise;
 		var getTournamentsByDatePromise;
+		var getLeadersPromise;
 
 		var service = {
 			getTournament: function(tournamentId) {
@@ -65,6 +66,19 @@
 				});
 
 				return getTournamentsByDatePromise;
+			},
+
+			getLeaders: function(tournamentId) {
+				var url = '/tournaments/leaders/' + tournamentId;
+				getLeadersPromise = $http.get(url).then(function(leaders) {
+					return leaders.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getLeadersPromise;
 			},
 
 			createTournament: function(tournamentData) {
