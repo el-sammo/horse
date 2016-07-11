@@ -20,14 +20,14 @@
 				<span 
 					class="footerLinkRed"
 				>
-					Current Tracks: 
+					Current Tournaments: 
 				</span>
 				<span 
 					class="footerLink reservationYellow" 
-					ng-click="showTrack(track.id)" 
-					ng-repeat="track in tracks" track by $index
+					ng-click="setActiveTournament(tournament.id)" 
+					ng-repeat="tournament in currentTournaments" track by $index
 				>
-					{{track.name}}
+					{{tournament.name}}
 				</span>
 				<span 
 					class="footerLink reservationYellow pull-right" 

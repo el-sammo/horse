@@ -10,17 +10,44 @@ module.exports = {
 		});
 	},
 
-	scoreAffectedWagers: function(finalRaceId) {
-		return Customers.find(
-			{id: customerId}
-		).then(function(trds) {
-			var balance = 0;
-			if(trds[0].balance) {
-				balance = trds[0].balance;
-			}
-			return {success: true, balance: balance};
+	scoreWager: function(wagerId, result) {
+		return Wagers.update(
+			{id: wagerId},
+			{result: result, scored: true},
+			false, 
+			false
+		).then(function(wager) {
+			return {success: true};
 		}).catch(function(err) {
-			return {success: false, reason: 'invalid customerId'};
+			return {success: false, err: err};
+		});
+	},
+
+	updateCredits: function(tournamentId, customerId, result) {
+		return Tournaments.find({id: tournamentId}).then(function(tournamentData) {
+			var newCustomers = [];
+			tournamentData[0].customers.forEach(function(customer) {
+				if(customer.customerId === customerId) {
+					var credits = parseFloat((parseFloat(customer.credits) + parseFloat(result)));
+					var newCustomer = {}
+					newCustomer.customerId = customer.customerId;
+					newCustomer.credits = credits;
+					newCustomers.push(newCustomer);
+				} else {
+					newCustomers.push(customer);
+				}
+			});
+
+			return Tournaments.update(
+				{id: tournamentId},
+				{customers: newCustomers},
+				false, 
+				false
+			).then(function(tournament) {
+				return {success: true};
+			}).catch(function(err) {
+				return {success: false, err: err};
+			});
 		});
 	}
 

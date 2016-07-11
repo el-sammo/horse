@@ -38,6 +38,13 @@
 					controller: 'SignUpController'
 				});
 			},
+			tournyRegister: function(tournyId) {
+				$modal.open({
+					templateUrl: '/templates/tournyRegister.html',
+					backdrop: true,
+					controller: 'HomeController'
+				});
+			},
 			welcome: function() {
 				$modal.open({
 					templateUrl: '/templates/welcome.html',

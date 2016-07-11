@@ -19,6 +19,7 @@
 		var tournament;
 		var getTournamentPromise;
 		var registerTournamentPromise;
+		var getTournamentsByCustomerIdPromise;
 		var getTournamentsByDatePromise;
 		var getLeadersPromise;
 
@@ -53,6 +54,19 @@
 				});
 
 				return registerTournamentPromise;
+			},
+
+			getTournamentsByCustomerId: function(data) {
+				var url = '/tournaments/byCustomerId/' + data;
+				getTournamentsByCustomerIdPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getTournamentsByCustomerIdPromise;
 			},
 
 			getTournamentsByDate: function(date) {

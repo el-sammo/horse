@@ -38,6 +38,29 @@ module.exports = {
 		});
 	},
 	
+	byCustomerId: function(req, res) {
+		var reqPcs = req.params.id.split('-');
+		var customerId = reqPcs[0];
+		var today = reqPcs[1];
+		Tournaments.find({tournyDate: today}).sort({
+			name: 'asc', entryFee: 'asc'
+		}).then(function(tournaments) {
+			var customerTournaments = [];
+			tournaments.forEach(function(tournament) {
+				tournament.customers.forEach(function(customer) {
+					if(customer.customerId === customerId) {
+						customerTournaments.push(tournament);
+					}
+				});
+			});
+			res.send(JSON.stringify(customerTournaments));
+		}).catch(function(err) {
+      res.json({error: 'Server error'}, 500);
+      console.error(err);
+      throw err;
+		});
+	},
+	
 	byDate: function(req, res) {
 		Tournaments.find({tournyDate: req.params.id}).sort({
 			name: 'asc', entryFee: 'asc'

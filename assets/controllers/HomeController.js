@@ -11,13 +11,15 @@
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
 		'$modal', 'signupPrompter', 'deviceMgr', 'layoutMgmt',
-		'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt'
+		'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt',
+		'messenger'
 	];
 
 	function controller(
 		$scope, $http, $routeParams, $rootScope, $window,
 		$modal, signupPrompter, deviceMgr, layoutMgmt, 
-		customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt
+		customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt,
+		messenger
 	) {
 
 		if(deviceMgr.isBigScreen()) {
@@ -94,30 +96,17 @@
 				getCustomerPromise.then(function(customer) {
 					$scope.customer = customer;
 				});
+
+				var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
+				getTournamentsByDatePromise.then(function(currentTournamentsData) {
+					$scope.currentTournaments = currentTournamentsData;
+				});
+
 			} else {
 				$scope.showLogin = true;
 				$scope.showSignup = true;
 				$scope.showLogout = false;
 			}
-
-			var getTrdsByDatePromise = trdMgmt.getTrdsByDate(todayDate);
-			getTrdsByDatePromise.then(function(trdsData) {
-				$scope.trdData = trdsData;
-//				$scope.showTrack(trdsData[0].id);
-
-				var tracks = [];
-				var firstTrack = true;
-				trdsData.forEach(function(trd) {
-					if(firstTrack) {
-						firstTrack = false;
-					}
-					tracks.push({
-						id: trd.id,
-						name: trd.name
-					});
-				});
-				$scope.tracks = tracks;
-			});
 
 			var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
 			getTournamentsByDatePromise.then(function(tournamentsData) {
@@ -793,12 +782,13 @@
 		$scope.leg9Runners = [];
 		$scope.leg10Runners = [];
 
-		$scope.submitWager = function() {
+		$scope.submitWager = function(activeTournamentId) {
 			if(!$scope.customerId) {
 				layoutMgmt.logIn();
 			} else {
 				// wager schema
 				var wagerSubmission = {
+					tournamentId: activeTournamentId,
 					customerId: $scope.customerId,
 					trackRaceId: $scope.trId,
 					finalRaceId: $scope.finalRaceId,
@@ -1025,6 +1015,29 @@ console.log(response.data[0]);
 		} else {
 			$scope.wagerHistory = [{race: 'No Wagers'}];
 			$scope.tabShow = 'wagerHistory';
+		}
+
+		$scope.setActiveTournament = function(tournamentId) {
+			var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+			getTournamentPromise.then(function(tournamentData) {
+				tournamentData.customers.forEach(function(customer) {
+					if(customer.customerId === $scope.customer.id) {
+						var getTrdPromise = trdMgmt.getTrd(tournamentData.assocTrackId);
+						getTrdPromise.then(function(trdData) {
+							$scope.trdData = [trdData];
+							$scope.tracks = [{
+								id: trdData.id,
+								name: trdData.name
+							}];
+							$scope.showTrack(trdData.id);
+						});
+						$scope.activeTournamentId = tournamentId;
+					} else {
+						// $scope.tournamentRegister(tournamentId);
+console.log('not registered for this tournament');
+					}
+				});
+			});
 		}
 
 	}

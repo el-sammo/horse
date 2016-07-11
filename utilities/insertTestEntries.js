@@ -1,6 +1,6 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160710;
+var useDate = 20160711;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);
@@ -13,7 +13,7 @@ function insertTournamentData(useDate) {
 		var trackId = trdData._id;
 		var assocId = trackId.str;
 
-		var assocTournyId = assocId;
+		var assocTrackId = assocId;
 		var tournamentName = 'Belmont Daily';
 		var tournyDate = useDate;
 		var tournamentMax = 100;
@@ -23,11 +23,12 @@ function insertTournamentData(useDate) {
 		var customers = [
 			{customerId: '577852a3ab57f32438ebe6ab', credits: 1583},
 			{customerId: '57785312ab57f32438ebe6ac', credits: 322},
-			{customerId: '57785346ab57f32438ebe6ad', credits: 686}
+			{customerId: '57785346ab57f32438ebe6ad', credits: 686},
+			{customerId: '5765aec37e7e6e33c9203f4d', credits: 505}
 		];
 	
 		db.tournaments.insert({
-			assocTournyId: assocTournyId,
+			assocTrackId: assocTrackId,
 			name: tournamentName,
 			tournyDate: tournyDate,
 			max: tournamentMax,
@@ -38,7 +39,7 @@ function insertTournamentData(useDate) {
 		});
 	}
 
-	var assocTournyId = 'ajaxdowns';
+	var assocTrackId = 'ajaxdowns';
 	var tournamentName = 'Ajax Downs Daily';
 	var tournyDate = useDate;
 	var tournamentMax = 10;
@@ -59,7 +60,7 @@ function insertTournamentData(useDate) {
 	];
 
 	db.tournaments.insert({
-		assocTournyId: assocTournyId,
+		assocTrackId: assocTrackId,
 		name: tournamentName,
 		tournyDate: tournyDate,
 		max: tournamentMax,
@@ -69,7 +70,7 @@ function insertTournamentData(useDate) {
 		customers: customers
 	});
 
-	var assocTournyId = 'churchilldowns';
+	var assocTrackId = 'churchilldowns';
 	var tournamentName = 'Churchill Downs Daily';
 	var tournyDate = useDate;
 	var tournamentMax = 5;
@@ -84,7 +85,7 @@ function insertTournamentData(useDate) {
 	];
 
 	db.tournaments.insert({
-		assocTournyId: assocTournyId,
+		assocTrackId: assocTrackId,
 		name: tournamentName,
 		tournyDate: tournyDate,
 		max: tournamentMax,

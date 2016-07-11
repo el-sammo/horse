@@ -142,6 +142,7 @@
 		var sessionPromise = customerMgmt.getSession();
 		sessionPromise.then(function(sessionData) {
 			if(sessionData.customerId) {
+				$scope.customerId = sessionData.customerId;
 				var getCustomerPromise = customerMgmt.getCustomer(sessionData.customerId);
 				getCustomerPromise.then(function(customerData) {
 					if(!customerData.admin) {
@@ -164,7 +165,7 @@
 
 			var getTrdPromise = trdMgmt.getTrd(trId);
 			getTrdPromise.then(function(trdData) {
-				$scope.trdData = trdData[0];
+				$scope.trdData = trdData;
 console.log('$scope.trdData:');
 console.log($scope.trdData);
 				var checkDouble = false;
@@ -1139,7 +1140,7 @@ console.log($scope.trdData);
 
 			$scope.trdData.races = newRaces;
 
-			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum});
+			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum, customerId: $scope.customerId});
 			scoreTrdPromise.then(function(response) {
 console.log('response:');
 console.log(response);

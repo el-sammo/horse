@@ -41,7 +41,7 @@ module.exports = {
 	},
 	
 	score: function(req, res) {
-		if(req.body && req.body.trdData && req.body.trdData.id) {
+		if(req.body && req.body.trdData && req.body.trdData.id && req.body.customerId && req.body.customerId === '5765aec37e7e6e33c9203f4d') {
 			return scoreRace(req, res);
 		} else {
 			return res.send(JSON.stringify({success: false, failMsg: 'Invalid Score Data'}));
@@ -68,36 +68,41 @@ console.log(scoredData[0].races[0].score);
 console.log(' ');
 		return TrdsService.getAffectedWagers(finalRaceId).then(function(affectedWagers) {
 console.log(' ');
-console.log('affectedWagers:');
-console.log(affectedWagers);
-console.log(' ');
-console.log(' ');
 console.log('scoreData:');
 console.log(scoreData);
 console.log(' ');
-			return affectedWagers.forEach(function(wager) {
+			affectedWagers.forEach(function(wager) {
 				if(wager.wagerPool === 'Win') {
-console.log('scoreData.firstNumber: '+scoreData.firstNumber);
 					if(wager.wagerSelections.length > 1) {
 						var winSelections = wager.wagerSelections.split(',');
-console.log('winSelections:');
-console.log(winSelections);
 						if(winSelections.indexOf(scoreData.firstNumber) > -1) {
+							var result = (parseFloat((parseFloat(wager.wagerAmount) / 2) * parseFloat(scoreData.firstWinPrice))).toFixed(2);
+						} else {
+							var result = (parseFloat(0)).toFixed(2);
 						}
 					} else {
-console.log('typeof wager.wagerSelections: '+typeof wager.wagerSelections);
-console.log('wager.wagerSelections:');
-console.log(wager.wagerSelections);
 						if(wager.wagerSelections.toString() === scoreData.firstNumber) {
-console.log('Win wager winner: '+wager.wagerSelections.toString());
-							var result = parseFloat((parseFloat(wager.wagerAmount) / 2) * parseFloat(scoreData.firstWinPrice));
-console.log('result: '+result);
+							var result = (parseFloat((parseFloat(wager.wagerAmount) / 2) * parseFloat(scoreData.firstWinPrice))).toFixed(2);
 						} else {
-console.log('Win wager loser: '+winSelections.toStr());
+							var result = (parseFloat(0)).toFixed(2);
 						}
 					}
 				}
+				TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
+					if(updateWagerResponse.success) {
+						TrdsService.updateCredits(wager.tournamentId, wager.customerId, result).then(function(updateCreditsResponse) {
+							if(!updateCreditsResponse.success) {
+console.log('updateCreditsResponse error:');
+console.log(updateCreditsResponse.err);
+							}
+						});
+					} else {
+console.log('updateWagerResponse error:');
+console.log(updateWagerResponse.err);
+					}
+				});
 			});
+			return res.send(JSON.stringify({success: true}));
 		});
 		
 	//	res.send(JSON.stringify(results));

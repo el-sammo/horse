@@ -91,8 +91,6 @@
 							</span>
 							<span 
 								class="raceDetailsSmaller"
-								style="cursor: pointer;"
-								ng-click="scoreRace(track.id, race.number)"
 								ng-show="race.closed && !race.score"
 							>
 								<br/>
@@ -380,7 +378,7 @@
 								<div class="col-md-2">
 									<button 
 										class="btn btn-primary btn-sm" 
-										ng-click="submitWager()"
+										ng-click="submitWager(activeTournamentId)"
 										ng-disabled="race.closed"
 									>
 										Submit Ticket
