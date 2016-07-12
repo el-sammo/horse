@@ -62,29 +62,36 @@ function scoreRace(req, res, self) {
 		}
 	});
 	return Trds.update({id: trdData.id}, {races: trdData.races}, false, false).then(function(scoredData) {
-console.log(' ');
-console.log('scoredData[0].races[0].score:');
-console.log(scoredData[0].races[0].score);
-console.log(' ');
 		return TrdsService.getAffectedWagers(finalRaceId).then(function(affectedWagers) {
-console.log(' ');
-console.log('scoreData:');
-console.log(scoreData);
-console.log(' ');
 			affectedWagers.forEach(function(wager) {
+				var result = parseInt(0);
 				if(wager.wagerPool === 'Win') {
 					if(wager.wagerSelections.length > 1) {
-						var winSelections = wager.wagerSelections.split(',');
-						if(winSelections.indexOf(scoreData.firstNumber) > -1) {
-							var result = (parseFloat((parseFloat(wager.wagerAmount) / 2) * parseFloat(scoreData.firstWinPrice))).toFixed(2);
-						} else {
-							var result = (parseFloat(0)).toFixed(2);
+						var wagerSelections = wager.wagerSelections.split(',');
+						if(wagerSelections.indexOf(scoreData.firstNumber) > -1) {
+							result += ((wager.wagerAmount / 2) * scoreData.firstWinPrice);
 						}
 					} else {
 						if(wager.wagerSelections.toString() === scoreData.firstNumber) {
-							var result = (parseFloat((parseFloat(wager.wagerAmount) / 2) * parseFloat(scoreData.firstWinPrice))).toFixed(2);
-						} else {
-							var result = (parseFloat(0)).toFixed(2);
+							result += ((wager.wagerAmount / 2) * scoreData.firstWinPrice);
+						}
+					}
+				}
+				if(wager.wagerPool === 'Place') {
+					if(wager.wagerSelections.length > 1) {
+						var wagerSelections = wager.wagerSelections.split(',');
+						if(wagerSelections.indexOf(scoreData.firstNumber) > -1) {
+							result += ((wager.wagerAmount / 2) * scoreData.firstPlacePrice);
+						}
+						if(wagerSelections.indexOf(scoreData.secondNumber) > -1) {
+							result += ((wager.wagerAmount / 2) * scoreData.secondPlacePrice);
+						}
+					} else {
+						if(wager.wagerSelections.toString() === scoreData.firstNumber) {
+							result += ((wager.wagerAmount / 2) * scoreData.firstPlacePrice);
+						}
+						if(wager.wagerSelections.toString() === scoreData.secondNumber) {
+							result += ((wager.wagerAmount / 2) * scoreData.secondPlacePrice);
 						}
 					}
 				}

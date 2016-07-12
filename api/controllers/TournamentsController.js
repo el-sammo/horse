@@ -114,6 +114,15 @@ function tournamentRegister(req, res, self) {
 		if(tournamentData.closed) {
 			return res.send(JSON.stringify({success: false, failMsg: 'Closed'}));
 		}
+		var customerFound = false;
+		tournamentData.customers.forEach(function(customer) {
+			if(customer.customerId === customerId) {
+				customerFound = true;
+			}
+		});
+		if(customerFound) {
+			return res.send(JSON.stringify({success: false, failMsg: 'Already Registered'}));
+		}
 		var totalFee = parseFloat(parseFloat(tournamentData.entryFee) + parseFloat(tournamentData.siteFee));
 		if(tournamentData.customers.length < tournamentData.max) {
 			return TournamentsService.getCustomerBalance(customerId).then(function(balanceData) {

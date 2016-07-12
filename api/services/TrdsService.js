@@ -24,6 +24,7 @@ module.exports = {
 	},
 
 	updateCredits: function(tournamentId, customerId, result) {
+console.log('updatecredits() called with '+result+' credits');
 		return Tournaments.find({id: tournamentId}).then(function(tournamentData) {
 			var newCustomers = [];
 			tournamentData[0].customers.forEach(function(customer) {

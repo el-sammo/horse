@@ -26,6 +26,28 @@ module.exports = {
 		});
 	},
 
+	getCustomerTournamentCreditBalance: function(tournamentId, customerId) {
+		return Tournaments.find(
+			{id: tournamentId}
+		).then(function(tournamentData) {
+			var customerFound = false;
+			var credits;
+			tournamentData[0].customers.forEach(function(customer) {
+				if(customer.customerId === customerId) {
+					customerFound = true;
+					credits = customer.credits;
+				}
+			});
+			if(customerFound) {
+				return {success: true, balance: credits};
+			} else {
+				return {success: false, reason: 'customer not found'};
+			}
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid customerId'};
+		});
+	},
+
 	updateCustomerBalance: function(customerId, previousBalance, wagerAmount, doWhat) {
 		if(doWhat === 'subtract') {
 			var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(wagerAmount));
@@ -44,5 +66,39 @@ module.exports = {
 			console.log(err);
 			return {success: false, reason: 'invalid customerId'};
 		});
+	},
+
+	updateCustomerTournamentCreditBalance: function(tournamentId, customerId, previousBalance, wagerAmount, doWhat) {
+		if(doWhat === 'subtract') {
+			var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(wagerAmount));
+		}
+		if(doWhat === 'add') {
+			var newBalance = parseFloat(parseFloat(previousBalance) + parseFloat(wagerAmount));
+		}
+		return Tournaments.find(
+			{id: tournamentId}
+		).then(function(tournamentData) {
+			var newCustomers = [];
+			tournamentData[0].customers.forEach(function(customer) {
+				if(customer.customerId === customerId) {
+					newCustomers.push({customerId: customer.customerId, credits: newBalance});
+				} else {
+					newCustomers.push(customer);
+				}
+			});
+
+			return Tournaments.update(
+				{id: tournamentId},
+				{customers: newCustomers},
+				false, 
+				false
+			).then(function(updatedTournament) {
+				return {success: true, updatedTournament: updatedTournament};
+			}).catch(function(err) {
+				console.log(err);
+				return {success: false, reason: 'updateCustomerTournamentCreditBalance() failed'};
+			});
+		});
 	}
+
 }

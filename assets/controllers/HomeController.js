@@ -82,6 +82,26 @@
 			});
 		}
 
+		var updateActiveTournamentBalance = function() {
+			var customerId = $scope.customer.id || $scope.customerId;
+			var getTournamentPromise = tournamentMgmt.getTournament($scope.activeTournamentId);
+			getTournamentPromise.then(function(tournamentData) {
+				$scope.activeTournamentCredits = tournamentData.name +' Credits: 0';
+				tournamentData.customers.forEach(function(customer) {
+					if(customer.customerId === customerId) {
+console.log('customer:');
+console.log(customer);
+						$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
+					}
+				});
+			});
+		}
+
+		var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
+		getTournamentsByDatePromise.then(function(currentTournamentsData) {
+			$scope.currentTournaments = currentTournamentsData;
+		});
+
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
 
@@ -95,11 +115,6 @@
 				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
 				getCustomerPromise.then(function(customer) {
 					$scope.customer = customer;
-				});
-
-				var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
-				getTournamentsByDatePromise.then(function(currentTournamentsData) {
-					$scope.currentTournaments = currentTournamentsData;
 				});
 
 			} else {
@@ -804,7 +819,7 @@
 					if(response.data.success) { 
 						$scope.successfulWager = response.data.confirmedWager;
 						$scope.wagerError = '';
-						updateBalance();
+						updateActiveTournamentBalance();
 					} else {
 						if(response.data.failMsg === 'Incomplete Wager Data') {
 							$scope.successfulWager = '';
@@ -828,7 +843,7 @@
 				cancelWagerPromise.then(function(response) {
 					$scope.tabShow = 'wagerResponse';
 					$scope.successfulWager = response[0];
-					updateBalance();
+					updateActiveTournamentBalance();
 				});
 			}
 		}
@@ -869,7 +884,7 @@
 						formattedWager.total = wager.wagerTotal;
 						var result;
 						if(wager.scored) {
-							result = wager.result;
+							result = wager.result.toFixed(2);
 						} else {
 							if(wager.cancelled) {
 								result = 'C';
@@ -1004,8 +1019,8 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 			} else {
 				var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
 				registerTournamentPromise.then(function(response) {
-console.log('response.data[0]:');
-console.log(response.data[0]);
+console.log('response.data:');
+console.log(response.data);
 				});
 			}
 		}
@@ -1018,26 +1033,31 @@ console.log(response.data[0]);
 		}
 
 		$scope.setActiveTournament = function(tournamentId) {
-			var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
-			getTournamentPromise.then(function(tournamentData) {
-				tournamentData.customers.forEach(function(customer) {
-					if(customer.customerId === $scope.customer.id) {
-						var getTrdPromise = trdMgmt.getTrd(tournamentData.assocTrackId);
-						getTrdPromise.then(function(trdData) {
-							$scope.trdData = [trdData];
-							$scope.tracks = [{
-								id: trdData.id,
-								name: trdData.name
-							}];
-							$scope.showTrack(trdData.id);
-						});
-						$scope.activeTournamentId = tournamentId;
-					} else {
-						// $scope.tournamentRegister(tournamentId);
-console.log('not registered for this tournament');
-					}
+			if(!$scope.customerId || !$scope.customer.id) {
+				layoutMgmt.logIn();
+			} else {
+				var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+				getTournamentPromise.then(function(tournamentData) {
+					tournamentData.customers.forEach(function(customer) {
+						if(customer.customerId === $scope.customerId) {
+							$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
+							var getTrdPromise = trdMgmt.getTrd(tournamentData.assocTrackId);
+							getTrdPromise.then(function(trdData) {
+								$scope.trdData = [trdData];
+								$scope.tracks = [{
+									id: trdData.id,
+									name: trdData.name
+								}];
+								$scope.showTrack(trdData.id);
+							});
+							$scope.activeTournamentId = tournamentId;
+						} else {
+							// $scope.tournamentRegister(tournamentId);
+	console.log('not registered for this tournament');
+						}
+					});
 				});
-			});
+			}
 		}
 
 	}

@@ -18,6 +18,10 @@ module.exports = {
     var missingPcs = [];
 
 		if(req.body) {
+			if(!req.body.tournamentId) {
+				completeWager = false;
+				missingPcs.push('tournamentId');
+			}
 			if(!req.body.customerId) {
 				completeWager = false;
 				missingPcs.push('customerId');
@@ -141,11 +145,12 @@ module.exports = {
 };
 
 function validateCancelWager(req, res, self) {
-	return Wagers.find({id: req.params.id}).then(function(wagerData) {
-		var trIdPcs = wagerData[0].trackRaceId.split('-');
+	return Wagers.find({id: req.params.id}).then(function(wagersData) {
+		var wagerData = wagersData[0];
+		var trIdPcs = wagerData.trackRaceId.split('-');
 		return WagersService.getTrd(trIdPcs[0]).then(function(trackData) {
 			if(! trackData) {
-				console.log('trackData ajax failed in WagerController-validateWager() for trackRaceId '+wagerData[0].trackRaceId);
+				console.log('trackData ajax failed in WagerController-validateWager() for trackRaceId '+wagerData.trackRaceId);
 // TODO: what should this return?
 				return errorHandler(trdsError)();
 			}
@@ -155,8 +160,8 @@ function validateCancelWager(req, res, self) {
 					if(race.closed) {
 						return res.send(JSON.stringify({success: false, failMsg: 'Race Started'}));
 					} else {
-						return WagersService.getCustomerBalance(wagerData[0].customerId).then(function(balanceData) {
-							return WagersService.updateCustomerBalance(wagerData[0].customerId, balanceData.balance, wagerData[0].wagerTotal, 'add').then(function(customerData) {
+						return WagersService.getCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId).then(function(balanceData) {
+							return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'add').then(function(customerData) {
 								if(customerData.success) {
 									return Wagers.update({id: req.params.id}, {cancelled: true}, false, false).then(function(result) {
 										res.send(JSON.stringify(result));
@@ -226,7 +231,7 @@ console.log('Invalid Wager Pool');
 console.log('Invalid Wager Amount');
 					return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
 				}
-				return WagersService.getCustomerBalance(wagerData.customerId).then(function(balanceData) {
+				return WagersService.getCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId).then(function(balanceData) {
 					if(balanceData.balance < wagerData.wagerTotal) {
 						validWager = false;
 console.log('Insufficient Customer Balance');
@@ -272,7 +277,7 @@ console.log('validating multi-leg');
 							}
 							if(validWager) {
 console.log('appears to be a valid multi-leg wager');
-								return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
+								return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
 									if(customerData.success) {
 										return Wagers.create(wagerData).then(function(confirmedWagerData) {
 											return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
@@ -321,8 +326,8 @@ console.log('validating wps');
 								});
 								if(validWager) {
 console.log('appears to be a valid wps wager');
-									return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
-										if(customerData.success) {
+									return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(response) {
+										if(response.success) {
 											return Wagers.create(wagerData).then(function(confirmedWagerData) {
 												return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
 											}).catch(function(err) {
@@ -375,7 +380,7 @@ console.log('validating multi-part');
 								});
 								if(validWager) {
 console.log('appears to be a valid multi-part wager');
-									return WagersService.updateCustomerBalance(wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
+									return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
 										if(customerData.success) {
 											return Wagers.create(wagerData).then(function(confirmedWagerData) {
 												return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));

@@ -65,10 +65,9 @@
 				</span>
 				<span 
 					class="footerLink reservationYellow pull-right" 
-					ng-show="customer.balance" 
-					ng-click="account()"
+					ng-show="activeTournamentCredits" 
 				>
-					Credits: {{customer.balance}}
+					{{activeTournamentCredits}}
 				</span>
 				<span 
 					class="footerLink reservationYellow pull-right" 

@@ -5,10 +5,10 @@ module.exports = {
 	getCustomerBalance: function(customerId) {
 		return Customers.find(
 			{id: customerId}
-		).then(function(trds) {
+		).then(function(customerData) {
 			var balance = 0;
-			if(trds[0].balance) {
-				balance = trds[0].balance;
+			if(customerData[0].balance) {
+				balance = customerData[0].dollars;
 			}
 			return {success: true, balance: balance};
 		}).catch(function(err) {
@@ -25,7 +25,7 @@ module.exports = {
 		}
 		return Customers.update(
 			{id: customerId},
-			{balance: newBalance},
+			{dollars: newBalance},
 			false, 
 			false
 		).then(function(updatedCustomer) {
