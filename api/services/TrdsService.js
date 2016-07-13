@@ -2,7 +2,7 @@ module.exports = {
 
 	getAffectedWagers: function(finalRaceId) {
 		return Wagers.find(
-			{finalRaceId: finalRaceId}
+			{finalRaceId: finalRaceId, cancelled: false, scored: false}
 		).then(function(affectedWagers) {
 			return affectedWagers;
 		}).catch(function(err) {

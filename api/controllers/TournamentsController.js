@@ -81,6 +81,14 @@ module.exports = {
 		}
 	},
 	
+	updateTCC: function(req, res) {
+		if(req.body) {
+			return updateTournamentCustomers(req, res);
+		} else {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid updateTCC data'}));
+		}
+	},
+	
 	register: function(req, res) {
 		var rpiPcs = req.params.id.split('-');
 		if(rpiPcs.length > 1) {
@@ -169,6 +177,62 @@ function tournamentLeaders(req, res, self) {
 		tournamentData.customers.sort(dynamicSort("credits"));
 		tournamentData.customers.reverse();
 		res.send(JSON.stringify(tournamentData.customers));
+	}).catch(function(err) {
+    return {error: 'Server error'};
+    console.error(err);
+    throw err;
+	});
+}
+
+function updateTournamentCustomers(req, res, self) {
+	var finalRaceId = req.params.id;
+	var acIds = req.body;
+	var tournamentId = acIds[0];
+	acIds.reverse();
+	acIds.pop();
+	return TournamentsService.getWagers(finalRaceId).then(function(wagersData) {
+		var wagers = wagersData.wagers;
+		var newCustomers = [];
+		acIds.forEach(function(customerId) {
+			var newCustomer = {};
+			newCustomer.customerId = customerId;
+			newCustomer.credits = 0;
+			wagers.forEach(function(wager) {
+				if(wager.customerId === newCustomer.customerId) {
+					newCustomer.credits = (newCustomer.credits + parseFloat(wager.result));
+				}
+			});
+			newCustomers.push(newCustomer);
+		});
+		var finalCustomers = [];
+		Tournaments.find({id: tournamentId}).then(function(getTournamentData) {
+			getTournamentData[0].customers.forEach(function(gtTC) {
+				var finalCustomer = {};
+				finalCustomer.customerId = gtTC.customerId;
+				finalCustomer.credits = parseFloat(gtTC.credits);
+				newCustomers.forEach(function(newCustomerData) {
+					if(newCustomerData.customerId === finalCustomer.customerId) {
+						finalCustomer.credits = (parseFloat(finalCustomer.credits) + parseFloat(newCustomerData.credits));
+					}
+				});
+				finalCustomers.push(finalCustomer);
+			});
+		});
+
+		return Tournaments.update(
+			{id: tournamentId},
+			{customers: finalCustomers},
+			false,
+			false
+		).then(function(results) {
+			var tournamentData = results[0];
+			res.send(JSON.stringify(tournamentData.customers));
+			return {success: true, updatedTournamentData: tournamentData};
+		}).catch(function(err) {
+			return {error: 'Server error'};
+			console.error(err);
+			throw err;
+		});
 	}).catch(function(err) {
     return {error: 'Server error'};
     console.error(err);

@@ -22,12 +22,13 @@
 		var getTournamentsByCustomerIdPromise;
 		var getTournamentsByDatePromise;
 		var getLeadersPromise;
+		var updateTournamentCustomersCreditsPromise;
 
 		var service = {
 			getTournament: function(tournamentId) {
-//				if(getTournamentPromise) {
-//					return getTournamentPromise;
-//				}
+				if(getTournamentPromise) {
+					return getTournamentPromise;
+				}
 
 				var url = '/tournaments/' + tournamentId;
 				getTournamentPromise = $http.get(url).then(function(res) {
@@ -93,6 +94,22 @@
 				});
 
 				return getLeadersPromise;
+			},
+
+			updateTournamentCustomersCredits: function(finalRaceId, acIds) {
+				var url = '/tournaments/updateTCC/' + finalRaceId;
+				return $http.put(url, acIds).success(
+					function(data, status, headers, config) {
+						if(status >= 400) {
+							return $q.reject(data);
+						}
+						return {success: true};
+					}
+				).catch(function(err) {
+					console.log('PUT ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
 			},
 
 			createTournament: function(tournamentData) {

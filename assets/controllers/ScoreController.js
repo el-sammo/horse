@@ -12,13 +12,15 @@
 	controller.$inject = [
 		'$scope', '$http', 'messenger', '$rootScope',
 		'$window', '$routeParams', 'layoutMgmt',
-		'deviceMgr', 'trdMgmt', 'customerMgmt'
+		'deviceMgr', 'trdMgmt', 'customerMgmt',
+		'tournamentMgmt'
 	];
 
 	function controller(
 		$scope, $http, messenger, $rootScope,
 		$window, $routeParams, layoutMgmt,
-		deviceMgr, trdMgmt, customerMgmt
+		deviceMgr, trdMgmt, customerMgmt,
+		tournamentMgmt
 	) {
 
 		if(deviceMgr.isBigScreen()) {
@@ -1141,10 +1143,18 @@ console.log($scope.trdData);
 			$scope.trdData.races = newRaces;
 
 			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum, customerId: $scope.customerId});
-			scoreTrdPromise.then(function(response) {
+			scoreTrdPromise.then(function(scoreTrdPromiseResponse) {
+				if(scoreTrdPromiseResponse.data.success) {
+					var updateTournamentCustomersCredits = tournamentMgmt.updateTournamentCustomersCredits(score.trId+'-'+score.raceNum, scoreTrdPromiseResponse.data.acIds);
+					updateTournamentCustomersCredits.then(function(response) {
+						if(response.status == 200 && response.statusText === 'OK') {
+							$window.location.href = location.origin + "/app/";
+						} else {
 console.log('response:');
 console.log(response);
-//				$window.location.href = location.origin + "/app/";
+						}
+					});
+				}
 			});
 		}
 

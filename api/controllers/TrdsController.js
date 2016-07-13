@@ -63,7 +63,16 @@ function scoreRace(req, res, self) {
 	});
 	return Trds.update({id: trdData.id}, {races: trdData.races}, false, false).then(function(scoredData) {
 		return TrdsService.getAffectedWagers(finalRaceId).then(function(affectedWagers) {
+			var affectedCustomerIds = [];
+			var first = true;
 			affectedWagers.forEach(function(wager) {
+				if(first) {
+					affectedCustomerIds.push(wager.tournamentId);
+					first = false;
+				}
+				if(affectedCustomerIds.indexOf(wager.customerId) < 0) {
+					affectedCustomerIds.push(wager.customerId);
+				}
 				var result = parseInt(0);
 				if(wager.wagerPool === 'Win') {
 					if(wager.wagerSelections.length > 1) {
@@ -97,19 +106,20 @@ function scoreRace(req, res, self) {
 				}
 				TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
 					if(updateWagerResponse.success) {
-						TrdsService.updateCredits(wager.tournamentId, wager.customerId, result).then(function(updateCreditsResponse) {
-							if(!updateCreditsResponse.success) {
-console.log('updateCreditsResponse error:');
-console.log(updateCreditsResponse.err);
-							}
-						});
+//						TrdsService.updateCredits(wager.tournamentId, wager.customerId, result).then(function(updateCreditsResponse) {
+// TODO How do I force each updateCredits() call to complete before starting the next?
+//							if(!updateCreditsResponse.success) {
+//console.log('updateCreditsResponse error:');
+//console.log(updateCreditsResponse.err);
+//							}
+//						});
 					} else {
 console.log('updateWagerResponse error:');
 console.log(updateWagerResponse.err);
 					}
 				});
 			});
-			return res.send(JSON.stringify({success: true}));
+			return res.send(JSON.stringify({success: true, acIds: affectedCustomerIds}));
 		});
 		
 	//	res.send(JSON.stringify(results));

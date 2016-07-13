@@ -1,17 +1,18 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160712;
+var useDate = 20160713;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);
 
 function insertTournamentData(useDate) {
 	var cursor = db.trds.find({name: 'Belmont', raceDate: useDate});
+	var assocId = '';
 	while(cursor.hasNext()) {
 		var trdData = cursor.next();
 
 		var trackId = trdData._id;
-		var assocId = trackId.str;
+		assocId = trackId.str;
 
 		var assocTrackId = assocId;
 		var tournamentName = 'Belmont Daily';
@@ -38,6 +39,77 @@ function insertTournamentData(useDate) {
 			customers: customers
 		});
 	}
+
+	var btId = '';
+	var cursor = db.tournaments.find({name: 'Belmont Daily', tournyDate: useDate});
+	while(cursor.hasNext()) {
+		var bTourny = cursor.next();
+		btId = bTourny._id.str;
+	}
+
+	db.wagers.insert({
+		tournamentId: btId,
+		customerId: '577852a3ab57f32438ebe6ab',
+		trackraceId: assocId + '-1',
+		finalRaceId: assocId + '-1',
+		wagerPool: 'Win',
+		legs: 1,
+		parts: 1,
+		wagerSelections: '1,2,5,7',
+		wagerAmount: '10.00',
+		wagerTotal: '40.00',
+		wagerPlacedAt: 1468441862503,
+		cancelled: false,
+		scored: false
+	});
+
+	db.wagers.insert({
+		tournamentId: btId,
+		customerId: '577852a3ab57f32438ebe6ab',
+		trackraceId: assocId + '-1',
+		finalRaceId: assocId + '-1',
+		wagerPool: 'Win',
+		legs: 1,
+		parts: 1,
+		wagerSelections: '2,5,7',
+		wagerAmount: '10.00',
+		wagerTotal: '30.00',
+		wagerPlacedAt: 1468441862504,
+		cancelled: false,
+		scored: false
+	});
+
+	db.wagers.insert({
+		tournamentId: btId,
+		customerId: '57785312ab57f32438ebe6ac',
+		trackraceId: assocId + '-1',
+		finalRaceId: assocId + '-1',
+		wagerPool: 'Win',
+		legs: 1,
+		parts: 1,
+		wagerSelections: '1,2,5,6,7',
+		wagerAmount: '10.00',
+		wagerTotal: '50.00',
+		wagerPlacedAt: 1468441862505,
+		cancelled: false,
+		scored: false
+	});
+
+	db.wagers.insert({
+		tournamentId: btId,
+		customerId: '57785312ab57f32438ebe6ac',
+		trackraceId: assocId + '-1',
+		finalRaceId: assocId + '-1',
+		wagerPool: 'Win',
+		legs: 1,
+		parts: 1,
+		wagerSelections: '6,7',
+		wagerAmount: '10.00',
+		wagerTotal: '20.00',
+		wagerPlacedAt: 1468441862506,
+		cancelled: false,
+		scored: false
+	});
 
 	var assocTrackId = 'ajaxdowns';
 	var tournamentName = 'Ajax Downs Daily';

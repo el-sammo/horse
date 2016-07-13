@@ -2,6 +2,16 @@
 var Promise = require('bluebird');
 
 module.exports = {
+	getWagers: function(finalRaceId) {
+		return Wagers.find(
+			{finalRaceId: finalRaceId}
+		).then(function(wagerData) {
+			return {success: true, wagers: wagerData};
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid customerId'};
+		});
+	},
+
 	getCustomerBalance: function(customerId) {
 		return Customers.find(
 			{id: customerId}

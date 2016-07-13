@@ -94,8 +94,6 @@
 						if(status >= 400) {
 							return $q.reject(data);
 						}
-console.log('data:');
-console.log(data);
 						return data;
 					}
 				).catch(function(err) {

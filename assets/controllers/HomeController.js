@@ -82,15 +82,12 @@
 			});
 		}
 
-		var updateActiveTournamentBalance = function() {
-			var customerId = $scope.customer.id || $scope.customerId;
-			var getTournamentPromise = tournamentMgmt.getTournament($scope.activeTournamentId);
+		var updateActiveTournamentBalance = function(tournamentId, customerId) {
+			var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
 			getTournamentPromise.then(function(tournamentData) {
 				$scope.activeTournamentCredits = tournamentData.name +' Credits: 0';
 				tournamentData.customers.forEach(function(customer) {
 					if(customer.customerId === customerId) {
-console.log('customer:');
-console.log(customer);
 						$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
 					}
 				});
@@ -798,13 +795,15 @@ console.log(customer);
 		$scope.leg10Runners = [];
 
 		$scope.submitWager = function(activeTournamentId) {
-			if(!$scope.customerId) {
+			if(!$scope.customerId || !$scope.customer.id) {
 				layoutMgmt.logIn();
 			} else {
+				var customerId = $scope.customerId || $scope.customer.id;
+				var tournamentId = activeTournamentId;
 				// wager schema
 				var wagerSubmission = {
-					tournamentId: activeTournamentId,
-					customerId: $scope.customerId,
+					tournamentId: tournamentId,
+					customerId: customerId,
 					trackRaceId: $scope.trId,
 					finalRaceId: $scope.finalRaceId,
 					wagerPool: $scope.wager,
@@ -819,7 +818,7 @@ console.log(customer);
 					if(response.data.success) { 
 						$scope.successfulWager = response.data.confirmedWager;
 						$scope.wagerError = '';
-						updateActiveTournamentBalance();
+						updateActiveTournamentBalance(tournamentId, customerId);
 					} else {
 						if(response.data.failMsg === 'Incomplete Wager Data') {
 							$scope.successfulWager = '';
@@ -843,7 +842,9 @@ console.log(customer);
 				cancelWagerPromise.then(function(response) {
 					$scope.tabShow = 'wagerResponse';
 					$scope.successfulWager = response[0];
-					updateActiveTournamentBalance();
+					var tournamentId = $scope.successfulWager.tournamentId;
+					var customerId = $scope.successfulWager.customerId;
+					updateActiveTournamentBalance(tournamentId, customerId);
 				});
 			}
 		}
@@ -1036,11 +1037,12 @@ console.log(response.data);
 			if(!$scope.customerId || !$scope.customer.id) {
 				layoutMgmt.logIn();
 			} else {
+				var customerId = $scope.customerId || $scope.customer.id;
 				var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
 				getTournamentPromise.then(function(tournamentData) {
 					tournamentData.customers.forEach(function(customer) {
-						if(customer.customerId === $scope.customerId) {
-							$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
+						if(customer.customerId === customerId) {
+							updateActiveTournamentBalance(tournamentId, customerId);
 							var getTrdPromise = trdMgmt.getTrd(tournamentData.assocTrackId);
 							getTrdPromise.then(function(trdData) {
 								$scope.trdData = [trdData];
