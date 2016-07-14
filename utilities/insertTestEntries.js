@@ -1,6 +1,6 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160713;
+var useDate = 20160714;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);
@@ -310,7 +310,8 @@ function insertTestEntryData(useDate) {
 					claim: 0,
 					meds: 'L'
 				}
-			]
+			],
+			closed: false
 		},
 		{
 			number: 2, 
@@ -428,7 +429,8 @@ function insertTestEntryData(useDate) {
 					meds: 'L',
 					equip: 'Blk-On'
 				}
-			]
+			],
+			closed: false
 		},
 		{
 			number: 3, 
@@ -553,7 +555,8 @@ function insertTestEntryData(useDate) {
 					claim: 0,
 					meds: 'L'
 				}
-			]
+			],
+			closed: false
 		},
 		{
 			number: 4, 
@@ -695,7 +698,8 @@ function insertTestEntryData(useDate) {
 					claim: 0,
 					meds: 'L'
 				}
-			]
+			],
+			closed: false
 		},
 		{
 			number: 5, 
@@ -835,7 +839,8 @@ function insertTestEntryData(useDate) {
 					claim: 20000,
 					meds: 'L'
 				}
-			]
+			],
+			closed: false
 		},
 	];
 

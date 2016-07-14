@@ -75,6 +75,7 @@ function scoreRace(req, res, self) {
 				}
 				var result = parseInt(0);
 				if(wager.wagerPool === 'Win') {
+console.log('evaluating win');
 					if(wager.wagerSelections.length > 1) {
 						var wagerSelections = wager.wagerSelections.split(',');
 						if(wagerSelections.indexOf(scoreData.firstNumber) > -1) {
@@ -87,6 +88,7 @@ function scoreRace(req, res, self) {
 					}
 				}
 				if(wager.wagerPool === 'Place') {
+console.log('evaluating place');
 					if(wager.wagerSelections.length > 1) {
 						var wagerSelections = wager.wagerSelections.split(',');
 						if(wagerSelections.indexOf(scoreData.firstNumber) > -1) {
@@ -104,16 +106,71 @@ function scoreRace(req, res, self) {
 						}
 					}
 				}
-				TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
-					if(updateWagerResponse.success) {
-//						TrdsService.updateCredits(wager.tournamentId, wager.customerId, result).then(function(updateCreditsResponse) {
-// TODO How do I force each updateCredits() call to complete before starting the next?
-//							if(!updateCreditsResponse.success) {
-//console.log('updateCreditsResponse error:');
-//console.log(updateCreditsResponse.err);
-//							}
-//						});
+				if(wager.wagerPool === 'Show') {
+console.log('evaluating show');
+					if(wager.wagerSelections.length > 1) {
+						var wagerSelections = wager.wagerSelections.split(',');
+						if(wagerSelections.indexOf(scoreData.firstNumber) > -1) {
+							result += ((wager.wagerAmount / 2) * scoreData.firstShowPrice);
+						}
+						if(wagerSelections.indexOf(scoreData.secondNumber) > -1) {
+							result += ((wager.wagerAmount / 2) * scoreData.secondShowPrice);
+						}
+						if(wagerSelections.indexOf(scoreData.thirdNumber) > -1) {
+							result += ((wager.wagerAmount / 2) * scoreData.thirdShowPrice);
+						}
 					} else {
+						if(wager.wagerSelections.toString() === scoreData.firstNumber) {
+							result += ((wager.wagerAmount / 2) * scoreData.firstPlacePrice);
+						}
+						if(wager.wagerSelections.toString() === scoreData.secondNumber) {
+							result += ((wager.wagerAmount / 2) * scoreData.secondPlacePrice);
+						}
+						if(wager.wagerSelections.toString() === scoreData.thirdNumber) {
+							result += ((wager.wagerAmount / 2) * scoreData.thirdShowPrice);
+						}
+					}
+				}
+				if(wager.wagerPool === 'Exacta') {
+console.log('evaluating exacta');
+					var wsPcs = wager.wagerSelections.split(' / ');
+					var firstRunners = wsPcs[0];
+					var secondRunners = wsPcs[1];
+					var firstCorrect = false;
+					var secondCorrect = false;
+					if(firstRunners.length > 1) {
+						var firstRunnersPcs = firstRunners.split(',');
+						if(firstRunnersPcs.indexOf(scoreData.firstNumber) > -1) {
+							firstCorrect = true;
+						}
+					} else {
+						if(firstRunners.toString() === scoreData.firstNumber) {
+							firstCorrect = true;
+						}
+					}
+					if(firstCorrect) {
+						if(secondRunners.length > 1) {
+							var secondRunnersPcs = secondRunners.split(',');
+							if(secondRunnersPcs.indexOf(scoreData.secondNumber) > -1) {
+								secondCorrect = true;
+							}
+						} else {
+							if(secondRunners.toString() === scoreData.secondNumber) {
+								secondCorrect = true;
+							}
+						}
+						if(secondCorrect) {
+							result += ((wager.wagerAmount / 2) * scoreData.exactaPrice);
+console.log('result: '+result);
+						} else {
+console.log('second NOT correct');
+						}
+					} else {
+console.log('first NOT correct');
+					}
+				}
+				TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
+					if(!updateWagerResponse.success) {
 console.log('updateWagerResponse error:');
 console.log(updateWagerResponse.err);
 					}

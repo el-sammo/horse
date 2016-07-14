@@ -227,18 +227,22 @@
 		$scope.showTrack = function(trackId) {
 			$scope.trackShow = trackId;
 			$scope.showTrackRace(trackId, 1);
-			$scope.showRaceWager(trackId, 1, 'Win', 2);
 		}
 
 		$scope.showTrackRace = function(trackId, raceNum) {
-			$scope.raceNum = raceNum;
-			$scope.trId = trackId+'-'+raceNum;
-			$scope.showRaceWager(trackId, raceNum, 'Win', 2);
 			$scope.trdData.forEach(function(trd) {
 				if(trd.id === trackId) {
 					trd.races.forEach(function(race) {
 						if(race.number == raceNum) {
-							$scope.race = race;
+							if(!race.closed) {
+								$scope.race = race;
+								$scope.raceNum = raceNum;
+								$scope.trId = trackId+'-'+raceNum;
+								$scope.showRaceWager(trackId, raceNum, 'Win', 2);
+							} else {
+								raceNum ++;
+								$scope.showTrackRace(trackId, raceNum);
+							}
 						}
 					});
 				}
