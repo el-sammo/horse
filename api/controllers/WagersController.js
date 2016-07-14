@@ -75,6 +75,12 @@ module.exports = {
 		}
   },
 
+  closeWagers: function(req, res) {
+		if(req.params && req.params.id) {
+			return closeWagersByTrackRaceId(req, res);
+		}
+  },
+
 	byCustomerId: function(req, res) {
 		Wagers.find({customerId: req.params.id}).sort({
 			created: 'asc'
@@ -187,6 +193,21 @@ function validateCancelWager(req, res, self) {
 			});
 		});
 	});
+}
+
+function closeWagersByTrackRaceId(req, res, self) {
+	return Wagers.update(
+			{trackRaceId: req.params.id},
+			{raceClosed: true},
+			false,
+			true
+	).then(function(wagersData) {
+		return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
+	}).catch(function(err) {
+		res.json({error: 'Server error'}, 500);
+		console.error(err);
+		throw err;
+	});	
 }
 
 function validateWager(req, res, self) {

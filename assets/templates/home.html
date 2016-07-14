@@ -777,7 +777,7 @@
 										<div 
 											class="col-md-1"
 											style="text-align: right;"
-											ng-show="wager.result !== 'Pending'"
+											ng-show="wager.result !== 'Pending' && wager.result !== 'Cancel'"
 										>
 											<span class="historyDetails">
 												{{wager.result}}
@@ -785,8 +785,17 @@
 										</div>
 										<div 
 											class="col-md-1"
-											style="text-align: right; cursor: pointer;"
+											style="text-align: right;"
 											ng-show="wager.result === 'Pending'"
+										>
+											<span class="historyDetails">
+												Pending
+											</span>
+										</div>
+										<div 
+											class="col-md-1"
+											style="text-align: right; cursor: pointer;"
+											ng-show="wager.result === 'Cancel'"
 											ng-click="cancelWager(wager.id)"
 										>
 											<span class="historyDetails">

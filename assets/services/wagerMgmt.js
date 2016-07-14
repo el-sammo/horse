@@ -21,6 +21,7 @@
 		var getWagersByCustomerIdPromise;
 		var getWagersByCustomerIdSinceMillisecondsPromise;
 		var getLiveWagersByCustomerIdPromise;
+		var closeWagersPromise;
 		var cancelWagerPromise;
 
 		var service = {
@@ -94,6 +95,19 @@
 					console.error(err);
 					return $q.reject(err);
 				});
+			},
+
+			closeWagers: function(trackRaceId) {
+				var url = '/wagers/closeWagers/' + trackRaceId;
+				closeWagersPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return closeWagersPromise;
 			},
 
 			cancelWager: function(wagerId) {

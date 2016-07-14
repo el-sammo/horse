@@ -169,6 +169,215 @@ console.log('second NOT correct');
 console.log('first NOT correct');
 					}
 				}
+				if(wager.wagerPool === 'Trifecta') {
+console.log('evaluating trifecta');
+					var wsPcs = wager.wagerSelections.split(' / ');
+					var firstRunners = wsPcs[0];
+					var secondRunners = wsPcs[1];
+					var thirdRunners = wsPcs[2];
+					var firstCorrect = false;
+					var secondCorrect = false;
+					var thirdCorrect = false;
+					if(firstRunners.length > 1) {
+						var firstRunnersPcs = firstRunners.split(',');
+						if(firstRunnersPcs.indexOf(scoreData.firstNumber) > -1) {
+							firstCorrect = true;
+						}
+					} else {
+						if(firstRunners.toString() === scoreData.firstNumber) {
+							firstCorrect = true;
+						}
+					}
+					if(firstCorrect) {
+						if(secondRunners.length > 1) {
+							var secondRunnersPcs = secondRunners.split(',');
+							if(secondRunnersPcs.indexOf(scoreData.secondNumber) > -1) {
+								secondCorrect = true;
+							}
+						} else {
+							if(secondRunners.toString() === scoreData.secondNumber) {
+								secondCorrect = true;
+							}
+						}
+						if(secondCorrect) {
+							if(thirdRunners.length > 1) {
+								var thirdRunnersPcs = thirdRunners.split(',');
+								if(thirdRunnersPcs.indexOf(scoreData.thirdNumber) > -1) {
+									thirdCorrect = true;
+								}
+							} else {
+								if(thirdRunners.toString() === scoreData.thirdNumber) {
+									thirdCorrect = true;
+								}
+							}
+							if(thirdCorrect) {
+								result += ((wager.wagerAmount / 2) * scoreData.trifectaPrice);
+console.log('result: '+result);
+							} else {
+console.log('third NOT correct');
+							}
+						} else {
+console.log('second NOT correct');
+						}
+					} else {
+console.log('first NOT correct');
+					}
+				}
+				if(wager.wagerPool === 'Superfecta') {
+console.log('evaluating superecta');
+					var wsPcs = wager.wagerSelections.split(' / ');
+					var firstRunners = wsPcs[0];
+					var secondRunners = wsPcs[1];
+					var thirdRunners = wsPcs[2];
+					var fourthRunners = wsPcs[3];
+					var firstCorrect = false;
+					var secondCorrect = false;
+					var thirdCorrect = false;
+					var fourthCorrect = false;
+					if(firstRunners.length > 1) {
+						var firstRunnersPcs = firstRunners.split(',');
+						if(firstRunnersPcs.indexOf(scoreData.firstNumber) > -1) {
+							firstCorrect = true;
+						}
+					} else {
+						if(firstRunners.toString() === scoreData.firstNumber) {
+							firstCorrect = true;
+						}
+					}
+					if(firstCorrect) {
+						if(secondRunners.length > 1) {
+							var secondRunnersPcs = secondRunners.split(',');
+							if(secondRunnersPcs.indexOf(scoreData.secondNumber) > -1) {
+								secondCorrect = true;
+							}
+						} else {
+							if(secondRunners.toString() === scoreData.secondNumber) {
+								secondCorrect = true;
+							}
+						}
+						if(secondCorrect) {
+							if(thirdRunners.length > 1) {
+								var thirdRunnersPcs = thirdRunners.split(',');
+								if(thirdRunnersPcs.indexOf(scoreData.thirdNumber) > -1) {
+									thirdCorrect = true;
+								}
+							} else {
+								if(thirdRunners.toString() === scoreData.thirdNumber) {
+									thirdCorrect = true;
+								}
+							}
+							if(thirdCorrect) {
+								if(fourthRunners.length > 1) {
+									var fourthRunnersPcs = fourthRunners.split(',');
+									if(fourthRunnersPcs.indexOf(scoreData.fourthNumber) > -1) {
+										fourthCorrect = true;
+									}
+								} else {
+									if(fourthRunners.toString() === scoreData.fourthNumber) {
+										fourthCorrect = true;
+									}
+								}
+								if(fourthCorrect) {
+									result += ((wager.wagerAmount / 2) * scoreData.superfectaPrice);
+console.log('result: '+result);
+								} else {
+console.log('fourth NOT correct');
+								}
+							} else {
+console.log('third NOT correct');
+							}
+						} else {
+console.log('second NOT correct');
+						}
+					} else {
+console.log('first NOT correct');
+					}
+				}
+				if(wager.wagerPool === 'Pentafecta') {
+console.log('evaluating pentafecta');
+					var wsPcs = wager.wagerSelections.split(' / ');
+					var firstRunners = wsPcs[0];
+					var secondRunners = wsPcs[1];
+					var thirdRunners = wsPcs[2];
+					var fourthRunners = wsPcs[3];
+					var fifthRunners = wsPcs[4];
+					var firstCorrect = false;
+					var secondCorrect = false;
+					var thirdCorrect = false;
+					var fifthCorrect = false;
+					if(firstRunners.length > 1) {
+						var firstRunnersPcs = firstRunners.split(',');
+						if(firstRunnersPcs.indexOf(scoreData.firstNumber) > -1) {
+							firstCorrect = true;
+						}
+					} else {
+						if(firstRunners.toString() === scoreData.firstNumber) {
+							firstCorrect = true;
+						}
+					}
+					if(firstCorrect) {
+						if(secondRunners.length > 1) {
+							var secondRunnersPcs = secondRunners.split(',');
+							if(secondRunnersPcs.indexOf(scoreData.secondNumber) > -1) {
+								secondCorrect = true;
+							}
+						} else {
+							if(secondRunners.toString() === scoreData.secondNumber) {
+								secondCorrect = true;
+							}
+						}
+						if(secondCorrect) {
+							if(thirdRunners.length > 1) {
+								var thirdRunnersPcs = thirdRunners.split(',');
+								if(thirdRunnersPcs.indexOf(scoreData.thirdNumber) > -1) {
+									thirdCorrect = true;
+								}
+							} else {
+								if(thirdRunners.toString() === scoreData.thirdNumber) {
+									thirdCorrect = true;
+								}
+							}
+							if(thirdCorrect) {
+								if(fourthRunners.length > 1) {
+									var fourthRunnersPcs = fourthRunners.split(',');
+									if(fourthRunnersPcs.indexOf(scoreData.fourthNumber) > -1) {
+										fourthCorrect = true;
+									}
+								} else {
+									if(fourthRunners.toString() === scoreData.fourthNumber) {
+										fourthCorrect = true;
+									}
+								}
+								if(fourthCorrect) {
+									if(fifthRunners.length > 1) {
+										var fifthRunnersPcs = fifthRunners.split(',');
+										if(fifthRunnersPcs.indexOf(scoreData.fifthNumber) > -1) {
+											fifthCorrect = true;
+										}
+									} else {
+										if(fifthRunners.toString() === scoreData.fifthNumber) {
+											fifthCorrect = true;
+										}
+									}
+									if(fifthCorrect) {
+										result += ((wager.wagerAmount / 2) * scoreData.pentafectaPrice);
+console.log('result: '+result);
+									} else {
+console.log('fifth NOT correct');
+									}
+								} else {
+console.log('fourth NOT correct');
+								}
+							} else {
+console.log('third NOT correct');
+							}
+						} else {
+console.log('second NOT correct');
+						}
+					} else {
+console.log('first NOT correct');
+					}
+				}
 				TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
 					if(!updateWagerResponse.success) {
 console.log('updateWagerResponse error:');

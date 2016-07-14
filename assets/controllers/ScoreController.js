@@ -1069,6 +1069,14 @@ console.log($scope.trdData);
 				score.trifecta = $scope.trifecta;
 				score.trifectaPrice = $scope.trifectaPrice;
 			}
+			if($scope.fourthNumber) {
+				score.fourthNumber = $scope.fourthNumber;
+				score.fourthJockey = $scope.fourthJockey;
+			}
+			if($scope.fifthNumber) {
+				score.fifthNumber = $scope.fifthNumber;
+				score.fifthJockey = $scope.fifthJockey;
+			}
 			if($scope.superfectaPrice) {
 				score.superfecta = $scope.superfecta;
 				score.superfectaPrice = $scope.superfectaPrice;
