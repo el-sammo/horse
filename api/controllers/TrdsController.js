@@ -378,6 +378,45 @@ console.log('second NOT correct');
 console.log('first NOT correct');
 					}
 				}
+				if(wager.wagerPool === 'Daily Double') {
+console.log('evaluating dd');
+					var wsPcs = wager.wagerSelections.split(' / ');
+					var ddPcs = scoreData.dailyDouble.split('/');
+					var firstRunners = wsPcs[0];
+					var secondRunners = wsPcs[1];
+					var firstWinners = ddPcs[0];
+					var secondWinners = ddPcs[1];
+					var firstCorrect = false;
+					var secondCorrect = false;
+					var firstRunnersArray = firstRunners.split(',');
+					var secondRunnersArray = secondRunners.split(',');
+					var firstWinnersArray = firstWinners.split(',');
+					var secondWinnersArray = secondWinners.split(',');
+					firstWinnersArray.forEach(function(firstWinner) {
+						firstRunnersArray.forEach(function(firstRunner) {
+							if(firstWinner.toString() === firstRunner.toString()) {
+								firstCorrect = true;
+							}
+						});
+					});
+					if(firstCorrect) {
+						secondWinnersArray.forEach(function(secondWinner) {
+							secondRunnersArray.forEach(function(secondRunner) {
+								if(secondWinner.toString() === secondRunner.toString()) {
+									secondCorrect = true;
+								}
+							});
+						});
+						if(secondCorrect) {
+							result += ((wager.wagerAmount / 2) * scoreData.dailyDoublePrice);
+console.log('result: '+result);
+						} else {
+console.log('second NOT correct');
+						}
+					} else {
+console.log('first NOT correct');
+					}
+				}
 				TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
 					if(!updateWagerResponse.success) {
 console.log('updateWagerResponse error:');
