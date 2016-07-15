@@ -168,8 +168,6 @@
 			var getTrdPromise = trdMgmt.getTrd(trId);
 			getTrdPromise.then(function(trdData) {
 				$scope.trdData = trdData;
-console.log('$scope.trdData:');
-console.log($scope.trdData);
 				var checkDouble = false;
 				var checkPick3 = false;
 				var checkPick4 = false;

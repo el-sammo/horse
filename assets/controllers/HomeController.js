@@ -866,7 +866,7 @@
 				var dateObj = new Date();
 				var ms = dateObj.getTime();
 				var msPerDay = 86400000;
-				var todayMill = ((ms - (ms % msPerDay)) + 21600000);
+				var todayMill = ((ms - (ms % msPerDay)) - 64800000);
 				var params = customerId + '-' + todayMill;
 				var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
 				getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {

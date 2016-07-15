@@ -23,6 +23,16 @@ module.exports = {
 		});
 	},
 
+	getTournamentId: function(trdId) {
+		return Tournaments.find(
+			{assocTrackId: trdId}
+		).then(function(tournamentData) {
+			return {tournamentId: tournamentData[0].id};
+		}).catch(function(err) {
+			return {success: false, err: err};
+		});
+	},
+
 	updateCredits: function(tournamentId, customerId, result) {
 console.log('updatecredits() called with '+result+' credits');
 		return Tournaments.find({id: tournamentId}).then(function(tournamentData) {

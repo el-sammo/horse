@@ -206,6 +206,10 @@ function updateTournamentCustomers(req, res, self) {
 		});
 		var finalCustomers = [];
 		Tournaments.find({id: tournamentId}).then(function(getTournamentData) {
+console.log(' ');
+console.log('getTournamentData:');
+console.log(getTournamentData);
+console.log(' ');
 			getTournamentData[0].customers.forEach(function(gtTC) {
 				var finalCustomer = {};
 				finalCustomer.customerId = gtTC.customerId;
