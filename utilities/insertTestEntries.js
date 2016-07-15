@@ -1,6 +1,6 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160714;
+var useDate = 20160715;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);

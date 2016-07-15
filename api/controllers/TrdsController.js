@@ -469,6 +469,165 @@ console.log('second NOT correct');
 console.log('first NOT correct');
 						}
 					}
+					if(wager.wagerPool === 'Pick 4') {
+console.log('evaluating p4');
+						var wsPcs = wager.wagerSelections.split(' / ');
+						var p4Pcs = scoreData.pick4.split('/');
+						var firstRunners = wsPcs[0];
+						var secondRunners = wsPcs[1];
+						var thirdRunners = wsPcs[2];
+						var fourthRunners = wsPcs[2];
+						var firstWinners = p4Pcs[0];
+						var secondWinners = p4Pcs[1];
+						var thirdWinners = p4Pcs[2];
+						var fourthWinners = p4Pcs[2];
+						var firstCorrect = false;
+						var secondCorrect = false;
+						var thirdCorrect = false;
+						var fourthCorrect = false;
+						var firstRunnersArray = firstRunners.split(',');
+						var secondRunnersArray = secondRunners.split(',');
+						var thirdRunnersArray = thirdRunners.split(',');
+						var fourthRunnersArray = fourthRunners.split(',');
+						var firstWinnersArray = firstWinners.split(',');
+						var secondWinnersArray = secondWinners.split(',');
+						var thirdWinnersArray = thirdWinners.split(',');
+						var fourthWinnersArray = fourthWinners.split(',');
+						firstWinnersArray.forEach(function(firstWinner) {
+							firstRunnersArray.forEach(function(firstRunner) {
+								if(firstWinner.toString() === firstRunner.toString()) {
+									firstCorrect = true;
+								}
+							});
+						});
+						if(firstCorrect) {
+							secondWinnersArray.forEach(function(secondWinner) {
+								secondRunnersArray.forEach(function(secondRunner) {
+									if(secondWinner.toString() === secondRunner.toString()) {
+										secondCorrect = true;
+									}
+								});
+							});
+							if(secondCorrect) {
+								thirdWinnersArray.forEach(function(thirdWinner) {
+									thirdRunnersArray.forEach(function(thirdRunner) {
+										if(thirdWinner.toString() === thirdRunner.toString()) {
+											thirdCorrect = true;
+										}
+									});
+								});
+								if(thirdCorrect) {
+									fourthWinnersArray.forEach(function(fourthWinner) {
+										fourthRunnersArray.forEach(function(fourthRunner) {
+											if(fourthWinner.toString() === fourthRunner.toString()) {
+												fourthCorrect = true;
+											}
+										});
+									});
+									if(fourthCorrect) {
+										result += ((wager.wagerAmount / 2) * scoreData.pick4Price);
+console.log('result: '+result);
+									} else {
+console.log('fourth NOT correct');
+									}
+								} else {
+console.log('third NOT correct');
+								}
+							} else {
+console.log('second NOT correct');
+							}
+						} else {
+console.log('first NOT correct');
+						}
+					}
+					if(wager.wagerPool === 'Pick 5') {
+console.log('evaluating p5');
+						var wsPcs = wager.wagerSelections.split(' / ');
+						var p5Pcs = scoreData.pick5.split('/');
+						var firstRunners = wsPcs[0];
+						var secondRunners = wsPcs[1];
+						var thirdRunners = wsPcs[2];
+						var fourthRunners = wsPcs[2];
+						var fifthRunners = wsPcs[2];
+						var firstWinners = p5Pcs[0];
+						var secondWinners = p5Pcs[1];
+						var thirdWinners = p5Pcs[2];
+						var fourthWinners = p5Pcs[2];
+						var fifthWinners = p5Pcs[2];
+						var firstCorrect = false;
+						var secondCorrect = false;
+						var thirdCorrect = false;
+						var fourthCorrect = false;
+						var fifthCorrect = false;
+						var firstRunnersArray = firstRunners.split(',');
+						var secondRunnersArray = secondRunners.split(',');
+						var thirdRunnersArray = thirdRunners.split(',');
+						var fourthRunnersArray = fourthRunners.split(',');
+						var fifthRunnersArray = fifthRunners.split(',');
+						var firstWinnersArray = firstWinners.split(',');
+						var secondWinnersArray = secondWinners.split(',');
+						var thirdWinnersArray = thirdWinners.split(',');
+						var fourthWinnersArray = fourthWinners.split(',');
+						var fifthWinnersArray = fifthWinners.split(',');
+						firstWinnersArray.forEach(function(firstWinner) {
+							firstRunnersArray.forEach(function(firstRunner) {
+								if(firstWinner.toString() === firstRunner.toString()) {
+									firstCorrect = true;
+								}
+							});
+						});
+						if(firstCorrect) {
+							secondWinnersArray.forEach(function(secondWinner) {
+								secondRunnersArray.forEach(function(secondRunner) {
+									if(secondWinner.toString() === secondRunner.toString()) {
+										secondCorrect = true;
+									}
+								});
+							});
+							if(secondCorrect) {
+								thirdWinnersArray.forEach(function(thirdWinner) {
+									thirdRunnersArray.forEach(function(thirdRunner) {
+										if(thirdWinner.toString() === thirdRunner.toString()) {
+											thirdCorrect = true;
+										}
+									});
+								});
+								if(thirdCorrect) {
+									fourthWinnersArray.forEach(function(fourthWinner) {
+										fourthRunnersArray.forEach(function(fourthRunner) {
+											if(fourthWinner.toString() === fourthRunner.toString()) {
+												fourthCorrect = true;
+											}
+										});
+									});
+									if(fourthCorrect) {
+										fifthWinnersArray.forEach(function(fifthWinner) {
+											fifthRunnersArray.forEach(function(fifthRunner) {
+												if(fifthWinner.toString() === fifthRunner.toString()) {
+													fifthCorrect = true;
+												}
+											});
+										});
+										if(fifthCorrect) {
+											result += ((wager.wagerAmount / 2) * scoreData.pick5Price);
+console.log('result: '+result);
+										} else {
+console.log('fifth NOT correct');
+										}
+									} else {
+console.log('fourth NOT correct');
+									}
+								} else {
+console.log('third NOT correct');
+								}
+							} else {
+console.log('second NOT correct');
+							}
+						} else {
+console.log('first NOT correct');
+						}
+					}
+// TODO P6, P7, P8, P9, P10
 					TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {
 						if(!updateWagerResponse.success) {
 console.log('updateWagerResponse error:');
@@ -476,10 +635,6 @@ console.log(updateWagerResponse.err);
 						}
 					});
 				});
-console.log(' ');
-console.log('affectedCustomerIds (bottom):');
-console.log(affectedCustomerIds);
-console.log(' ');
 				return res.send(JSON.stringify({success: true, acIds: affectedCustomerIds}));
 			});
 		});
