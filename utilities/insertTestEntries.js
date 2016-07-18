@@ -1,6 +1,6 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160715;
+var useDate = 20160718;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);
@@ -136,7 +136,9 @@ function insertTournamentData(useDate) {
 			{customerId: '57785409ab57f32438ebe6b0', credits: 1003},
 			{customerId: '57785437ab57f32438ebe6b1', credits: 44},
 			{customerId: '57785498ab57f32438ebe6b2', credits: 6886},
-			{customerId: '577854c7ab57f32438ebe6b3', credits: 4503}
+			{customerId: '577854c7ab57f32438ebe6b3', credits: 4503},
+			{customerId: '5789268eb0a218495caddcb6', credits: 500},
+			{customerId: '5765aec37e7e6e33c9203f4d', credits: 500}
 		];
 
 		db.tournaments.insert({
@@ -1415,7 +1417,7 @@ function insertTestEntryData(useDate) {
 					number: 2,
 					post: 2,
 					active: true,
-					name: 'Nextdoorneighbor)',
+					name: 'Nextdoorneighbor',
 					jockey: 'T. Baze',
 					weight: 120,
 					trainer: 'S. Ruiz',

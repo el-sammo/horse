@@ -164,10 +164,18 @@
 
 			$scope.trId = trId;
 			$scope.raceNum = raceNum;
+			$scope.trdData = [];
+console.log('$scope.trdData (before):');
+console.log($scope.trdData);
+
+console.log('trId: '+trId);
+console.log('raceNum: '+raceNum);
 
 			var getTrdPromise = trdMgmt.getTrd(trId);
 			getTrdPromise.then(function(trdData) {
 				$scope.trdData = trdData;
+console.log('$scope.trdData (after):');
+console.log($scope.trdData);
 				var checkDouble = false;
 				var checkPick3 = false;
 				var checkPick4 = false;
@@ -1147,6 +1155,9 @@
 			});
 
 			$scope.trdData.races = newRaces;
+
+console.log('$scope.trdData:');
+console.log($scope.trdData);
 
 			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum, customerId: $scope.customerId});
 			scoreTrdPromise.then(function(scoreTrdPromiseResponse) {

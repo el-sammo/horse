@@ -51,7 +51,16 @@
 			$scope.customerId = args;
 			$scope.showLogin = false;
 			$scope.showLogout = true;
-			updateBalance();
+			$scope.showSignup = false;
+
+			var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
+			getCustomerPromise.then(function(customer) {
+				$scope.customer = customer;
+			});
+
+			if($scope.activeTournamentId) {
+				updateActiveTournamentBalance($scope.activeTournamentId, $scope.customerId);
+			}
 			$scope.showHistory();
 		});
 
@@ -1038,6 +1047,7 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 		}
 
 		$scope.tournamentRegister = function(tournyId) {
+// TODO debug this, including handling errors
 			if(!$scope.customerId) {
 				layoutMgmt.logIn();
 			} else {
