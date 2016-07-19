@@ -1027,6 +1027,8 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 			$scope.showLeaders = true;
 			var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
 			getLeadersPromise.then(function(leadersData) {
+				$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
+				leadersData.pop();
 				var leaderBoardData = [];
 				leadersData.forEach(function(leader) {
 					var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);

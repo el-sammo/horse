@@ -173,10 +173,14 @@ function tournamentRegister(req, res, self) {
 function tournamentLeaders(req, res, self) {
 	var tournamentId = req.params.id;
 	return Tournaments.find({id: tournamentId}).then(function(results) {
-		var tournamentData = results[0];
-		tournamentData.customers.sort(dynamicSort("credits"));
-		tournamentData.customers.reverse();
-		res.send(JSON.stringify(tournamentData.customers));
+		var tournamentLeadersData = [];
+		results[0].customers.sort(dynamicSort("credits"));
+		results[0].customers.reverse();
+		results[0].customers.forEach(function(customer) {
+			tournamentLeadersData.push({customerId: customer.customerId, credits: customer.credits})
+		});
+		tournamentLeadersData.push(results[0].name);
+		res.send(JSON.stringify(tournamentLeadersData));
 	}).catch(function(err) {
     return {error: 'Server error'};
     console.error(err);
