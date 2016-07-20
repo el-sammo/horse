@@ -1,6 +1,6 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160719;
+var useDate = 20160720;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);
@@ -162,8 +162,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 1, 
 			distance: .75,
+			formattedDist: '6F',
 			surface: 'Turf',
-			time: '13.30',
+			time: 13.30,
+			formattedTime: '13:30',
 			sexes: 'Open',
 			ages: '2 Year Olds',
 			type: 'Maiden Special Weight',
@@ -172,38 +174,47 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 2
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: 1
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				},
 				{
 					wager: 'Pick 3',
+					abbrev: 'P3',
 					min: 1
 				},
 				{
 					wager: 'Pick 5',
+					abbrev: 'P5',
 					min: .5
 				}
 			],
@@ -302,8 +313,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 2, 
 			distance: .8125,
+			formattedDist: '6 1/2F',
 			surface: 'Dirt',
 			time: '14.01',
+			formattedTime: '14:01',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Claiming',
@@ -312,38 +325,47 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 2
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: 1
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				},
 				{
 					wager: 'Pick 3',
+					abbrev: 'P3',
 					min: 1
 				},
 				{
 					wager: 'Pick 4',
+					abbrev: 'P4',
 					min: .5
 				}
 			],
@@ -421,8 +443,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 3, 
 			distance: 1,
+			formattedDist: '1M',
 			surface: 'Turf',
 			time: '14.32',
+			formattedTime: '14:32',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Allowance Optional Claiming',
@@ -431,34 +455,42 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 2
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: 1
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				},
 				{
 					wager: 'Pick 3',
+					abbrev: 'P3',
 					min: 1
 				}
 			],
@@ -547,8 +579,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 4, 
 			distance: .75,
+			formattedDist: '6F',
 			surface: 'Inner Turf',
 			time: '15.04',
+			formattedTime: '15:04',
 			sexes: 'Open',
 			ages: '3 Year Olds and Up',
 			type: 'Starter Allowance',
@@ -557,30 +591,37 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 2
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: 1
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				}
 			],
@@ -690,8 +731,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 5, 
 			distance: .8125,
+			formattedDist: '6 1/2F',
 			surface: 'Dirt',
 			time: '15.36',
+			formattedTime: '15:36',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Maiden Claiming',
@@ -700,26 +743,32 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 2
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: 1
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				}
 			],
@@ -842,8 +891,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 1, 
 			distance: 1,
+			formattedDist: '1M',
 			surface: 'Dirt',
 			time: '17.00',
+			formattedTime: '17:00',
 			sexes: 'Open',
 			ages: '3 Year Olds And Up',
 			type: 'Claiming',
@@ -852,38 +903,47 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 1
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: .5
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				},
 				{
 					wager: 'Pick 3',
+					abbrev: 'P3',
 					min: 1
 				},
 				{
 					wager: 'Pick 5',
+					abbrev: 'P5',
 					min: .5
 				}
 			],
@@ -1048,8 +1108,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 2, 
 			distance: .625,
+			formattedDist: '5F',
 			surface: 'Dirt',
 			time: '17.33',
+			formattedTime: '17:33',
 			sexes: 'Fillies',
 			ages: '2 Year Olds',
 			type: 'Maiden Special Weight',
@@ -1058,34 +1120,42 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 1
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: .5
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				},
 				{
 					wager: 'Pick 3',
+					abbrev: 'P3',
 					min: 1
 				}
 			],
@@ -1173,8 +1243,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 3, 
 			distance: 1.0625,
+			formattedDist: '6F',
 			surface: 'Turf',
 			time: '18.03',
+			formattedTime: '18:03',
 			sexes: 'Open',
 			ages: '3 Year Olds and Up',
 			type: 'Allowance',
@@ -1183,34 +1255,42 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 1
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: .5
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				},
 				{
 					wager: 'Pick 3',
+					abbrev: 'P3',
 					min: 1
 				}
 			],
@@ -1364,8 +1444,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 4, 
 			distance: .8125,
+			formattedDist: '6 1/2F',
 			surface: 'Dirt',
 			time: '18.33',
+			formattedTime: '18:33',
 			sexes: 'Open',
 			ages: '3 Year Olds and Up',
 			type: 'Caliming',
@@ -1374,30 +1456,37 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 1
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: .5
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				},
 				{
 					wager: 'Daily Double',
+					abbrev: 'DD',
 					min: 2
 				}
 			],
@@ -1485,8 +1574,10 @@ function insertTestEntryData(useDate) {
 		{
 			number: 5, 
 			distance: 1.0625,
+			formattedDist: '1 1/16M',
 			surface: 'Turf',
 			time: '19.03',
+			formattedTime: '19:03',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Allowance',
@@ -1495,26 +1586,32 @@ function insertTestEntryData(useDate) {
 			wagers: [
 				{
 					wager: 'Win',
+					abbrev: 'Win',
 					min: 2
 				},
 				{
 					wager: 'Place',
+					abbrev: 'Place',
 					min: 2
 				},
 				{
 					wager: 'Show',
+					abbrev: 'Show',
 					min: 2
 				},
 				{
 					wager: 'Exacta',
+					abbrev: 'Exacta',
 					min: 1
 				},
 				{
 					wager: 'Trifecta',
+					abbrev: 'Tri',
 					min: .5
 				},
 				{
 					wager: 'Superfecta',
+					abbrev: 'Super',
 					min: .1
 				}
 			],
@@ -1682,6 +1779,62 @@ function insertTestEntryData(useDate) {
 
 }
 
+
+function convertPostTime(postTime) {
+	var timePcs = postTime.toString().split(".");
+	if(timePcs[1].length < 2) {
+		timePcs[1] = timePcs[1]+'0';
+	}
+	return timePcs[0]+':'+timePcs[1];
+}
+
+
+function getWagerAbbrev(wager) {
+	var wagerAbbrevMap = [];
+	wagerAbbrevMap['Win'] = 'Win';
+	wagerAbbrevMap['Place'] = 'Place';
+	wagerAbbrevMap['Show'] = 'Show';
+	wagerAbbrevMap['Exacta'] = 'Exacta';
+	wagerAbbrevMap['Trifecta'] = 'Tri';
+	wagerAbbrevMap['Superfecta'] = 'Super';
+	wagerAbbrevMap['Pentafecta'] = 'SH5';
+	wagerAbbrevMap['Daily Double'] = 'DD';
+	wagerAbbrevMap['Pick 3'] = 'P3';
+	wagerAbbrevMap['Pick 4'] = 'P4';
+	wagerAbbrevMap['Pick 5'] = 'P5';
+	wagerAbbrevMap['Pick 6'] = 'P6';
+	wagerAbbrevMap['Pick 7'] = 'P7';
+	wagerAbbrevMap['Pick 8'] = 'P8';
+	wagerAbbrevMap['Pick 9'] = 'P9';
+	wagerAbbrevMap['Pick 10'] = 'P10';
+
+	return wagerAbbrevMap[wager];
+}
+
+
+function convertDist(dist) {
+	var distMap = [];
+	distMap[.5625] = '4 1/2F',
+	distMap[.625] = '5F',
+	distMap[.6875] = '5 1/2F',
+	distMap[.75] = '6F',
+	distMap[.8125] = '6 1/2F',
+	distMap[.875] = '7F',
+	distMap[.9375] = '7 1/2F',
+	distMap[1] = '1M',
+	distMap[1.0625] = '1 1/16M',
+	distMap[1.070] = '1M 70Y',
+	distMap[1.125] = '1 1/8M',
+	distMap[1.25] = '1 1/4M',
+	distMap[1.375] = '1 3/8M',
+	distMap[1.5] = '1 1/2M',
+	distMap[1.625] = '1 5/8M',
+	distMap[1.75] = '1 3/4M',
+	distMap[1.875] = '1 7/8M',
+	distMap[2] = '2M'
+
+	return distMap[dist];
+}
 
 
 

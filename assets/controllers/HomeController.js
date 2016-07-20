@@ -55,6 +55,7 @@
 
 			var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
 			getCustomerPromise.then(function(customer) {
+console.log('getCustomerPromise called');
 				$scope.customer = customer;
 			});
 
@@ -80,11 +81,14 @@
 		var todayDate = year + month + date;
 
 		var updateBalance = function() {
+console.log('updateBalance() called');
 			var getSessionPromise = customerMgmt.getSession();
 			getSessionPromise.then(function(sessionData) {
+console.log('getSessionPromise called');
 				if(sessionData.customerId) {
 					var getCustomerPromise = customerMgmt.getCustomer(sessionData.customerId);
 					getCustomerPromise.then(function(customer) {
+console.log('getCustomerPromise called');
 						$scope.customer = customer;
 					});
 				}
@@ -92,8 +96,10 @@
 		}
 
 		var updateActiveTournamentBalance = function(tournamentId, customerId) {
+console.log('updateActiveTournamentBalance() called');
 			var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
 			getTournamentPromise.then(function(tournamentData) {
+console.log('getTournamentPromise called');
 				$scope.activeTournamentCredits = tournamentData.name +' Credits: 0';
 				tournamentData.customers.forEach(function(customer) {
 					if(customer.customerId === customerId) {
@@ -105,16 +111,19 @@
 
 		var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
 		getTournamentsByDatePromise.then(function(currentTournamentsData) {
+console.log('getTournamentsByDatePromise called');
 			$scope.currentTournaments = currentTournamentsData;
 		});
 
 		var getTrdsByDatePromise = trdMgmt.getTrdsByDate(todayDate);
 		getTrdsByDatePromise.then(function(trdsData) {
+console.log('getTrdsByDatePromise called');
 			$scope.trdData = trdsData;
 		});
 
 		var getSessionPromise = customerMgmt.getSession();
 		getSessionPromise.then(function(sessionData) {
+console.log('getSessionPromise called');
 
 			if(sessionData.customerId) {
 				$rootScope.customerId = sessionData.customerId;
@@ -125,6 +134,7 @@
 
 				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
 				getCustomerPromise.then(function(customer) {
+console.log('getCustomerPromise called');
 					$scope.customer = customer;
 				});
 
@@ -134,56 +144,33 @@
 				$scope.showLogout = false;
 			}
 
-			var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
-			getTournamentsByDatePromise.then(function(tournamentsData) {
-				var tournaments = [];
-				tournamentsData.forEach(function(tournament) {
-					var tournamentData = {};
-					tournamentData.id = tournament.id;
-					tournamentData.name = tournament.name;
-					tournamentData.entryFee = tournament.entryFee;
-					tournamentData.siteFee = tournament.siteFee;
-					tournamentData.customersCount = tournament.customers.length;
-					tournamentData.max = tournament.max;
-					if(tournament.closed) {
-						if(tournament.scored) {
-							tournamentData.tournamentStatus = 'Final';
-						} else {
-							tournamentData.tournamentStatus = 'In Progress';
-						}
+			var tournaments = [];
+			$scope.currentTournaments.forEach(function(tournament) {
+				var tournamentData = {};
+				tournamentData.id = tournament.id;
+				tournamentData.name = tournament.name;
+				tournamentData.entryFee = tournament.entryFee;
+				tournamentData.siteFee = tournament.siteFee;
+				tournamentData.customersCount = tournament.customers.length;
+				tournamentData.max = tournament.max;
+				if(tournament.closed) {
+					if(tournament.scored) {
+						tournamentData.tournamentStatus = 'Final';
 					} else {
-						if(tournament.customers.length == tournament.max) {
-							tournamentData.tournamentStatus = 'Full';
-						} else {
-							tournamentData.tournamentStatus = 'Registering';
-						}
+						tournamentData.tournamentStatus = 'In Progress';
 					}
-					tournaments.push(tournamentData);
-				});
-				$scope.tournamentsData = tournaments;
+				} else {
+					if(tournament.customers.length == tournament.max) {
+						tournamentData.tournamentStatus = 'Full';
+					} else {
+						tournamentData.tournamentStatus = 'Registering';
+					}
+				}
+				tournaments.push(tournamentData);
 			});
+			$scope.tournamentsData = tournaments;
 
 		});
-
-		var distMap = [];
-		distMap[.5625] = '4 1/2F',
-		distMap[.625] = '5F',
-		distMap[.6875] = '5 1/2F',
-		distMap[.75] = '6F',
-		distMap[.8125] = '6 1/2F',
-		distMap[.875] = '7F',
-		distMap[.9375] = '7 1/2F',
-		distMap[1] = '1M',
-		distMap[1.0625] = '1 1/16M',
-		distMap[1.070] = '1M 70Y',
-		distMap[1.125] = '1 1/8M',
-		distMap[1.25] = '1 1/4M',
-		distMap[1.375] = '1 3/8M',
-		distMap[1.5] = '1 1/2M',
-		distMap[1.625] = '1 5/8M',
-		distMap[1.75] = '1 3/4M',
-		distMap[1.875] = '1 7/8M',
-		distMap[2] = '2M'
 
 		var legMap = [];
 		legMap['Win'] = 1;
@@ -227,24 +214,14 @@
 		amountMap[1] = ['1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 		amountMap[2] = ['2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 
-		$scope.convertDist = function(dist) {
-			return distMap[dist];
-		}
-
-		$scope.convertPostTime = function(postTime) {
-			var timePcs = postTime.toString().split(".");
-			if(timePcs[1].length < 2) {
-				timePcs[1] = timePcs[1]+'0';
-			}
-			return timePcs[0]+':'+timePcs[1];
-		}
-
 		$scope.showTrack = function(trackId) {
+console.log('$scope.showTrack() called');
 			$scope.trackShow = trackId;
 			$scope.showTrackRace(trackId, 1, false);
 		}
 
 		$scope.showTrackRace = function(trackId, raceNum, override) {
+console.log('$scope.showTrackRace() called');
 			$scope.trdData.forEach(function(trd) {
 				if(trd.id === trackId) {
 					var trdRaceCount = trd.races.length;
@@ -271,10 +248,12 @@
 		}
 
 		$scope.showLeg = function(legNum) {
+console.log('$scope.showLeg() called');
 			$scope.legShow = legNum;
 		}
 
 		$scope.showRaceWager = function(trackId, raceNumber, wager, min) {
+console.log('$scope.showRaceWager() called');
 			$scope.clearSelectedRunners();
 			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
@@ -345,6 +324,7 @@
 		}
 
 		$scope.updateSelectedRunnersDisplay = function() {
+console.log('$scope.updateSelectedRunnersDisplay() called');
 			$scope.formattedRunners = '';
 			$scope.ticketCost = '';
 			$scope.multiplier = 1;
@@ -783,6 +763,7 @@
 		}
 
 		$scope.clearSelectedRunners = function() {
+console.log('$scope.clearSelectedRunners() called');
 			$scope.formattedRunners = '';
 			$scope.selectedRunners = [];
 			$scope.firstRunners = [];
@@ -820,6 +801,7 @@
 		$scope.leg10Runners = [];
 
 		$scope.submitWager = function(activeTournamentId) {
+console.log('$scope.submitWager() called');
 			if(!$scope.customerId || !$scope.customer.id) {
 				layoutMgmt.logIn();
 			} else {
@@ -860,11 +842,13 @@
 		}
 
 		$scope.cancelWager = function(wagerId) {
+console.log('$scope.cancelWager() called');
 			if(!$scope.customerId) {
 				layoutMgmt.logIn();
 			} else {
 				var cancelWagerPromise = wagerMgmt.cancelWager(wagerId);
 				cancelWagerPromise.then(function(response) {
+console.log('cancelWagerPromise called');
 					$scope.tabShow = 'wagerResponse';
 					$scope.successfulWager = response[0];
 					var tournamentId = $scope.successfulWager.tournamentId;
@@ -879,6 +863,7 @@
 		};
 
 		$scope.showHistory = function() {
+console.log('$scope.showHistory() called');
 			if(!$scope.customerId && !$scope.customer) {
 				layoutMgmt.logIn();
 			} else {
@@ -891,6 +876,7 @@
 				var params = customerId + '-' + todayMill;
 				var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
 				getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
+console.log('getWagersByCustomerIdSinceMillisecondsPromise called');
 					var formattedHistory = [];
 					wagerHistory.forEach(function(wager) {
 						var formattedWager = {};
@@ -902,10 +888,11 @@
 						var raceNumber = trIdPcs[1];
 						var getTrdPromise = trdMgmt.getTrd(trackId);
 						getTrdPromise.then(function(trdData) {
+console.log('getTrdPromise called');
 							formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
 						});
 						formattedWager.amount = wager.wagerAmount;
-						formattedWager.type = $scope.getWagerAbbrev(wager.wagerPool);
+						formattedWager.type = wager.abbrev;
 						formattedWager.selection = wager.wagerSelections;
 						formattedWager.total = wager.wagerTotal;
 						var result;
@@ -990,32 +977,11 @@
 console.log('$scope.showResults() called with trdId: '+trdId+' and race number: '+raceNum);
 		}
 
-		$scope.getWagerAbbrev = function(wager) {
-			var wagerAbbrevMap = [];
-			wagerAbbrevMap['Win'] = 'Win';
-			wagerAbbrevMap['Place'] = 'Place';
-			wagerAbbrevMap['Show'] = 'Show';
-			wagerAbbrevMap['Exacta'] = 'Exacta';
-			wagerAbbrevMap['Trifecta'] = 'Tri';
-			wagerAbbrevMap['Superfecta'] = 'Super';
-			wagerAbbrevMap['Pentafecta'] = 'SH5';
-			wagerAbbrevMap['Daily Double'] = 'DD';
-			wagerAbbrevMap['Pick 3'] = 'P3';
-			wagerAbbrevMap['Pick 4'] = 'P4';
-			wagerAbbrevMap['Pick 5'] = 'P5';
-			wagerAbbrevMap['Pick 6'] = 'P6';
-			wagerAbbrevMap['Pick 7'] = 'P7';
-			wagerAbbrevMap['Pick 8'] = 'P8';
-			wagerAbbrevMap['Pick 9'] = 'P9';
-			wagerAbbrevMap['Pick 10'] = 'P10';
-
-			return wagerAbbrevMap[wager];
-
-		}
-
 		$scope.showTournamentDetails = function(tournyId) {
+console.log('$scope.showTournamentDetails() called');
 			var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 			getTournamentPromise.then(function(tournamentData) {
+console.log('getTournamentPromise called');
 				$scope.tournamentData = tournamentData;
 			});
 			if(!$scope.showLeaders) {
@@ -1024,15 +990,18 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 		}
 
 		$scope.showTournamentLeaders = function(tournyId) {
+console.log('$scope.showTournamentLeaders() called');
 			$scope.showLeaders = true;
 			var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
 			getLeadersPromise.then(function(leadersData) {
+console.log('getLeadersPromise called');
 				$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
 				leadersData.pop();
 				var leaderBoardData = [];
 				leadersData.forEach(function(leader) {
 					var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
 					getCustomerPromise.then(function(customerData) {
+console.log('getCustomerPromise called');
 						var thisLeader = {};
 						thisLeader.id = leader.customerId;
 						thisLeader.fName = customerData.fName;
@@ -1049,6 +1018,7 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 		}
 
 		$scope.tournamentRegister = function(tournyId) {
+console.log('$scope.tournamentRegister() called');
 // TODO debug this, including handling errors
 			if(!$scope.customerId) {
 				layoutMgmt.logIn();
@@ -1069,6 +1039,7 @@ console.log(response.data);
 		}
 
 		$scope.setActiveTournament = function(tournament) {
+console.log('$scope.setActiveTournament() called');
 			if($scope.customerId || ($scope.customer && $scope.customer.id)) {
 				var customerId = $scope.customerId || $scope.customer.id;
 				tournament.customers.forEach(function(customer) {
