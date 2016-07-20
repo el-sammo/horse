@@ -1,888 +1,957 @@
-<div class="col-md-12" ng-show="bigScreen" ng-cloak>
-	<div class="row" id="homeMain">
+
+<div class="hr_wide">
+	<div id="tt-menu">
 		<div 
-			class="contentGreyBg"
-			style="top: 8px;"
+			id="menuDisplay" 
+			class="menuDisplay"
 		>
+			<span 
+				class="footerLinkRed"
+			>
+				Current Tournaments: 
+			</span>
+			<span 
+				class="footerLink reservationYellow" 
+				ng-click="setActiveTournament(tournament)" 
+				ng-repeat="tournament in currentTournaments" track by $index
+			>
+				{{tournament.name}}
+			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="showSignup"
+				ng-click="signUp()"
+			>
+				Sign Up
+			</span>
+			<span 
+				class="footerLink pull-right"
+				ng-show="!showLogout"
+			>
+				/
+			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="showLogin"
+				ng-click="logIn()"
+			>
+				Log In
+			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="showLogout"
+				ng-click="logOut()"
+			>
+				Log Out
+			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="customer.dollars" 
+				ng-click="account()"
+			>
+				Balance: {{customer.dollars}}
+			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="activeTournamentCredits" 
+			>
+				{{activeTournamentCredits}}
+			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="customer" 
+				ng-click="account()"
+			>
+				Hi, {{customer.fName}}!
+			</span>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="row" id="homeMain">
 			<div 
-				class="row" 
-				ng-repeat="track in trdData"
-				ng-show="trackShow === track.id"
+				class="contentGreyBg"
+				style="top: 8px;"
 			>
 				<div 
-					class="col-md-6"
+					class="row" 
+					ng-repeat="track in trdData"
+					ng-show="trackShow === track.id"
 				>
-					<div class="row">
-						<div 
-							class="col-md-12" 
-							style="text-align: center;"
-						>
-							<span class="trackHead">
-								{{track.name}}
-							</span>
-						</div>
-					</div>
 					<div 
-						class="row" 
-						style="
-							padding-left: 12px;
-							padding-top: 6px;
-							text-align: left; 
-						"
+						class="col-md-6"
 					>
-						<div 
-							class="col-md-1 whiteBottom" 
-							ng-repeat="race in track.races"
-						>
-							<span 
-								class="raceHead raceNumberTabOff"
-								ng-click="showTrackRace(track.id, race.number)"
-								ng-show="raceNum != race.number"
-							>
-								{{race.number}}
-							</span>
-							<span 
-								class="raceHead raceNumberTabOn"
-								ng-click="showTrackRace(track.id, race.number)"
-								ng-show="raceNum == race.number"
-							>
-								{{race.number}}
-							</span>
-						</div>
-						<div 
-							class="whiteBottom"
-							style="top: 5px; position: relative;"
-						>
-							&nbsp;
-						</div>
-					</div>
-					<div 
-						class="row" 
-						style="
-							top: -20px;
-							padding-left: 12px;
-							padding-top: -6px;
-							text-align: left;
-							position: relative;
-						"
-					>
-						<div 
-							class="col-md-1"
-							style="text-align: center;"
-							ng-repeat="race in track.races"
-						>
-							<span 
-								class="raceDetailsSmaller"
-								style="cursor: pointer;"
-								ng-click="closeRace(track.id, race.number)"
-								ng-show="customer.admin && !race.score && !race.closed"
-							>
-								<br/>
-								Close
-							</span>
-							<span 
-								class="raceDetailsSmaller"
-								style="cursor: pointer;"
-								ng-click="scoreRace(track.id, race.number)"
-								ng-show="customer.admin && !race.score && race.closed"
-							>
-								<br/>
-								Score
-							</span>
-							<span 
-								class="raceDetailsSmaller"
-								ng-show="race.closed && !race.score"
-							>
-								<br/>
-								Closed
-							</span>
-							<span 
-								class="raceDetailsSmaller"
-								style="cursor: pointer;"
-								ng-click="showResults(track.id, race.number)"
-								ng-show="race.closed && race.score"
-							>
-								<br/>
-								Results
-							</span>
-						</div>
-					</div>
-					<div 
-						class="row" 
-						style="
-							padding-top: 6px;
-							padding-left: 12px;
-						"
-						ng-repeat="race in track.races" 
-						ng-init="trackRaceId = track.id+'-'+race.number"
-						ng-show="trId === trackRaceId"
-					>
-						<div 
-							class="col-md-12" 
-							style="text-align: left;"
-						>
+						<div class="row">
 							<div 
-								class="row"
-								style="padding-top: 6px;"
+								class="col-md-12" 
+								style="text-align: center;"
 							>
-								<div class="col-md-12">
-									<span 
-										class="raceInfo"
-										ng-show="race.time"
-									>
-										Post: {{race.formattedTime}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.distance"
-									>
-										| Distance: {{race.formattedDist}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.surface"
-									>
-										| Surface: {{race.surface}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.sexes"
-									>
-										| {{race.sexes}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.ages"
-									>
-										| {{race.ages}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.type"
-									>
-										| {{race.type}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.claim"
-									>
-										| Claim: ${{race.claim}}
-									</span>
-									<span 
-										class="raceInfo"
-										ng-show="race.purse"
-									>
-										| Purse: ${{race.purse}}
-									</span>
-								</div>
+								<span class="trackHead">
+									{{track.name}}
+								</span>
 							</div>
-							<br/>
+						</div>
+						<div 
+							class="row" 
+							style="
+								padding-left: 12px;
+								padding-top: 6px;
+								text-align: left; 
+							"
+						>
 							<div 
-								class="row"
-								style="padding-top: 6px;"
+								class="col-md-1 whiteBottom" 
+								ng-repeat="race in track.races"
 							>
-								<div 
-									class="col-md-1 whiteBottom"
-									ng-repeat="thisWager in race.wagers"
+								<span 
+									class="raceHead raceNumberTabOff"
+									ng-click="showTrackRace(track.id, race.number)"
+									ng-show="raceNum != race.number"
 								>
-									<span 
-										class="raceDetails wagerTypeTabOff"
-										style="left: 10px; cursor: pointer; position: relative;"
-										ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
-										ng-show="wager !== thisWager.wager && (thisWager.abbrev === 'Tri' || thisWager.abbrev === 'DD')"
-									>
-										{{thisWager.abbrev}}
-									</span>
-									<span 
-										class="raceDetails wagerTypeTabOn"
-										style="left: 10px; cursor: pointer; position: relative;"
-										ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
-										ng-show="wager === thisWager.wager && (thisWager.abbrev === 'Tri' || thisWager.abbrev === 'DD')"
-									>
-										{{thisWager.abbrev}}
-									</span>
-									<span 
-										class="raceDetails wagerTypeTabOff"
-										style="cursor: pointer;"
-										ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
-										ng-show="wager !== thisWager.wager && thisWager.abbrev !== 'Tri' && thisWager.abbrev !== 'DD'"
-									>
-										{{thisWager.abbrev}}
-									</span>
-									<span 
-										class="raceDetails wagerTypeTabOn"
-										style="left: -2px; cursor: pointer; position: relative;"
-										ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
-										ng-show="wager === thisWager.wager && thisWager.abbrev !== 'Tri' && thisWager.abbrev !== 'DD'"
-									>
-										{{thisWager.abbrev}}
-									</span>
-								</div>
-								<div 
-									class="whiteBottom"
-									style="width: 100%;"
+									{{race.number}}
+								</span>
+								<span 
+									class="raceHead raceNumberTabOn"
+									ng-click="showTrackRace(track.id, race.number)"
+									ng-show="raceNum == race.number"
 								>
-									&nbsp;
-								</div>
+									{{race.number}}
+								</span>
 							</div>
-							<br/>
 							<div 
-								class="row"
-								style="padding-top: 6px;"
+								class="whiteBottom"
+								style="top: 5px; position: relative;"
+							>
+								&nbsp;
+							</div>
+						</div>
+						<div 
+							class="row" 
+							style="
+								top: -20px;
+								padding-left: 12px;
+								padding-top: -6px;
+								text-align: left;
+								position: relative;
+							"
+						>
+							<div 
+								class="col-md-1"
+								style="text-align: center;"
+								ng-repeat="race in track.races"
+							>
+								<span 
+									class="raceDetailsSmaller"
+									style="cursor: pointer;"
+									ng-click="closeRace(track.id, race.number)"
+									ng-show="customer.admin && !race.score && !race.closed"
+								>
+									<br/>
+									Close
+								</span>
+								<span 
+									class="raceDetailsSmaller"
+									style="cursor: pointer;"
+									ng-click="scoreRace(track.id, race.number)"
+									ng-show="customer.admin && !race.score && race.closed"
+								>
+									<br/>
+									Score
+								</span>
+								<span 
+									class="raceDetailsSmaller"
+									ng-show="race.closed && !race.score"
+								>
+									<br/>
+									Closed
+								</span>
+								<span 
+									class="raceDetailsSmaller"
+									style="cursor: pointer;"
+									ng-click="showResults(track.id, race.number)"
+									ng-show="race.closed && race.score"
+								>
+									<br/>
+									Results
+								</span>
+							</div>
+						</div>
+						<div 
+							class="row" 
+							style="
+								padding-top: 6px;
+								padding-left: 12px;
+							"
+							ng-repeat="race in track.races" 
+							ng-init="trackRaceId = track.id+'-'+race.number"
+							ng-show="trId === trackRaceId"
+						>
+							<div 
+								class="col-md-12" 
+								style="text-align: left;"
 							>
 								<div 
-									class="col-md-12"
+									class="row"
+									style="padding-top: 6px;"
 								>
-									<div class="row" ng-show="legs > 1">
-										<div class="col-md-12">
-											<div class="row">
-												<div class="col-md-1 whiteBottom">
-													<span class="raceDetails">Leg:</span>
-												</div>
-												<div 
-													class="col-md-1 whiteBottom"
-													ng-repeat="runners in wagerRunners track by $index"
-													ng-init="legNumber = $index + 1"
-												>
-													<span 
-														class="raceDetailsLegHead legNumberTabOff"
-														style="cursor: pointer;"
-														ng-click="showLeg(legNumber)"
-														ng-show="legShow != legNumber"
+									<div class="col-md-12">
+										<span 
+											class="raceInfo"
+											ng-show="race.time"
+										>
+											Post: {{race.formattedTime}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.distance"
+										>
+											| Distance: {{race.formattedDist}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.surface"
+										>
+											| Surface: {{race.surface}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.sexes"
+										>
+											| {{race.sexes}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.ages"
+										>
+											| {{race.ages}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.type"
+										>
+											| {{race.type}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.claim"
+										>
+											| Claim: ${{race.claim}}
+										</span>
+										<span 
+											class="raceInfo"
+											ng-show="race.purse"
+										>
+											| Purse: ${{race.purse}}
+										</span>
+									</div>
+								</div>
+								<br/>
+								<div 
+									class="row"
+									style="padding-top: 6px;"
+								>
+									<div 
+										class="col-md-1 whiteBottom"
+										ng-repeat="thisWager in race.wagers"
+									>
+										<span 
+											class="raceDetails wagerTypeTabOff"
+											style="left: 10px; cursor: pointer; position: relative;"
+											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-show="wager !== thisWager.wager && (thisWager.abbrev === 'Tri' || thisWager.abbrev === 'DD')"
+										>
+											{{thisWager.abbrev}}
+										</span>
+										<span 
+											class="raceDetails wagerTypeTabOn"
+											style="left: 10px; cursor: pointer; position: relative;"
+											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-show="wager === thisWager.wager && (thisWager.abbrev === 'Tri' || thisWager.abbrev === 'DD')"
+										>
+											{{thisWager.abbrev}}
+										</span>
+										<span 
+											class="raceDetails wagerTypeTabOff"
+											style="cursor: pointer;"
+											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-show="wager !== thisWager.wager && thisWager.abbrev !== 'Tri' && thisWager.abbrev !== 'DD'"
+										>
+											{{thisWager.abbrev}}
+										</span>
+										<span 
+											class="raceDetails wagerTypeTabOn"
+											style="left: -2px; cursor: pointer; position: relative;"
+											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-show="wager === thisWager.wager && thisWager.abbrev !== 'Tri' && thisWager.abbrev !== 'DD'"
+										>
+											{{thisWager.abbrev}}
+										</span>
+									</div>
+									<div 
+										class="whiteBottom"
+										style="width: 100%;"
+									>
+										&nbsp;
+									</div>
+								</div>
+								<br/>
+								<div 
+									class="row"
+									style="padding-top: 6px;"
+								>
+									<div 
+										class="col-md-12"
+									>
+										<div class="row" ng-show="legs > 1">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="col-md-1 whiteBottom">
+														<span class="raceDetails">Leg:</span>
+													</div>
+													<div 
+														class="col-md-1 whiteBottom"
+														ng-repeat="runners in wagerRunners track by $index"
+														ng-init="legNumber = $index + 1"
 													>
-														{{legNumber}}
-													</span>
-													<span 
-														class="raceDetailsLegHead legNumberTabOn"
-														style="cursor: pointer;"
-														ng-click="showLeg(legNumber)"
-														ng-show="legShow == legNumber"
+														<span 
+															class="raceDetailsLegHead legNumberTabOff"
+															style="cursor: pointer;"
+															ng-click="showLeg(legNumber)"
+															ng-show="legShow != legNumber"
+														>
+															{{legNumber}}
+														</span>
+														<span 
+															class="raceDetailsLegHead legNumberTabOn"
+															style="cursor: pointer;"
+															ng-click="showLeg(legNumber)"
+															ng-show="legShow == legNumber"
+														>
+															{{legNumber}}
+														</span>
+													</div>
+													<div 
+														class="whiteBottom"
+														style="width: 100%;"
 													>
-														{{legNumber}}
-													</span>
+														&nbsp;
+													</div>
 												</div>
-												<div 
-													class="whiteBottom"
-													style="width: 100%;"
-												>
-													&nbsp;
-												</div>
-											</div>
-											<br/>
-											<div class="row">
-												<div 
-													class="col-md-12" 
-												>
-													<div class="row">
-														<div class="col-md-12">
-															<ng-include src="'/templates/entryDataTmpl.html'"></ng-include>
-															<ng-include src="'/templates/leg1Tmpl.html'"></ng-include>
-															<ng-include src="'/templates/leg2Tmpl.html'"></ng-include>
-															<ng-include src="'/templates/leg3Tmpl.html'"></ng-include>
-															<ng-include src="'/templates/leg4Tmpl.html'"></ng-include>
-															<ng-include src="'/templates/leg5Tmpl.html'"></ng-include>
+												<br/>
+												<div class="row">
+													<div 
+														class="col-md-12" 
+													>
+														<div class="row">
+															<div class="col-md-12">
+																<ng-include src="'/templates/entryDataTmpl.html'"></ng-include>
+																<ng-include src="'/templates/leg1Tmpl.html'"></ng-include>
+																<ng-include src="'/templates/leg2Tmpl.html'"></ng-include>
+																<ng-include src="'/templates/leg3Tmpl.html'"></ng-include>
+																<ng-include src="'/templates/leg4Tmpl.html'"></ng-include>
+																<ng-include src="'/templates/leg5Tmpl.html'"></ng-include>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="row" ng-show="legs < 2 && parts > 1">
-										<div class="col-md-12">
-											<ng-include src="'/templates/multiPartTmpl.html'"></ng-include>
-										</div>
-									</div>
-									<div class="row" ng-show="legs < 2 && parts < 2">
-										<div class="col-md-12">
-											<div class="row">
-												<div class="col-md-2">
-													<span class="raceDetails">{{singleDesc}}</span>
-												</div>
-												<div class="col-md-4">
-													<span class="raceDetails">Runner</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Jockey</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Trainer</span>
-												</div>
-											</div>
-											<br/>
-											<div 
-												class="row"
-												ng-repeat="(idx, entry) in wagerRunners[0]"
-											>
-												<div class="col-md-2">
-													<input 
-														type="checkbox"
-														ng-model="selectedRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
-												</div>
-												<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
+										<div class="row" ng-show="legs < 2 && parts > 1">
+											<div class="col-md-12">
+												<ng-include src="'/templates/multiPartTmpl.html'"></ng-include>
 											</div>
 										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<br/>
-					<br/>
-					<br/>
-					<div 
-						class="row"
-						style="padding-left: 12px;"
-					>
-						<div class="col-md-12">
-							<div class="row">
-								<div class="col-md-2">
-									<div class="row">
-										<div class="col-md-12">
-											<span class="raceDetails">Amount</span>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-md-12">
-											<select 
-												name="repeatSelect" 
-												id="repeatSelect" 
-												ng-model="wagerData.amount"
-												ng-change="updateSelectedRunnersDisplay()"
-											>
-												<option 
-													ng-repeat="option in amountOptions.availableOptions" 
-													value="{{option}}"
+										<div class="row" ng-show="legs < 2 && parts < 2">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="col-md-2">
+														<span class="raceDetails">{{singleDesc}}</span>
+													</div>
+													<div class="col-md-4">
+														<span class="raceDetails">Runner</span>
+													</div>
+													<div class="col-md-3">
+														<span class="raceDetails">Jockey</span>
+													</div>
+													<div class="col-md-3">
+														<span class="raceDetails">Trainer</span>
+													</div>
+												</div>
+												<br/>
+												<div 
+													class="row"
+													ng-repeat="(idx, entry) in wagerRunners[0]"
 												>
-													{{option}}
-												</option>
-											</select>
+													<div class="col-md-2">
+														<input 
+															type="checkbox"
+															ng-model="selectedRunners[idx]"
+															ng-true-value="{{entry.number}}"
+															ng-false-value="false"
+															ng-change="updateSelectedRunnersDisplay()"
+															ng-disabled="!entry.active"
+															ng-show="!race.closed"
+														>
+														<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
+													</div>
+													<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="col-md-5">
-									<span class="raceDetails" ng-show="wager && wagerData.amount">${{wagerData.amount}} {{wager}}:</span>
-									<br/>
-									<span class="raceDetails" ng-show="wager">{{formattedRunners}}</span>
-								</div>
-								<div class="col-md-2">
-									<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>
-								</div>
-								<div class="col-md-2">
-									<button 
-										class="btn btn-primary btn-sm" 
-										ng-click="submitWager(activeTournamentId)"
-										ng-disabled="race.closed"
-									>
-										Submit Ticket
-									</button>
+							</div>
+						</div>
+						<br/>
+						<br/>
+						<br/>
+						<div 
+							class="row"
+							style="padding-left: 12px;"
+						>
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-2">
+										<div class="row">
+											<div class="col-md-12">
+												<span class="raceDetails">Amount</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<select 
+													name="repeatSelect" 
+													id="repeatSelect" 
+													ng-model="wagerData.amount"
+													ng-change="updateSelectedRunnersDisplay()"
+												>
+													<option 
+														ng-repeat="option in amountOptions.availableOptions" 
+														value="{{option}}"
+													>
+														{{option}}
+													</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-5">
+										<span class="raceDetails" ng-show="wager && wagerData.amount">${{wagerData.amount}} {{wager}}:</span>
+										<br/>
+										<span class="raceDetails" ng-show="wager">{{formattedRunners}}</span>
+									</div>
+									<div class="col-md-2">
+										<span class="raceDetails" ng-show="ticketCost">Total Cost: ${{ticketCost}}</span>
+									</div>
+									<div class="col-md-2">
+										<button 
+											class="btn btn-primary btn-sm" 
+											ng-click="submitWager(activeTournamentId)"
+											ng-disabled="race.closed"
+										>
+											Submit Ticket
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
 					</div>
-					<br/>
-					<br/>
-					<br/>
-					<br/>
-				</div>
-				<div 
-					class="col-md-6" 
-					style="
-						top: 45px;
-						position: relative;
-					"
-				>
-					<div class="row">
-						<div class="col-md-11 col-md-offset-1">
-							<div class="row">
-								<div class="col-md-3 whiteBottom">
-									<span 
-										class="boxHead contentTabOff" 
-										ng-click="showHorseCenter()"
-										ng-show="!horseCenterShow"
-									>
-										HorseCenter
-									</span>
-									<span 
-										class="boxHead contentTabOn" 
-										ng-click="showHorseCenter()"
-										ng-show="horseCenterShow"
-									>
-										HorseCenter
-									</span>
-								</div>
-								<div class="col-md-3 whiteBottom">
-									<span 
-										class="boxHead contentTabOff" 
-										ng-click="showLeaderboards()"
-										ng-show="!leaderboardsShow"
-									>
-										Leaderboards
-									</span>
-									<span 
-										class="boxHead contentTabOn" 
-										ng-click="showLeaderboards()"
-										ng-show="leaderboardsShow"
-									>
-										Leaderboards
-									</span>
-								</div>
-								<div class="col-md-3 whiteBottom">
-									<span 
-										class="boxHead contentTabOff" 
-										ng-click="showTournaments()"
-										ng-show="!tournamentsShow"
-									>
-										Tournaments
-									</span>
-									<span 
-										class="boxHead contentTabOn" 
-										ng-click="showTournaments()"
-										ng-show="tournamentsShow"
-									>
-										Tournaments
-									</span>
-								</div>
-								<div class="col-md-2 whiteBottom">
-									&nbsp;
-								</div>
-							</div>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div 
-							class="col-md-11 col-md-offset-1"
-							ng-show="horseCenterShow && !leaderboardsShow && !tournamentsShow"
-						>
-							<!--
-							<iframe 
-								src="http://player.twitch.tv/?channel=zombiunicorn" 
-								height="284" 
-								width="500" 
-								frameborder="0" 
-								scrolling="no"
-								allowfullscreen="true">
-							</iframe>
-							<iframe 
-								src="http://player.twitch.tv/?channel=chess" 
-								height="284" 
-								width="500" 
-								frameborder="0" 
-								scrolling="no"
-								allowfullscreen="true">
-							</iframe>
-							-->
-						</div>
-						<div 
-							class="col-md-11 col-md-offset-1"
-							ng-show="leaderboardsShow && !horseCenterShow && !tournamentsShow && !showLeaders"
-						>
-							<div class="row">
-								<div 
-									class="col-md-7"
-									style="text-align: left;"
-								>
-									<span class="tournamentHead">Tournament</span>
-								</div>
-								<div 
-									class="col-md-3 col-md-offset-1"
-									style="text-align: right;"
-								>
-									<span class="tournamentHead">Status</span>
-								</div>
-							</div>
-							<br/>
-							<div 
-								class="row" 
-								ng-repeat="tournament in tournamentsData"
-							>
-								<div 
-									class="col-md-7"
-									style="text-align: left; cursor: pointer;"
-									ng-click="showTournamentLeaders(tournament.id)"
-								>
-									<span class="tournamentDetails">{{tournament.name}}</span>
-								</div>
-								<div 
-									class="col-md-3 col-md-offset-1"
-									style="text-align: right; cursor: pointer;"
-									ng-click="showTournamentLeaders(tournament.id)"
-								>
-									<span class="tournamentDetails">{{tournament.tournamentStatus}}</span>
-								</div>
-							</div>
-						</div>
-						<div 
-							class="col-md-11 col-md-offset-1"
-							ng-show="showLeaders"
-						>
-							<div class="row">
-								<div class="col-md-11">
-									<span class="tournamentHead">{{tournamentLeadersDataTournamentName}}</span>
-								</div>
-							</div>
-							<br/>
-							<div class="row">
-								<div class="col-md-7">
-									<span class="tournamentDetails">Name</span>
-								</div>
-								<div class="col-md-2">
-									<span class="tournamentDetails">City</span>
-								</div>
-								<div 
-									class="col-md-2"
-									class="text-align: right;"
-								>
-									<span class="tournamentDetails">Credits</span>
-								</div>
-							</div>
-							<div class="row" ng-repeat="leader in leadersData">
-								<div class="col-md-7">
-									<span class="tournamentDetails">{{leader.fName}} {{leader.lName}} ({{leader.username}})</span>
-								</div>
-								<div class="col-md-2">
-									<span class="tournamentDetails">{{leader.city}}</span>
-								</div>
-								<div 
-									class="col-md-2"
-									class="text-align: right;"
-								>
-									<span class="tournamentDetails">{{leader.credits}}</span>
-								</div>
-							</div>
-						</div>
-						<div 
-							class="col-md-11 col-md-offset-1"
-							ng-show="tournamentsShow && !leaderboardsShow && !horseCenterShow && !showTournament"
-						>
-							<div class="row">
-								<div 
-									class="col-md-7"
-									style="text-align: left;"
-								>
-									<span class="tournamentHead">Tournament</span>
-								</div>
-								<div 
-									class="col-md-2"
-									style="text-align: right;"
-								>
-									<span class="tournamentHead">Entry Fee</span>
-								</div>
-								<div 
-									class="col-md-2"
-									style="text-align: right;"
-								>
-									<span class="tournamentHead">Entries</span>
-								</div>
-							</div>
-							<br/>
-							<div 
-								class="row" 
-								ng-repeat="tournament in tournamentsData"
-							>
-								<div 
-									class="col-md-7"
-									style="text-align: left; cursor: pointer;"
-									ng-click="showTournamentDetails(tournament.id)"
-								>
-									<span class="tournamentDetails">{{tournament.name}}</span>
-								</div>
-								<div 
-									class="col-md-2"
-									style="text-align: right; cursor: pointer;"
-									ng-click="showTournamentDetails(tournament.id)"
-								>
-									<span class="tournamentDetails">${{tournament.entryFee}} + {{tournament.siteFee}}</span>
-								</div>
-								<div 
-									class="col-md-2"
-									style="text-align: right; cursor: pointer;"
-									ng-click="showTournamentDetails(tournament.id)"
-								>
-									<span class="tournamentDetails">{{tournament.customersCount}}/{{tournament.max}}</span>
-								</div>
-							</div>
-						</div>
-						<div 
-							class="col-md-11 col-md-offset-1"
-							ng-show="showTournament"
-						>
-							<div class="row">
-								<div class="col-md-11">
-									<span class="tournamentHead">{{tournamentData.name}}</span>
-								</div>
-								<div class="col-md-11">
-									<span 
-										class="tournamentHead"
-										style="cursor: pointer;"
-										ng-click="tournamentRegister(tournamentData.id)"
-									>
-										Register
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div class="col-md-11 col-md-offset-1">
-							<div class="row">
-								<div class="col-md-3 whiteBottom">
-									<span 
-										class="boxHead ticketTabOff" 
-										ng-click="showHistory()"
-										ng-show="tabShow !== 'wagerHistory'"
-									>
-										Ticket History
-									</span>
-									<span 
-										class="boxHead ticketTabOn" 
-										ng-click="showHistory()"
-										ng-show="tabShow === 'wagerHistory'"
-									>
-										Ticket History
-									</span>
-								</div>
-								<div class="col-md-4 whiteBottom">
-									<span 
-										class="boxHead ticketTabOff" 
-										ng-click="showConfirmation()"
-										ng-show="tabShow !== 'wagerResponse'"
-									>
-										Ticket Confirmation
-									</span>
-									<span 
-										class="boxHead ticketTabOn" 
-										ng-click="showConfirmation()"
-										ng-show="tabShow === 'wagerResponse'"
-									>
-										Ticket Confirmation
-									</span>
-								</div>
-								<div class="col-md-4 whiteBottom">
-									&nbsp;
-								</div>
-							</div>
-							<br/>
-							<div 
-								class="row"
-								ng-show="tabShow === 'wagerResponse'"
-							>
-								<div class="col-md-12" ng-show="wagerError">
-									<br/>
-									<span class="raceDetailsRed">Ticket Error</span>
-									<br/><br/>
-									<span class="raceDetailsSmaller">{{wagerError}}</span>
-								</div>
-								<div class="col-md-12" ng-show="successfulWager">
-									<br/>
-									<span class="raceDetails">Ticket Placed</span>
-									<br/><br/>
-									<span class="raceDetailsSmaller">Type: {{successfulWager.wagerPool}}</span>
-									<br/>
-									<span class="raceDetailsSmaller">Amount: {{successfulWager.wagerAmount}}</span>
-									<br/>
-									<span class="raceDetailsSmaller">Runners: {{successfulWager.wagerSelections}}</span>
-									<br/>
-									<span class="raceDetailsSmaller">Total: {{successfulWager.wagerTotal}}</span>
-									<br/>
-									<span 
-										class="raceDetailsSmaller" 
-										style="cursor: pointer;"
-										ng-click="cancelWager(successfulWager.id)"
-										ng-show="!successfulWager.cancelled"
-									>
-										Cancel
-									</span>
-									<span 
-										class="raceDetailsSmallerRed" 
-										ng-show="successfulWager.cancelled"
-									>
-										Cancelled
-									</span>
-									<br/>
-								</div>
-							</div>
-							<div class="row" ng-show="tabShow === 'wagerHistory'">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Race
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Amount
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Type
-											</span>
-										</div>
-										<div class="col-md-3">
-											<span class="historyDetailsHead">
-												Selection
-											</span>
-										</div>
-										<div class="col-md-1">
-											<span class="historyDetailsHead">
-												Total
-											</span>
-										</div>
-										<div 
-											class="col-md-1"
-											style="text-align: right;"
+					<div 
+						class="col-md-6" 
+						style="
+							top: 45px;
+							position: relative;
+						"
+					>
+						<div class="row">
+							<div class="col-md-11 col-md-offset-1">
+								<div class="row">
+									<div class="col-md-3 whiteBottom">
+										<span 
+											class="boxHead contentTabOff" 
+											ng-click="showHorseCenter()"
+											ng-show="!horseCenterShow"
 										>
-											<span class="historyDetailsHead">
-												Result
-											</span>
-										</div>
+											HorseCenter
+										</span>
+										<span 
+											class="boxHead contentTabOn" 
+											ng-click="showHorseCenter()"
+											ng-show="horseCenterShow"
+										>
+											HorseCenter
+										</span>
 									</div>
-									<div class="row" ng-repeat="wager in wagerHistory">
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.race}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.amount}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.type}}
-											</span>
-										</div>
-										<div class="col-md-3">
-											<span class="historyDetails">
-												{{wager.selection}}
-											</span>
-										</div>
-										<div class="col-md-1">
-											<span class="historyDetails">
-												{{wager.total}}
-											</span>
-										</div>
-										<div 
-											class="col-md-1"
-											style="text-align: right;"
-											ng-show="wager.result !== 'Pending' && wager.result !== 'Cancel'"
+									<div class="col-md-3 whiteBottom">
+										<span 
+											class="boxHead contentTabOff" 
+											ng-click="showLeaderboards()"
+											ng-show="!leaderboardsShow"
 										>
-											<span class="historyDetails">
-												{{wager.result}}
-											</span>
-										</div>
-										<div 
-											class="col-md-1"
-											style="text-align: right;"
-											ng-show="wager.result === 'Pending'"
+											Leaderboards
+										</span>
+										<span 
+											class="boxHead contentTabOn" 
+											ng-click="showLeaderboards()"
+											ng-show="leaderboardsShow"
 										>
-											<span class="historyDetails">
-												Pending
-											</span>
-										</div>
-										<div 
-											class="col-md-1"
-											style="text-align: right; cursor: pointer;"
-											ng-show="wager.result === 'Cancel'"
-											ng-click="cancelWager(wager.id)"
+											Leaderboards
+										</span>
+									</div>
+									<div class="col-md-3 whiteBottom">
+										<span 
+											class="boxHead contentTabOff" 
+											ng-click="showTournaments()"
+											ng-show="!tournamentsShow"
 										>
-											<span class="historyDetails">
-												Cancel
-											</span>
-										</div>
+											Tournaments
+										</span>
+										<span 
+											class="boxHead contentTabOn" 
+											ng-click="showTournaments()"
+											ng-show="tournamentsShow"
+										>
+											Tournaments
+										</span>
+									</div>
+									<div class="col-md-2 whiteBottom">
+										&nbsp;
 									</div>
 								</div>
 							</div>
-							<div class="row" ng-show="tabShow === 'liveWagers'">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Date
-											</span>
+						</div>
+						<br/>
+						<div class="row">
+							<div 
+								class="col-md-11 col-md-offset-1"
+								ng-show="horseCenterShow && !leaderboardsShow && !tournamentsShow"
+							>
+								<!--
+								<iframe 
+									src="http://player.twitch.tv/?channel=zombiunicorn" 
+									height="284" 
+									width="500" 
+									frameborder="0" 
+									scrolling="no"
+									allowfullscreen="true">
+								</iframe>
+								<iframe 
+									src="http://player.twitch.tv/?channel=chess" 
+									height="284" 
+									width="500" 
+									frameborder="0" 
+									scrolling="no"
+									allowfullscreen="true">
+								</iframe>
+								-->
+							</div>
+							<div 
+								class="col-md-11 col-md-offset-1"
+								ng-show="leaderboardsShow && !horseCenterShow && !tournamentsShow && !showLeaders"
+							>
+								<div class="row">
+									<div 
+										class="col-md-7"
+										style="text-align: left;"
+									>
+										<span class="tournamentHead">Tournament</span>
+									</div>
+									<div 
+										class="col-md-3 col-md-offset-1"
+										style="text-align: right;"
+									>
+										<span class="tournamentHead">Status</span>
+									</div>
+								</div>
+								<br/>
+								<div 
+									class="row" 
+									ng-repeat="tournament in tournamentsData"
+								>
+									<div 
+										class="col-md-7"
+										style="text-align: left; cursor: pointer;"
+										ng-click="showTournamentLeaders(tournament.id)"
+									>
+										<span class="tournamentDetails">{{tournament.name}}</span>
+									</div>
+									<div 
+										class="col-md-3 col-md-offset-1"
+										style="text-align: right; cursor: pointer;"
+										ng-click="showTournamentLeaders(tournament.id)"
+									>
+										<span class="tournamentDetails">{{tournament.tournamentStatus}}</span>
+									</div>
+								</div>
+							</div>
+							<div 
+								class="col-md-11 col-md-offset-1"
+								ng-show="showLeaders"
+							>
+								<div class="row">
+									<div class="col-md-11">
+										<span class="tournamentHead">{{tournamentLeadersDataTournamentName}}</span>
+									</div>
+								</div>
+								<br/>
+								<div class="row">
+									<div class="col-md-7">
+										<span class="tournamentDetails">Name</span>
+									</div>
+									<div class="col-md-2">
+										<span class="tournamentDetails">City</span>
+									</div>
+									<div 
+										class="col-md-2"
+										class="text-align: right;"
+									>
+										<span class="tournamentDetails">Credits</span>
+									</div>
+								</div>
+								<div class="row" ng-repeat="leader in leadersData">
+									<div class="col-md-7">
+										<span class="tournamentDetails">{{leader.fName}} {{leader.lName}} ({{leader.username}})</span>
+									</div>
+									<div class="col-md-2">
+										<span class="tournamentDetails">{{leader.city}}</span>
+									</div>
+									<div 
+										class="col-md-2"
+										class="text-align: right;"
+									>
+										<span class="tournamentDetails">{{leader.credits}}</span>
+									</div>
+								</div>
+							</div>
+							<div 
+								class="col-md-11 col-md-offset-1"
+								ng-show="tournamentsShow && !leaderboardsShow && !horseCenterShow && !showTournament"
+							>
+								<div class="row">
+									<div 
+										class="col-md-7"
+										style="text-align: left;"
+									>
+										<span class="tournamentHead">Tournament</span>
+									</div>
+									<div 
+										class="col-md-2"
+										style="text-align: right;"
+									>
+										<span class="tournamentHead">Entry Fee</span>
+									</div>
+									<div 
+										class="col-md-2"
+										style="text-align: right;"
+									>
+										<span class="tournamentHead">Entries</span>
+									</div>
+								</div>
+								<br/>
+								<div 
+									class="row" 
+									ng-repeat="tournament in tournamentsData"
+								>
+									<div 
+										class="col-md-7"
+										style="text-align: left; cursor: pointer;"
+										ng-click="showTournamentDetails(tournament.id)"
+									>
+										<span class="tournamentDetails">{{tournament.name}}</span>
+									</div>
+									<div 
+										class="col-md-2"
+										style="text-align: right; cursor: pointer;"
+										ng-click="showTournamentDetails(tournament.id)"
+									>
+										<span class="tournamentDetails">${{tournament.entryFee}} + {{tournament.siteFee}}</span>
+									</div>
+									<div 
+										class="col-md-2"
+										style="text-align: right; cursor: pointer;"
+										ng-click="showTournamentDetails(tournament.id)"
+									>
+										<span class="tournamentDetails">{{tournament.customersCount}}/{{tournament.max}}</span>
+									</div>
+								</div>
+							</div>
+							<div 
+								class="col-md-11 col-md-offset-1"
+								ng-show="showTournament"
+							>
+								<div class="row">
+									<div class="col-md-11">
+										<span class="tournamentHead">{{tournamentData.name}}</span>
+									</div>
+									<div class="col-md-11">
+										<span 
+											class="tournamentHead"
+											style="cursor: pointer;"
+											ng-click="tournamentRegister(tournamentData.id)"
+										>
+											Register
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<br/>
+						<div class="row">
+							<div class="col-md-11 col-md-offset-1">
+								<div class="row">
+									<div class="col-md-3 whiteBottom">
+										<span 
+											class="boxHead ticketTabOff" 
+											ng-click="showHistory()"
+											ng-show="tabShow !== 'wagerHistory'"
+										>
+											Ticket History
+										</span>
+										<span 
+											class="boxHead ticketTabOn" 
+											ng-click="showHistory()"
+											ng-show="tabShow === 'wagerHistory'"
+										>
+											Ticket History
+										</span>
+									</div>
+									<div class="col-md-4 whiteBottom">
+										<span 
+											class="boxHead ticketTabOff" 
+											ng-click="showConfirmation()"
+											ng-show="tabShow !== 'wagerResponse'"
+										>
+											Ticket Confirmation
+										</span>
+										<span 
+											class="boxHead ticketTabOn" 
+											ng-click="showConfirmation()"
+											ng-show="tabShow === 'wagerResponse'"
+										>
+											Ticket Confirmation
+										</span>
+									</div>
+									<div class="col-md-4 whiteBottom">
+										&nbsp;
+									</div>
+								</div>
+								<br/>
+								<div 
+									class="row"
+									ng-show="tabShow === 'wagerResponse'"
+								>
+									<div class="col-md-12" ng-show="wagerError">
+										<br/>
+										<span class="raceDetailsRed">Ticket Error</span>
+										<br/><br/>
+										<span class="raceDetailsSmaller">{{wagerError}}</span>
+									</div>
+									<div class="col-md-12" ng-show="successfulWager">
+										<br/>
+										<span class="raceDetails">Ticket Placed</span>
+										<br/><br/>
+										<span class="raceDetailsSmaller">Type: {{successfulWager.wagerPool}}</span>
+										<br/>
+										<span class="raceDetailsSmaller">Amount: {{successfulWager.wagerAmount}}</span>
+										<br/>
+										<span class="raceDetailsSmaller">Runners: {{successfulWager.wagerSelections}}</span>
+										<br/>
+										<span class="raceDetailsSmaller">Total: {{successfulWager.wagerTotal}}</span>
+										<br/>
+										<span 
+											class="raceDetailsSmaller" 
+											style="cursor: pointer;"
+											ng-click="cancelWager(successfulWager.id)"
+											ng-show="!successfulWager.cancelled"
+										>
+											Cancel
+										</span>
+										<span 
+											class="raceDetailsSmallerRed" 
+											ng-show="successfulWager.cancelled"
+										>
+											Cancelled
+										</span>
+										<br/>
+									</div>
+								</div>
+								<div class="row" ng-show="tabShow === 'wagerHistory'">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Race
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Amount
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Type
+												</span>
+											</div>
+											<div class="col-md-3">
+												<span class="historyDetailsHead">
+													Selection
+												</span>
+											</div>
+											<div class="col-md-1">
+												<span class="historyDetailsHead">
+													Total
+												</span>
+											</div>
+											<div 
+												class="col-md-1"
+												style="text-align: right;"
+											>
+												<span class="historyDetailsHead">
+													Result
+												</span>
+											</div>
 										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Track
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Race
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Amount
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Type
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Selection
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Total
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetailsHead">
-												Result
-											</span>
+										<div class="row" ng-repeat="wager in wagerHistory">
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.race}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.amount}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.type}}
+												</span>
+											</div>
+											<div class="col-md-3">
+												<span class="historyDetails">
+													{{wager.selection}}
+												</span>
+											</div>
+											<div class="col-md-1">
+												<span class="historyDetails">
+													{{wager.total}}
+												</span>
+											</div>
+											<div 
+												class="col-md-1"
+												style="text-align: right;"
+												ng-show="wager.result !== 'Pending' && wager.result !== 'Cancel'"
+											>
+												<span class="historyDetails">
+													{{wager.result}}
+												</span>
+											</div>
+											<div 
+												class="col-md-1"
+												style="text-align: right;"
+												ng-show="wager.result === 'Pending'"
+											>
+												<span class="historyDetails">
+													Pending
+												</span>
+											</div>
+											<div 
+												class="col-md-1"
+												style="text-align: right; cursor: pointer;"
+												ng-show="wager.result === 'Cancel'"
+												ng-click="cancelWager(wager.id)"
+											>
+												<span class="historyDetails">
+													Cancel
+												</span>
+											</div>
 										</div>
 									</div>
-									<div class="row" ng-repeat="wager in wagerHistory">
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.createdAt}}
-											</span>
+								</div>
+								<div class="row" ng-show="tabShow === 'liveWagers'">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Date
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Track
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Race
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Amount
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Type
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Selection
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Total
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetailsHead">
+													Result
+												</span>
+											</div>
 										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.track}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.trackRaceId}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.wagerAmount}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.wagerPool}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.wagerSelections}}
-											</span>
-										</div>
-										<div class="col-md-2">
-											<span class="historyDetails">
-												{{wager.wagerTotal}}
-											</span>
+										<div class="row" ng-repeat="wager in wagerHistory">
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.createdAt}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.track}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.trackRaceId}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.wagerAmount}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.wagerPool}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.wagerSelections}}
+												</span>
+											</div>
+											<div class="col-md-2">
+												<span class="historyDetails">
+													{{wager.wagerTotal}}
+												</span>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -891,15 +960,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
-
-<div class="col-sm-12 col-xs-12" ng-show="!bigScreen">
-	<div class="row" id="homeMain">
-		<div 
-			class="contentGreyBgSm"
-		>
 		</div>
 	</div>
 </div>

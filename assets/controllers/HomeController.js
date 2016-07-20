@@ -22,12 +22,6 @@
 		messenger
 	) {
 
-		if(deviceMgr.isBigScreen()) {
-			$scope.bigScreen = true;
-		} else {
-			$scope.bigScreen = false;
-		}
-
 		$scope.leaderboardsShow = false;
 		$scope.horseCenterShow = true;
 
