@@ -21,6 +21,7 @@
 
 		var service = {
 			getCustomer: function(customerId) {
+// This does data caching
 //				if(getCustomerPromise) {
 //					return getCustomerPromise;
 //				}
