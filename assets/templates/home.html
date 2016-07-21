@@ -74,8 +74,15 @@
 			>
 				<div 
 					class="row" 
-					ng-repeat="track in trdData"
-					ng-show="trackShow === track.id"
+					ng-show="marketingShow"
+				>
+					<span class="raceDetails">
+						Marketing
+					</span>
+				</div>
+				<div 
+					class="row" 
+					ng-show="trackShow"
 				>
 					<div 
 						class="col-md-6"
@@ -104,14 +111,14 @@
 							>
 								<span 
 									class="raceHead raceNumberTabOff"
-									ng-click="showTrackRace(track.id, race.number)"
+									ng-click="showTrackRace(race.number)"
 									ng-show="raceNum != race.number"
 								>
 									{{race.number}}
 								</span>
 								<span 
 									class="raceHead raceNumberTabOn"
-									ng-click="showTrackRace(track.id, race.number)"
+									ng-click="showTrackRace(race.number)"
 									ng-show="raceNum == race.number"
 								>
 									{{race.number}}
@@ -256,7 +263,7 @@
 										<span 
 											class="raceDetails wagerTypeTabOff"
 											style="left: 10px; cursor: pointer; position: relative;"
-											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-click="showRaceWager(race.number, thisWager.wager, thisWager.min)"
 											ng-show="wager !== thisWager.wager && (thisWager.abbrev === 'Tri' || thisWager.abbrev === 'DD')"
 										>
 											{{thisWager.abbrev}}
@@ -264,7 +271,7 @@
 										<span 
 											class="raceDetails wagerTypeTabOn"
 											style="left: 10px; cursor: pointer; position: relative;"
-											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-click="showRaceWager(race.number, thisWager.wager, thisWager.min)"
 											ng-show="wager === thisWager.wager && (thisWager.abbrev === 'Tri' || thisWager.abbrev === 'DD')"
 										>
 											{{thisWager.abbrev}}
@@ -272,7 +279,7 @@
 										<span 
 											class="raceDetails wagerTypeTabOff"
 											style="cursor: pointer;"
-											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-click="showRaceWager(race.number, thisWager.wager, thisWager.min)"
 											ng-show="wager !== thisWager.wager && thisWager.abbrev !== 'Tri' && thisWager.abbrev !== 'DD'"
 										>
 											{{thisWager.abbrev}}
@@ -280,7 +287,7 @@
 										<span 
 											class="raceDetails wagerTypeTabOn"
 											style="left: -2px; cursor: pointer; position: relative;"
-											ng-click="showRaceWager(track.id, race.number, thisWager.wager, thisWager.min)"
+											ng-click="showRaceWager(race.number, thisWager.wager, thisWager.min)"
 											ng-show="wager === thisWager.wager && thisWager.abbrev !== 'Tri' && thisWager.abbrev !== 'DD'"
 										>
 											{{thisWager.abbrev}}

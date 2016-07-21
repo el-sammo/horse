@@ -22,8 +22,6 @@
 		messenger
 	) {
 
-		// $routeParams.id;
-
 		$scope.leaderboardsShow = false;
 		$scope.horseCenterShow = true;
 
@@ -109,63 +107,57 @@ console.log('updateActiveTournamentBalance() called');
 		getTournamentsByDatePromise.then(function(currentTournamentsData) {
 console.log('getTournamentsByDatePromise called');
 			$scope.currentTournaments = currentTournamentsData;
-		});
 
-		var getTrdsByDatePromise = trdMgmt.getTrdsByDate(todayDate);
-		getTrdsByDatePromise.then(function(trdsData) {
-console.log('getTrdsByDatePromise called');
-			$scope.trdData = trdsData;
-		});
-
-		var getSessionPromise = customerMgmt.getSession();
-		getSessionPromise.then(function(sessionData) {
+			var getSessionPromise = customerMgmt.getSession();
+			getSessionPromise.then(function(sessionData) {
 console.log('getSessionPromise called');
-
-			if(sessionData.customerId) {
-				$rootScope.customerId = sessionData.customerId;
-				$scope.customerId = $rootScope.customerId;
-				$scope.showLogin = false;
-				$scope.showSignup = false;
-				$scope.showLogout = true;
-
-				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
-				getCustomerPromise.then(function(customer) {
+	
+				if(sessionData.customerId) {
+					$rootScope.customerId = sessionData.customerId;
+					$scope.customerId = $rootScope.customerId;
+					$scope.showLogin = false;
+					$scope.showSignup = false;
+					$scope.showLogout = true;
+	
+					var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
+					getCustomerPromise.then(function(customer) {
 console.log('getCustomerPromise called');
-					$scope.customer = customer;
-				});
-
-			} else {
-				$scope.showLogin = true;
-				$scope.showSignup = true;
-				$scope.showLogout = false;
-			}
-
-			var tournaments = [];
-			$scope.currentTournaments.forEach(function(tournament) {
-				var tournamentData = {};
-				tournamentData.id = tournament.id;
-				tournamentData.name = tournament.name;
-				tournamentData.entryFee = tournament.entryFee;
-				tournamentData.siteFee = tournament.siteFee;
-				tournamentData.customersCount = tournament.customers.length;
-				tournamentData.max = tournament.max;
-				if(tournament.closed) {
-					if(tournament.scored) {
-						tournamentData.tournamentStatus = 'Final';
-					} else {
-						tournamentData.tournamentStatus = 'In Progress';
-					}
+						$scope.customer = customer;
+					});
+	
 				} else {
-					if(tournament.customers.length == tournament.max) {
-						tournamentData.tournamentStatus = 'Full';
-					} else {
-						tournamentData.tournamentStatus = 'Registering';
-					}
+					$scope.showLogin = true;
+					$scope.showSignup = true;
+					$scope.showLogout = false;
 				}
-				tournaments.push(tournamentData);
+	
+				var tournaments = [];
+				$scope.currentTournaments.forEach(function(tournament) {
+					var tournamentData = {};
+					tournamentData.id = tournament.id;
+					tournamentData.name = tournament.name;
+					tournamentData.entryFee = tournament.entryFee;
+					tournamentData.siteFee = tournament.siteFee;
+					tournamentData.customersCount = tournament.customers.length;
+					tournamentData.max = tournament.max;
+					if(tournament.closed) {
+						if(tournament.scored) {
+							tournamentData.tournamentStatus = 'Final';
+						} else {
+							tournamentData.tournamentStatus = 'In Progress';
+						}
+					} else {
+						if(tournament.customers.length == tournament.max) {
+							tournamentData.tournamentStatus = 'Full';
+						} else {
+							tournamentData.tournamentStatus = 'Registering';
+						}
+					}
+					tournaments.push(tournamentData);
+				});
+				$scope.tournamentsData = tournaments;
+	
 			});
-			$scope.tournamentsData = tournaments;
-
 		});
 
 		var legMap = [];
@@ -212,33 +204,32 @@ console.log('getCustomerPromise called');
 
 		$scope.showTrack = function(trackId) {
 console.log('$scope.showTrack() called');
-			$scope.trackShow = trackId;
-			$scope.showTrackRace(trackId, 1, false);
+			$scope.marketingShow = false;
+			$scope.trackShow = true;
+			$scope.showTrackRace(1, false);
 		}
 
-		$scope.showTrackRace = function(trackId, raceNum, override) {
+		$scope.showTrackRace = function(raceNum, override) {
 console.log('$scope.showTrackRace() called');
-			$scope.trdData.forEach(function(trd) {
-				if(trd.id === trackId) {
-					var trdRaceCount = trd.races.length;
-					trd.races.forEach(function(race) {
-						if(race.number == raceNum) {
-							if(!race.closed || override) {
-								$scope.race = race;
-								$scope.raceNum = raceNum;
-								$scope.trId = trackId+'-'+raceNum;
-								$scope.showRaceWager(trackId, raceNum, 'Win', 2);
-							} else {
-								raceNum ++;
-								if(raceNum > trdRaceCount) {
-									override = true;
-									$scope.showTrackRace(trackId, trdRaceCount, true);
-								} else {
-									$scope.showTrackRace(trackId, raceNum, false);
-								}
-							}
+console.log('$scope.track:');
+console.log($scope.track);
+			var trackRaceCount = $scope.track.races.length;
+			$scope.track.races.forEach(function(race) {
+				if(race.number == raceNum) {
+					if(!race.closed || override) {
+						$scope.race = race;
+						$scope.raceNum = raceNum;
+						$scope.trId = $scope.track.id+'-'+raceNum;
+						$scope.showRaceWager(raceNum, 'Win', 2);
+					} else {
+						raceNum ++;
+						if(raceNum > trackRaceCount) {
+							override = true;
+							$scope.showTrackRace(trackRaceCount, true);
+						} else {
+							$scope.showTrackRace(raceNum, false);
 						}
-					});
+					}
 				}
 			});
 		}
@@ -248,7 +239,7 @@ console.log('$scope.showLeg() called with '+legNum);
 			$scope.legShow = legNum;
 		}
 
-		$scope.showRaceWager = function(trackId, raceNumber, wager, min) {
+		$scope.showRaceWager = function(raceNumber, wager, min) {
 console.log('$scope.showRaceWager() called');
 			$scope.clearSelectedRunners();
 			$scope.selectedWager = wager;
@@ -256,18 +247,14 @@ console.log('$scope.showRaceWager() called');
 			$scope.wager = wager;
 			$scope.ticketCost = '';
 
-			var track = $.grep(
-				$scope.trdData, function(e) { 
-					return e.id == trackId; 
-				}
-			);
+			var track = $scope.track;
 
 			var races = [];
 			if(legMap[wager] < 2) {
 				races.push(
 					(
 						$.grep(
-							track[0].races, function(e) { 
+							track.races, function(e) { 
 								return e.number == raceNumber; 
 							}
 						)
@@ -277,7 +264,7 @@ console.log('$scope.showRaceWager() called');
 				races.push(
 					(
 						$.grep(
-							track[0].races, function(e) { 
+							track.races, function(e) { 
 								return e.number == raceNumber; 
 							}
 						)
@@ -289,7 +276,7 @@ console.log('$scope.showRaceWager() called');
 					races.push(
 						(
 							$.grep(
-								track[0].races, function(e) { 
+								track.races, function(e) { 
 									return e.number == nextLeg; 
 								}
 							)
@@ -1035,9 +1022,54 @@ console.log(response.data);
 		}
 
 		$scope.setActiveTournament = function(tournament) {
-console.log('$scope.setActiveTournament() called');
-			$scope.showTrack(tournament.assocTrackId);
-			$scope.activeTournamentId = tournament.id;
+console.log('$scope.setActiveTournament() called with');
+console.log(tournament);
+			var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
+			getTrdPromise.then(function(trdData) {
+console.log('getTrdPromise called');
+// TODO debug why $scope.track retains only the initially-assigned value
+// can't use $scope.$apply() here becuase we're in the middle of a digest
+				$scope.track = trdData;
+//
+// maybe...
+//
+// .directive('arrowListener', function() {
+//   return {
+//     restrict: 'A', // attribute
+//     scope: {
+//       moveRight: '&', // bind to parent method
+//       moveLeft: '&'
+//     },
+//     link: function(scope, elm, attrs) {
+//       elm.bind('keydown', function(e) {
+//         if (e.keyCode === 39) {
+//           scope.moveRight();
+//         }
+//         if (e.keyCode === 37) {
+//           scope.moveLeft();
+//         }
+//         scope.$apply();
+//       })
+//     }
+//   };
+// })
+//
+// .controller('NumCtrl', function($scope) {
+//   var history = [];
+//   $scope.numbersDisplayed = [0,1,2,3,4,5];
+//
+//   $scope.moveRight = function() {
+//     history.unshift($scope.numbersDisplayed.shift());
+//   };
+//
+//   $scope.moveLeft = function() {
+//     $scope.numbersDisplayed.unshift(history.shift());
+//   };
+// })
+//
+				$scope.activeTournamentId = $scope.track.id;
+				$scope.showTrack($scope.track.id);
+			});
 			if($scope.customerId || ($scope.customer && $scope.customer.id)) {
 				var customerId = $scope.customerId || $scope.customer.id;
 				tournament.customers.forEach(function(customer) {
