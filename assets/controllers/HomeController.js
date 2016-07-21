@@ -93,9 +93,11 @@ console.log('getCustomerPromise called');
 console.log('updateActiveTournamentBalance() called');
 			$scope.currentTournaments.forEach(function(tournament) {
 				if(tournament.id === tournamentId) {
+// TODO debug why $scope.activeTournamentCredits retains only the initially-assigned value
 					$scope.activeTournamentCredits = tournament.name +' Credits: 0';
 					tournament.customers.forEach(function(customer) {
 						if(customer.customerId === customerId) {
+// TODO debug why $scope.activeTournamentCredits retains only the initially-assigned value
 							$scope.activeTournamentCredits = tournament.name +' Credits: '+customer.credits;
 						}
 					});
@@ -245,21 +247,16 @@ console.log('$scope.showRaceWager() called');
 			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
 			$scope.wager = wager;
-			$scope.ticketCost = '';
 
 			var track = $scope.track;
 
 			var races = [];
 			if(legMap[wager] < 2) {
-				races.push(
-					(
-						$.grep(
-							track.races, function(e) { 
-								return e.number == raceNumber; 
-							}
-						)
-					)
-				[0]);
+				$scope.track.races.forEach(function(race) {
+					if(race.number == raceNumber) {
+						races.push(race);
+					}
+				});
 			} else {
 				races.push(
 					(
@@ -309,7 +306,6 @@ console.log('$scope.showRaceWager() called');
 		$scope.updateSelectedRunnersDisplay = function() {
 console.log('$scope.updateSelectedRunnersDisplay() called');
 			$scope.formattedRunners = '';
-			$scope.ticketCost = '';
 			$scope.multiplier = 1;
 			if($scope.legs > 1) {
 				var trIdPcs = $scope.trId.split('-');
@@ -499,7 +495,11 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 						$scope.multiplier = $scope.multiplier * trueLeg10Count;
 					} 
 				}
-				$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
+				if($scope.wagerData.amount) {
+					$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
+				} else {
+					$scope.ticketCost = ($scope.multiplier * 2).toFixed(2);
+				}
 			} else {
 				$scope.finalRaceId = $scope.trId;
 				var firstRunnersTrueArray = [];
@@ -783,6 +783,30 @@ console.log('$scope.clearSelectedRunners() called');
 		$scope.leg9Runners = [];
 		$scope.leg10Runners = [];
 
+
+		var getWagerAbbrev = function(wager) {
+			var wagerAbbrevMap = [];
+			wagerAbbrevMap['Win'] = 'Win';
+			wagerAbbrevMap['Place'] = 'Place';
+			wagerAbbrevMap['Show'] = 'Show';
+			wagerAbbrevMap['Exacta'] = 'Exacta';
+			wagerAbbrevMap['Trifecta'] = 'Tri';
+			wagerAbbrevMap['Superfecta'] = 'Super';
+			wagerAbbrevMap['Pentafecta'] = 'SH5';
+			wagerAbbrevMap['Daily Double'] = 'DD';
+			wagerAbbrevMap['Pick 3'] = 'P3';
+			wagerAbbrevMap['Pick 4'] = 'P4';
+			wagerAbbrevMap['Pick 5'] = 'P5';
+			wagerAbbrevMap['Pick 6'] = 'P6';
+			wagerAbbrevMap['Pick 7'] = 'P7';
+			wagerAbbrevMap['Pick 8'] = 'P8';
+			wagerAbbrevMap['Pick 9'] = 'P9';
+			wagerAbbrevMap['Pick 10'] = 'P10';
+
+			return wagerAbbrevMap[wager];
+		}
+
+
 		$scope.submitWager = function(activeTournamentId) {
 console.log('$scope.submitWager() called');
 			if(!$scope.customerId || !$scope.customer.id) {
@@ -790,6 +814,7 @@ console.log('$scope.submitWager() called');
 			} else {
 				var customerId = $scope.customerId || $scope.customer.id;
 				var tournamentId = activeTournamentId;
+				var wagerAbbrev = getWagerAbbrev($scope.wager);
 				// wager schema
 				var wagerSubmission = {
 					tournamentId: tournamentId,
@@ -797,6 +822,7 @@ console.log('$scope.submitWager() called');
 					trackRaceId: $scope.trId,
 					finalRaceId: $scope.finalRaceId,
 					wagerPool: $scope.wager,
+					wagerAbbrev: wagerAbbrev,
 					legs: $scope.legs,
 					parts: $scope.parts,
 					wagerSelections: $scope.formattedRunners,
@@ -875,7 +901,7 @@ console.log('getTrdPromise called');
 							formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
 						});
 						formattedWager.amount = wager.wagerAmount;
-						formattedWager.type = wager.abbrev;
+						formattedWager.type = wager.wagerAbbrev;
 						formattedWager.selection = wager.wagerSelections;
 						formattedWager.total = wager.wagerTotal;
 						var result;
@@ -936,23 +962,19 @@ console.log('getTrdPromise called');
 			}
 		};
 
-		$scope.closeRace = function(trdId, raceNum) {
-			$scope.trdData.forEach(function(trd) {
-				if(trd.id === trdId) {
-					var newTrdData = trd;
-					newTrdData.races.forEach(function(race) {
-						if(race.number == raceNum) {
-							race.closed = true;
-						}
-					});
-					var updateTrdDataPromise = trdMgmt.updateTrd(newTrdData);
-					updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
-						var closeWagersPromise = wagerMgmt.closeWagers(trdId+'-'+raceNum);
-						closeWagersPromise.then(function(closeWagersPromiseResponse) {
-							$window.location.href = location.origin + "/app/";
-						});
-					});
+		$scope.closeRace = function(raceNum) {
+			var trackData = $scope.track;
+			trackData.races.forEach(function(race) {
+				if(race.number == raceNum) {
+					race.closed = true;
 				}
+			});
+			var updateTrdDataPromise = trdMgmt.updateTrd(trackData);
+			updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+				var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
+				closeWagersPromise.then(function(closeWagersPromiseResponse) {
+					$window.location.href = location.origin + "/app/";
+				});
 			});
 		};
 
@@ -1022,14 +1044,16 @@ console.log(response.data);
 		}
 
 		$scope.setActiveTournament = function(tournament) {
+			$scope.activeTournament = tournament;
 console.log('$scope.setActiveTournament() called with');
 console.log(tournament);
 			var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
 			getTrdPromise.then(function(trdData) {
 console.log('getTrdPromise called');
+				var track = trdData;
 // TODO debug why $scope.track retains only the initially-assigned value
-// can't use $scope.$apply() here becuase we're in the middle of a digest
-				$scope.track = trdData;
+// can't use $scope.$apply() here because we're in the middle of a digest
+				$scope.track = track;
 //
 // maybe...
 //
@@ -1067,7 +1091,7 @@ console.log('getTrdPromise called');
 //   };
 // })
 //
-				$scope.activeTournamentId = $scope.track.id;
+				$scope.activeTournamentId = tournament.id;
 				$scope.showTrack($scope.track.id);
 			});
 			if($scope.customerId || ($scope.customer && $scope.customer.id)) {
