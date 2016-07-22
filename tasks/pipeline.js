@@ -34,6 +34,7 @@ var jsFilesToInject = [
 	// will be injected here in no particular order.
 	// 'js/**/*.js'
 	
+	'packages/ng-lodash/build/ng-lodash.min.js',
 	'packages/angular-bootstrap/ui-bootstrap-tpls.min.js',
 	'packages/angular-payments/lib/angular-payments.min.js',
 	'packages/angular-google-maps/dist/angular-google-maps.min.js',

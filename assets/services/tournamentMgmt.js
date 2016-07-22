@@ -26,10 +26,6 @@
 
 		var service = {
 			getTournament: function(tournamentId) {
-				if(getTournamentPromise) {
-					return getTournamentPromise;
-				}
-
 				var url = '/tournaments/' + tournamentId;
 				getTournamentPromise = $http.get(url).then(function(res) {
 					mergeIntoTournament(res.data);

@@ -10,16 +10,20 @@
 	
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
-		'$modal', 'signupPrompter', 'deviceMgr', 'layoutMgmt',
+		'$modal', '$timeout',
+		'signupPrompter', 'deviceMgr', 'layoutMgmt',
 		'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt',
-		'messenger'
+		'messenger', 
+		'lodash'
 	];
 
 	function controller(
 		$scope, $http, $routeParams, $rootScope, $window,
-		$modal, signupPrompter, deviceMgr, layoutMgmt, 
+		$modal, $timeout,
+		signupPrompter, deviceMgr, layoutMgmt, 
 		customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt,
-		messenger
+		messenger, 
+		_
 	) {
 
 		$scope.leaderboardsShow = false;
@@ -54,7 +58,10 @@ console.log('getCustomerPromise called');
 			});
 
 			if($scope.activeTournamentId) {
-				updateActiveTournamentBalance($scope.activeTournamentId, $scope.customerId);
+				var getTournamentPromise = tournamentMgmt.getTournament($scope.activeTournamentId);
+				getTournamentPromise.then(function(tournamentData) {
+					updateActiveTournamentBalance(tournamentData, $scope.customerId);
+				});
 			}
 			$scope.showHistory();
 		});
@@ -75,44 +82,30 @@ console.log('getCustomerPromise called');
 		var todayDate = year + month + date;
 
 		var updateBalance = function() {
-console.log('updateBalance() called');
 			var getSessionPromise = customerMgmt.getSession();
 			getSessionPromise.then(function(sessionData) {
-console.log('getSessionPromise called');
 				if(sessionData.customerId) {
 					var getCustomerPromise = customerMgmt.getCustomer(sessionData.customerId);
 					getCustomerPromise.then(function(customer) {
-console.log('getCustomerPromise called');
 						$scope.customer = customer;
 					});
 				}
 			});
 		}
 
-		var updateActiveTournamentBalance = function(tournamentId, customerId) {
-console.log('updateActiveTournamentBalance() called');
-			$scope.currentTournaments.forEach(function(tournament) {
-				if(tournament.id === tournamentId) {
-// TODO debug why $scope.activeTournamentCredits retains only the initially-assigned value
-					$scope.activeTournamentCredits = tournament.name +' Credits: 0';
-					tournament.customers.forEach(function(customer) {
-						if(customer.customerId === customerId) {
-// TODO debug why $scope.activeTournamentCredits retains only the initially-assigned value
-							$scope.activeTournamentCredits = tournament.name +' Credits: '+customer.credits;
-						}
-					});
-				}
+		var updateActiveTournamentBalance = function(tournamentData, customerId) {
+			var customer = _.find(tournamentData.customers, {
+				customerId: customerId
 			});
+			$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
 		}
 
 		var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
 		getTournamentsByDatePromise.then(function(currentTournamentsData) {
-console.log('getTournamentsByDatePromise called');
 			$scope.currentTournaments = currentTournamentsData;
 
 			var getSessionPromise = customerMgmt.getSession();
 			getSessionPromise.then(function(sessionData) {
-console.log('getSessionPromise called');
 	
 				if(sessionData.customerId) {
 					$rootScope.customerId = sessionData.customerId;
@@ -123,7 +116,6 @@ console.log('getSessionPromise called');
 	
 					var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
 					getCustomerPromise.then(function(customer) {
-console.log('getCustomerPromise called');
 						$scope.customer = customer;
 					});
 	
@@ -205,16 +197,12 @@ console.log('getCustomerPromise called');
 		amountMap[2] = ['2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 
 		$scope.showTrack = function(trackId) {
-console.log('$scope.showTrack() called');
 			$scope.marketingShow = false;
 			$scope.trackShow = true;
 			$scope.showTrackRace(1, false);
 		}
 
 		$scope.showTrackRace = function(raceNum, override) {
-console.log('$scope.showTrackRace() called');
-console.log('$scope.track:');
-console.log($scope.track);
 			var trackRaceCount = $scope.track.races.length;
 			$scope.track.races.forEach(function(race) {
 				if(race.number == raceNum) {
@@ -237,12 +225,10 @@ console.log($scope.track);
 		}
 
 		$scope.showLeg = function(legNum) {
-console.log('$scope.showLeg() called with '+legNum);
 			$scope.legShow = legNum;
 		}
 
 		$scope.showRaceWager = function(raceNumber, wager, min) {
-console.log('$scope.showRaceWager() called');
 			$scope.clearSelectedRunners();
 			$scope.selectedWager = wager;
 			$scope.wagerTmpl = wager;
@@ -746,7 +732,6 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 		}
 
 		$scope.clearSelectedRunners = function() {
-console.log('$scope.clearSelectedRunners() called');
 			$scope.formattedRunners = '';
 			$scope.selectedRunners = [];
 			$scope.firstRunners = [];
@@ -808,7 +793,6 @@ console.log('$scope.clearSelectedRunners() called');
 
 
 		$scope.submitWager = function(activeTournamentId) {
-console.log('$scope.submitWager() called');
 			if(!$scope.customerId || !$scope.customer.id) {
 				layoutMgmt.logIn();
 			} else {
@@ -834,7 +818,10 @@ console.log('$scope.submitWager() called');
 					if(response.data.success) { 
 						$scope.successfulWager = response.data.confirmedWager;
 						$scope.wagerError = '';
-						updateActiveTournamentBalance(tournamentId, customerId);
+						var getTournamentPromise = tournamentMgmt.getTournament(activeTournamentId);
+						getTournamentPromise.then(function(tournamentData) {
+							updateActiveTournamentBalance(tournamentData, customerId);
+						});
 					} else {
 						if(response.data.failMsg === 'Incomplete Wager Data') {
 							$scope.successfulWager = '';
@@ -851,18 +838,19 @@ console.log('$scope.submitWager() called');
 		}
 
 		$scope.cancelWager = function(wagerId) {
-console.log('$scope.cancelWager() called');
 			if(!$scope.customerId) {
 				layoutMgmt.logIn();
 			} else {
 				var cancelWagerPromise = wagerMgmt.cancelWager(wagerId);
 				cancelWagerPromise.then(function(response) {
-console.log('cancelWagerPromise called');
 					$scope.tabShow = 'wagerResponse';
 					$scope.successfulWager = response[0];
 					var tournamentId = $scope.successfulWager.tournamentId;
 					var customerId = $scope.successfulWager.customerId;
-					updateActiveTournamentBalance(tournamentId, customerId);
+					var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+					getTournamentPromise.then(function(tournamentData) {
+						updateActiveTournamentBalance(tournamentData, customerId);
+					});
 				});
 			}
 		}
@@ -872,20 +860,21 @@ console.log('cancelWagerPromise called');
 		};
 
 		$scope.showHistory = function() {
-console.log('$scope.showHistory() called');
 			if(!$scope.customerId && !$scope.customer) {
-				layoutMgmt.logIn();
+				$scope.wagerHistory = [{race: 'No Wagers'}];
+				$scope.tabShow = 'wagerHistory';
 			} else {
 				$scope.tabShow = 'wagerHistory';
 				var customerId = $scope.customerId || $scope.customer.id;
 				var dateObj = new Date();
-				var ms = dateObj.getTime();
-				var msPerDay = 86400000;
-				var todayMill = ((ms - (ms % msPerDay)) - 64800000);
+				var thisYear = dateObj.getFullYear();
+				var thisMonth = dateObj.getMonth();
+				var thisDay = dateObj.getDate();
+				var todayDate = new Date(thisYear, thisMonth, thisDay);
+				var todayMill = todayDate.getTime();
 				var params = customerId + '-' + todayMill;
 				var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
 				getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
-console.log('getWagersByCustomerIdSinceMillisecondsPromise called');
 					var formattedHistory = [];
 					wagerHistory.forEach(function(wager) {
 						var formattedWager = {};
@@ -897,7 +886,6 @@ console.log('getWagersByCustomerIdSinceMillisecondsPromise called');
 						var raceNumber = trIdPcs[1];
 						var getTrdPromise = trdMgmt.getTrd(trackId);
 						getTrdPromise.then(function(trdData) {
-console.log('getTrdPromise called');
 							formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
 						});
 						formattedWager.amount = wager.wagerAmount;
@@ -921,7 +909,7 @@ console.log('getTrdPromise called');
 						formattedWager.result = result;
 						formattedHistory.push(formattedWager);
 					});
-					if($scope.wagerHistory && $scope.wagerHistory.length > 0) {
+					if(formattedHistory && formattedHistory.length > 0) {
 						$scope.wagerHistory = formattedHistory;
 					}	else {
 						$scope.wagerHistory = [{race: 'No Wagers'}];
@@ -1036,20 +1024,10 @@ console.log(response.data);
 			}
 		}
 
-		if($scope.customerId) {
-			$scope.showHistory();
-		} else {
-			$scope.wagerHistory = [{race: 'No Wagers'}];
-			$scope.tabShow = 'wagerHistory';
-		}
-
 		$scope.setActiveTournament = function(tournament) {
 			$scope.activeTournament = tournament;
-console.log('$scope.setActiveTournament() called with');
-console.log(tournament);
 			var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
 			getTrdPromise.then(function(trdData) {
-console.log('getTrdPromise called');
 				var track = trdData;
 // TODO debug why $scope.track retains only the initially-assigned value
 // can't use $scope.$apply() here because we're in the middle of a digest
@@ -1096,14 +1074,11 @@ console.log('getTrdPromise called');
 			});
 			if($scope.customerId || ($scope.customer && $scope.customer.id)) {
 				var customerId = $scope.customerId || $scope.customer.id;
-				tournament.customers.forEach(function(customer) {
-					if(customer.customerId === customerId) {
-						updateActiveTournamentBalance(tournament.id, customerId);
-					}
-				});
+				updateActiveTournamentBalance(tournament, customerId);
 			} else {
 				$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
-			}
+			}	
+			$scope.showHistory();
 		}
 
 	}
