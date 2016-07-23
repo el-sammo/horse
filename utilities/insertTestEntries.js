@@ -164,8 +164,9 @@ function insertTestEntryData(useDate) {
 			distance: .75,
 			formattedDist: '6F',
 			surface: 'Turf',
-			time: 13.30,
-			formattedTime: '13:30',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: 17.30,
+			formattedTime: '17:30',
 			sexes: 'Open',
 			ages: '2 Year Olds',
 			type: 'Maiden Special Weight',
@@ -315,8 +316,9 @@ function insertTestEntryData(useDate) {
 			distance: .8125,
 			formattedDist: '6 1/2F',
 			surface: 'Dirt',
-			time: '14.01',
-			formattedTime: '14:01',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '18.01',
+			formattedTime: '18:01',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Claiming',
@@ -445,8 +447,9 @@ function insertTestEntryData(useDate) {
 			distance: 1,
 			formattedDist: '1M',
 			surface: 'Turf',
-			time: '14.32',
-			formattedTime: '14:32',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '18.32',
+			formattedTime: '18:32',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Allowance Optional Claiming',
@@ -581,8 +584,9 @@ function insertTestEntryData(useDate) {
 			distance: .75,
 			formattedDist: '6F',
 			surface: 'Inner Turf',
-			time: '15.04',
-			formattedTime: '15:04',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '19.04',
+			formattedTime: '19:04',
 			sexes: 'Open',
 			ages: '3 Year Olds and Up',
 			type: 'Starter Allowance',
@@ -733,8 +737,9 @@ function insertTestEntryData(useDate) {
 			distance: .8125,
 			formattedDist: '6 1/2F',
 			surface: 'Dirt',
-			time: '15.36',
-			formattedTime: '15:36',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '19.36',
+			formattedTime: '19:36',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Maiden Claiming',
@@ -893,8 +898,9 @@ function insertTestEntryData(useDate) {
 			distance: 1,
 			formattedDist: '1M',
 			surface: 'Dirt',
-			time: '17.00',
-			formattedTime: '17:00',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '21.00',
+			formattedTime: '21:00',
 			sexes: 'Open',
 			ages: '3 Year Olds And Up',
 			type: 'Claiming',
@@ -1110,8 +1116,9 @@ function insertTestEntryData(useDate) {
 			distance: .625,
 			formattedDist: '5F',
 			surface: 'Dirt',
-			time: '17.33',
-			formattedTime: '17:33',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '21.33',
+			formattedTime: '21:33',
 			sexes: 'Fillies',
 			ages: '2 Year Olds',
 			type: 'Maiden Special Weight',
@@ -1245,8 +1252,9 @@ function insertTestEntryData(useDate) {
 			distance: 1.0625,
 			formattedDist: '6F',
 			surface: 'Turf',
-			time: '18.03',
-			formattedTime: '18:03',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '22.03',
+			formattedTime: '22:03',
 			sexes: 'Open',
 			ages: '3 Year Olds and Up',
 			type: 'Allowance',
@@ -1446,8 +1454,9 @@ function insertTestEntryData(useDate) {
 			distance: .8125,
 			formattedDist: '6 1/2F',
 			surface: 'Dirt',
-			time: '18.33',
-			formattedTime: '18:33',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '22.33',
+			formattedTime: '22:33',
 			sexes: 'Open',
 			ages: '3 Year Olds and Up',
 			type: 'Caliming',
@@ -1576,8 +1585,9 @@ function insertTestEntryData(useDate) {
 			distance: 1.0625,
 			formattedDist: '1 1/16M',
 			surface: 'Turf',
-			time: '19.03',
-			formattedTime: '19:03',
+			// time and formattedTime are UTC (EST + 4 hours)
+			time: '23.03',
+			formattedTime: '23:03',
 			sexes: 'Fillies and Mares',
 			ages: '3 Year Olds and Up',
 			type: 'Allowance',
@@ -1781,6 +1791,7 @@ function insertTestEntryData(useDate) {
 
 
 function convertPostTime(postTime) {
+	// time and formattedTime are UTC (EST + 4 hours)
 	var timePcs = postTime.toString().split(".");
 	if(timePcs[1].length < 2) {
 		timePcs[1] = timePcs[1]+'0';

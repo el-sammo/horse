@@ -30,12 +30,6 @@
 			$window.location.href = location.origin + "/app/";
 		}
 
-		var tournamentId = $routeParams.id
-		var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
-		getTournamentPromise.then(function(tournament) {
-			$scope.setActiveTournament(tournament);
-		});
-
 		$scope.leaderboardsShow = false;
 		$scope.horseCenterShow = true;
 
@@ -63,7 +57,6 @@
 
 			var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
 			getCustomerPromise.then(function(customer) {
-console.log('getCustomerPromise called');
 				$scope.customer = customer;
 			});
 
@@ -161,6 +154,12 @@ console.log('getCustomerPromise called');
 				});
 				$scope.tournamentsData = tournaments;
 	
+				var tournamentId = $routeParams.id
+				var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+				getTournamentPromise.then(function(tournament) {
+					$scope.setActiveTournament(tournament);
+				});
+
 			});
 		});
 
@@ -989,6 +988,9 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 
 		$scope.showTournamentDetails = function(tournyId) {
 console.log('$scope.showTournamentDetails() called');
+			var dateObj = new Date();
+			var now = dateObj.toString();
+console.log('now: '+now);
 			var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 			getTournamentPromise.then(function(tournamentData) {
 console.log('getTournamentPromise called');
@@ -1046,46 +1048,7 @@ console.log(response.data);
 			var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
 			getTrdPromise.then(function(trdData) {
 				var track = trdData;
-// TODO debug why $scope.track retains only the initially-assigned value
-// can't use $scope.$apply() here because we're in the middle of a digest
 				$scope.track = track;
-//
-// maybe...
-//
-// .directive('arrowListener', function() {
-//   return {
-//     restrict: 'A', // attribute
-//     scope: {
-//       moveRight: '&', // bind to parent method
-//       moveLeft: '&'
-//     },
-//     link: function(scope, elm, attrs) {
-//       elm.bind('keydown', function(e) {
-//         if (e.keyCode === 39) {
-//           scope.moveRight();
-//         }
-//         if (e.keyCode === 37) {
-//           scope.moveLeft();
-//         }
-//         scope.$apply();
-//       })
-//     }
-//   };
-// })
-//
-// .controller('NumCtrl', function($scope) {
-//   var history = [];
-//   $scope.numbersDisplayed = [0,1,2,3,4,5];
-//
-//   $scope.moveRight = function() {
-//     history.unshift($scope.numbersDisplayed.shift());
-//   };
-//
-//   $scope.moveLeft = function() {
-//     $scope.numbersDisplayed.unshift(history.shift());
-//   };
-// })
-//
 				$scope.activeTournamentId = tournament.id;
 				$scope.showTrack($scope.track.id);
 			});
@@ -1096,6 +1059,10 @@ console.log(response.data);
 				$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
 			}	
 			$scope.showHistory();
+		}
+
+		$scope.changeActiveTournament = function(tournament) {
+			$window.location.href = location.origin + "/app/tournament/" + tournament.id;
 		}
 
 	}
