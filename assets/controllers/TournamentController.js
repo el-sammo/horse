@@ -4,9 +4,9 @@
 	var app = angular.module('app');
 
 	///
-	// Controllers: Home
+	// Controllers: Tournament
 	///
-	app.controller('HomeController', controller);
+	app.controller('TournamentController', controller);
 	
 	controller.$inject = [
 		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
@@ -25,6 +25,16 @@
 		messenger, 
 		_
 	) {
+
+		if(!$routeParams.id) {
+			$window.location.href = location.origin + "/app/";
+		}
+
+		var tournamentId = $routeParams.id
+		var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+		getTournamentPromise.then(function(tournament) {
+			$scope.setActiveTournament(tournament);
+		});
 
 		$scope.leaderboardsShow = false;
 		$scope.horseCenterShow = true;
@@ -961,7 +971,14 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 			updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
 				var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
 				closeWagersPromise.then(function(closeWagersPromiseResponse) {
-					$window.location.href = location.origin + "/app/";
+					if(raceNum < 2) {
+						var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
+						closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
+							$window.location.href = location.origin + "/app/";
+						});
+					} else {
+						$window.location.href = location.origin + "/app/";
+					}
 				});
 			});
 		};
@@ -1025,7 +1042,60 @@ console.log(response.data);
 		}
 
 		$scope.setActiveTournament = function(tournament) {
-			$window.location.href = location.origin + "/app/tournament/" + tournament.id;
+			$scope.activeTournament = tournament;
+			var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
+			getTrdPromise.then(function(trdData) {
+				var track = trdData;
+// TODO debug why $scope.track retains only the initially-assigned value
+// can't use $scope.$apply() here because we're in the middle of a digest
+				$scope.track = track;
+//
+// maybe...
+//
+// .directive('arrowListener', function() {
+//   return {
+//     restrict: 'A', // attribute
+//     scope: {
+//       moveRight: '&', // bind to parent method
+//       moveLeft: '&'
+//     },
+//     link: function(scope, elm, attrs) {
+//       elm.bind('keydown', function(e) {
+//         if (e.keyCode === 39) {
+//           scope.moveRight();
+//         }
+//         if (e.keyCode === 37) {
+//           scope.moveLeft();
+//         }
+//         scope.$apply();
+//       })
+//     }
+//   };
+// })
+//
+// .controller('NumCtrl', function($scope) {
+//   var history = [];
+//   $scope.numbersDisplayed = [0,1,2,3,4,5];
+//
+//   $scope.moveRight = function() {
+//     history.unshift($scope.numbersDisplayed.shift());
+//   };
+//
+//   $scope.moveLeft = function() {
+//     $scope.numbersDisplayed.unshift(history.shift());
+//   };
+// })
+//
+				$scope.activeTournamentId = tournament.id;
+				$scope.showTrack($scope.track.id);
+			});
+			if($scope.customerId || ($scope.customer && $scope.customer.id)) {
+				var customerId = $scope.customerId || $scope.customer.id;
+				updateActiveTournamentBalance(tournament, customerId);
+			} else {
+				$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
+			}	
+			$scope.showHistory();
 		}
 
 	}

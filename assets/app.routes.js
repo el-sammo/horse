@@ -130,6 +130,16 @@
 
 
 		///
+		// Tournament
+		///
+
+		$routeProvider.when('/tournament/:id', {
+			controller: 'TournamentController',
+			templateUrl: '/templates/tournament.html'
+		});
+
+
+		///
 		// Other
 		///
 

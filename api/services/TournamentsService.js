@@ -44,5 +44,15 @@ module.exports = {
 			console.log(err);
 			return {success: false, reason: 'invalid customerId'};
 		});
+	},
+
+	getTournamentByTrackId: function(trackId) {
+		return Tournaments.find(
+			{assocTrackId: trackId}
+		).then(function(tournamentData) {
+			return {success: true, tournamentData: tournamentData[0]};
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid trackId'};
+		});
 	}
 }

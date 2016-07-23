@@ -89,6 +89,14 @@ module.exports = {
 		}
 	},
 	
+	closeTournament: function(req, res) {
+		if(req.params.id) {
+			return closeValidTournament(req, res);
+		} else {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid track data'}));
+		}
+	},
+	
 	register: function(req, res) {
 		var rpiPcs = req.params.id.split('-');
 		if(rpiPcs.length > 1) {
@@ -232,6 +240,28 @@ function updateTournamentCustomers(req, res, self) {
 			var tournamentData = results[0];
 			res.send(JSON.stringify(tournamentData.customers));
 			return {success: true, updatedTournamentData: tournamentData};
+		}).catch(function(err) {
+			return {error: 'Server error'};
+			console.error(err);
+			throw err;
+		});
+	}).catch(function(err) {
+    return {error: 'Server error'};
+    console.error(err);
+    throw err;
+	});
+}
+
+function closeValidTournament(req, res, self) {
+	var trackId = req.params.id;
+	return TournamentsService.getTournamentByTrackId(trackId).then(function(gtResponse) {
+		return Tournaments.update(
+			{id: gtResponse.tournamentData.id},
+			{closed: true},
+			false,
+			false
+		).then(function(updateResponse) {
+			res.send(JSON.stringify(updateResponse[0]));
 		}).catch(function(err) {
 			return {error: 'Server error'};
 			console.error(err);

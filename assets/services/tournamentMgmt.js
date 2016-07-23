@@ -23,6 +23,7 @@
 		var getTournamentsByDatePromise;
 		var getLeadersPromise;
 		var updateTournamentCustomersCreditsPromise;
+		var closeTournamentPromise;
 
 		var service = {
 			getTournament: function(tournamentId) {
@@ -106,6 +107,19 @@
 					console.error(err);
 					return $q.reject(err);
 				});
+			},
+
+			closeTournament: function(trackId) {
+				var url = '/tournaments/closeTournament/' + trackId;
+				closeTournamentPromise = $http.get(url).then(function(response) {
+					return response.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return closeTournamentPromise;
 			},
 
 			createTournament: function(tournamentData) {
