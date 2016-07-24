@@ -1,74 +1,102 @@
 (function() {
-	'use strict';
+"use strict";
 
-	var app = angular.module('app');
+var app = angular.module('app');
+
+///
+// Controllers: Tournament
+///
+
+app.controller('TournamentController', controller);
+
+controller.$inject = [
+	'$scope', '$http', '$routeParams', '$rootScope', '$location', 
+	'$modal', '$timeout',
+	'signupPrompter', 'deviceMgr', 'layoutMgmt',
+	'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt',
+	'messenger', 
+	'lodash',
+];
+
+function controller(
+	$scope, $http, $routeParams, $rootScope, $location,
+	$modal, $timeout,
+	signupPrompter, deviceMgr, layoutMgmt, 
+	customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt,
+	messenger, 
+	_
+) {
+	///
+	// Variable declaration
+	///
+
+	var todayDate;
+	var legMap, partMap, amountMap, wagerAbbrevMap;
+
 
 	///
-	// Controllers: Tournament
+	// Run initialization
 	///
-	app.controller('TournamentController', controller);
-	
-	controller.$inject = [
-		'$scope', '$http', '$routeParams', '$rootScope', '$window', 
-		'$modal', '$timeout',
-		'signupPrompter', 'deviceMgr', 'layoutMgmt',
-		'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt',
-		'messenger', 
-		'lodash'
-	];
 
-	function controller(
-		$scope, $http, $routeParams, $rootScope, $window,
-		$modal, $timeout,
-		signupPrompter, deviceMgr, layoutMgmt, 
-		customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt,
-		messenger, 
-		_
-	) {
+	init();
 
+
+	///
+	// Initialization
+	///
+
+	function init() {
 		if(!$routeParams.id) {
-			$window.location.href = location.origin + "/app/";
+			$location.path('/');
 		}
+
+		initDate();
+		initTournaments();
+		initMaps();
+		initRunners();
 
 		$scope.leaderboardsShow = false;
 		$scope.horseCenterShow = true;
 
 		$scope.wagerData = {};
 
-//		$scope.signUp = signupPrompter.prompt();
+		$scope.logIn = layoutMgmt.logIn;
+		$scope.signUp = layoutMgmt.signUp;
+		$scope.logOut = layoutMgmt.logOut;
 
-		$scope.logIn = function() {
-			layoutMgmt.logIn();
-		}
+		$scope.showTrack = showTrack;
+		$scope.showTrackRace = showTrackRace;
+		$scope.showLeg = showLeg;
+		$scope.showRaceWager = showRaceWager;
+		$scope.scoreRace = scoreRace;
+		$scope.updateSelectedRunnersDisplay = updateSelectedRunnersDisplay;
+		$scope.clearSelectedRunners = initRunners;
+		$scope.submitWager = submitWager;
+		$scope.cancelWager = cancelWager;
+		$scope.showHistory = showHistory;
+		$scope.showHorseCenter = showHorseCenter;
+		$scope.showLeaderboards = showLeaderboards;
+		$scope.showTournaments = showTournaments;
+		$scope.showConfirmation = showConfirmation;
+		$scope.closeRace = closeRace;
+		$scope.showResults = showResults;
+		$scope.showTournamentDetails = showTournamentDetails;
+		$scope.showTournamentLeaders = showTournamentLeaders;
+		$scope.tournamentRegister = tournamentRegister;
+		$scope.setActiveTournament = setActiveTournament;
+		$scope.changeActiveTournament = changeActiveTournament;
 
-		$scope.signUp = function() {
-			layoutMgmt.signUp();
-		}
+		$scope.raceNumberTabClass = raceNumberTabClass;
+		$scope.wagerTypeTabClass = wagerTypeTabClass;
+		$scope.wagerTypeTabStyle = wagerTypeTabStyle;
 
-		$scope.logOut = function() {
-			layoutMgmt.logOut();
-		}
+		// For debugging
+		$scope.debugLog = debugLog;
 
-		$rootScope.$on('customerLoggedIn', function(evt, args) {
-			$scope.customerId = args;
-			$scope.showLogin = false;
-			$scope.showLogout = true;
-			$scope.showSignup = false;
+		$rootScope.$on('customerLoggedIn', onCustomerLoggedIn);
+	}
 
-			var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
-			getCustomerPromise.then(function(customer) {
-				$scope.customer = customer;
-			});
-
-			if($scope.activeTournamentId) {
-				var getTournamentPromise = tournamentMgmt.getTournament($scope.activeTournamentId);
-				getTournamentPromise.then(function(tournamentData) {
-					updateActiveTournamentBalance(tournamentData, $scope.customerId);
-				});
-			}
-			$scope.showHistory();
-		});
-
+	function initDate() {
 		var dateObj = new Date();
 		var year = dateObj.getFullYear();
 		var month = (dateObj.getMonth() + 1);
@@ -82,88 +110,17 @@
 			date = '0' + date;
 		}
 
-		var todayDate = year + month + date;
+		todayDate = year + month + date;
+	}
 
-		var updateBalance = function() {
-			var getSessionPromise = customerMgmt.getSession();
-			getSessionPromise.then(function(sessionData) {
-				if(sessionData.customerId) {
-					var getCustomerPromise = customerMgmt.getCustomer(sessionData.customerId);
-					getCustomerPromise.then(function(customer) {
-						$scope.customer = customer;
-					});
-				}
-			});
-		}
+	function initTournaments() {
+		tournamentMgmt.getTournamentsByDate(todayDate).then(
+			onGetTournaments
+		);
+	}
 
-		var updateActiveTournamentBalance = function(tournamentData, customerId) {
-			var customer = _.find(tournamentData.customers, {
-				customerId: customerId
-			});
-			$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
-		}
-
-		var getTournamentsByDatePromise = tournamentMgmt.getTournamentsByDate(todayDate);
-		getTournamentsByDatePromise.then(function(currentTournamentsData) {
-			$scope.currentTournaments = currentTournamentsData;
-
-			var getSessionPromise = customerMgmt.getSession();
-			getSessionPromise.then(function(sessionData) {
-	
-				if(sessionData.customerId) {
-					$rootScope.customerId = sessionData.customerId;
-					$scope.customerId = $rootScope.customerId;
-					$scope.showLogin = false;
-					$scope.showSignup = false;
-					$scope.showLogout = true;
-	
-					var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
-					getCustomerPromise.then(function(customer) {
-						$scope.customer = customer;
-					});
-	
-				} else {
-					$scope.showLogin = true;
-					$scope.showSignup = true;
-					$scope.showLogout = false;
-				}
-	
-				var tournaments = [];
-				$scope.currentTournaments.forEach(function(tournament) {
-					var tournamentData = {};
-					tournamentData.id = tournament.id;
-					tournamentData.name = tournament.name;
-					tournamentData.entryFee = tournament.entryFee;
-					tournamentData.siteFee = tournament.siteFee;
-					tournamentData.customersCount = tournament.customers.length;
-					tournamentData.max = tournament.max;
-					if(tournament.closed) {
-						if(tournament.scored) {
-							tournamentData.tournamentStatus = 'Final';
-						} else {
-							tournamentData.tournamentStatus = 'In Progress';
-						}
-					} else {
-						if(tournament.customers.length == tournament.max) {
-							tournamentData.tournamentStatus = 'Full';
-						} else {
-							tournamentData.tournamentStatus = 'Registering';
-						}
-					}
-					tournaments.push(tournamentData);
-				});
-				$scope.tournamentsData = tournaments;
-	
-				var tournamentId = $routeParams.id
-				var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
-				getTournamentPromise.then(function(tournament) {
-					$scope.setActiveTournament(tournament);
-				});
-
-			});
-		});
-
-		var legMap = [];
+	function initMaps() {
+		legMap = [];
 		legMap['Win'] = 1;
 		legMap['Place'] = 1;
 		legMap['Show'] = 1;
@@ -181,7 +138,7 @@
 		legMap['Pick 9'] = 9;
 		legMap['Pick 10'] = 10;
 
-		var partMap = [];
+		partMap = [];
 		partMap['Win'] = 1;
 		partMap['Place'] = 1;
 		partMap['Show'] = 1;
@@ -199,567 +156,33 @@
 		partMap['Pick 9'] = 1;
 		partMap['Pick 10'] = 1;
 
-		var amountMap = [];
+		amountMap = [];
 		amountMap[.1] = ['.10','.20','.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 		amountMap[.5] = ['.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 		amountMap[1] = ['1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 		amountMap[2] = ['2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
 
-		$scope.showTrack = function(trackId) {
-			$scope.marketingShow = false;
-			$scope.trackShow = true;
-			$scope.showTrackRace(1, false);
-		}
+		wagerAbbrevMap = [];
+		wagerAbbrevMap['Win'] = 'Win';
+		wagerAbbrevMap['Place'] = 'Place';
+		wagerAbbrevMap['Show'] = 'Show';
+		wagerAbbrevMap['Exacta'] = 'Exacta';
+		wagerAbbrevMap['Trifecta'] = 'Tri';
+		wagerAbbrevMap['Superfecta'] = 'Super';
+		wagerAbbrevMap['Pentafecta'] = 'SH5';
+		wagerAbbrevMap['Daily Double'] = 'DD';
+		wagerAbbrevMap['Pick 3'] = 'P3';
+		wagerAbbrevMap['Pick 4'] = 'P4';
+		wagerAbbrevMap['Pick 5'] = 'P5';
+		wagerAbbrevMap['Pick 6'] = 'P6';
+		wagerAbbrevMap['Pick 7'] = 'P7';
+		wagerAbbrevMap['Pick 8'] = 'P8';
+		wagerAbbrevMap['Pick 9'] = 'P9';
+		wagerAbbrevMap['Pick 10'] = 'P10';
+	}
 
-		$scope.showTrackRace = function(raceNum, override) {
-			var trackRaceCount = $scope.track.races.length;
-			$scope.track.races.forEach(function(race) {
-				if(race.number == raceNum) {
-					if(!race.closed || override) {
-						$scope.race = race;
-						$scope.raceNum = raceNum;
-						$scope.trId = $scope.track.id+'-'+raceNum;
-						$scope.showRaceWager(raceNum, 'Win', 2);
-					} else {
-						raceNum ++;
-						if(raceNum > trackRaceCount) {
-							override = true;
-							$scope.showTrackRace(trackRaceCount, true);
-						} else {
-							$scope.showTrackRace(raceNum, false);
-						}
-					}
-				}
-			});
-		}
-
-		$scope.showLeg = function(legNum) {
-			$scope.legShow = legNum;
-		}
-
-		$scope.showRaceWager = function(raceNumber, wager, min) {
-			$scope.clearSelectedRunners();
-			$scope.selectedWager = wager;
-			$scope.wagerTmpl = wager;
-			$scope.wager = wager;
-
-			var track = $scope.track;
-
-			var races = [];
-			if(legMap[wager] < 2) {
-				$scope.track.races.forEach(function(race) {
-					if(race.number == raceNumber) {
-						races.push(race);
-					}
-				});
-			} else {
-				races.push(
-					(
-						$.grep(
-							track.races, function(e) { 
-								return e.number == raceNumber; 
-							}
-						)
-					)
-				[0]);
-				var nextLeg = races[0].number;
-				while(races.length < legMap[wager]) {
-					nextLeg ++;
-					races.push(
-						(
-							$.grep(
-								track.races, function(e) { 
-									return e.number == nextLeg; 
-								}
-							)
-						)
-					[0]);
-				}
-			}
-
-			var wagerRunners = [];
-			races.forEach(function(race) {
-				wagerRunners.push(race.entries);
-			});
-
-			$scope.legs = legMap[wager];
-			$scope.parts = partMap[wager];
-
-			$scope.singleDesc = wager;
-
-			$scope.wagerRunners = wagerRunners;
-
-			$scope.showLeg(1);
-
-			$scope.amountOptions = {
-				repeatSelect: null,
-				availableOptions: amountMap[min]
-			}
-
-		}
-
-		$scope.updateSelectedRunnersDisplay = function() {
-console.log('$scope.updateSelectedRunnersDisplay() called');
-			$scope.formattedRunners = '';
-			$scope.multiplier = 1;
-			if($scope.legs > 1) {
-				var trIdPcs = $scope.trId.split('-');
-				$scope.finalRaceId = trIdPcs[0] + '-' + (parseInt(trIdPcs[1]) + (parseInt($scope.legs) - 1));
-				var trueLeg1Count = 1;
-				if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
-					var first = true;
-					$scope.leg1Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
-								trueLeg1Count ++;
-							}
-						}
-					});
-					$scope.multiplier = $scope.multiplier * trueLeg1Count;
-				} 
-				$scope.formattedRunners += ' / ';
-				var trueLeg2Count = 1;
-				if($scope.leg2Runners && ($scope.leg2Runners.length > 0)) {
-					var first = true;
-					$scope.leg2Runners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners += runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
-								trueLeg2Count ++;
-							}
-						}
-					});
-					$scope.multiplier = $scope.multiplier * trueLeg2Count;
-				}
-				if($scope.legs > 2) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg3Count = 1;
-					if($scope.leg3Runners && ($scope.leg3Runners.length > 0)) {
-						var first = true;
-						$scope.leg3Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg3Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg3Count;
-					} 
-				}
-				if($scope.legs > 3) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg4Count = 1;
-					if($scope.leg4Runners && ($scope.leg4Runners.length > 0)) {
-						var first = true;
-						$scope.leg4Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg4Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg4Count;
-					} 
-				}
-				if($scope.legs > 4) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg5Count = 1;
-					if($scope.leg5Runners && ($scope.leg5Runners.length > 0)) {
-						var first = true;
-						$scope.leg5Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg5Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg5Count;
-					} 
-				}
-				if($scope.legs > 5) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg6Count = 1;
-					if($scope.leg6Runners && ($scope.leg6Runners.length > 0)) {
-						var first = true;
-						$scope.leg6Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg6Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg6Count;
-					} 
-				}
-				if($scope.legs > 6) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg7Count = 1;
-					if($scope.leg7Runners && ($scope.leg7Runners.length > 0)) {
-						var first = true;
-						$scope.leg7Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg7Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg7Count;
-					} 
-				}
-				if($scope.legs > 7) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg8Count = 1;
-					if($scope.leg8Runners && ($scope.leg8Runners.length > 0)) {
-						var first = true;
-						$scope.leg8Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg8Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg8Count;
-					} 
-				}
-				if($scope.legs > 8) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg9Count = 1;
-					if($scope.leg9Runners && ($scope.leg9Runners.length > 0)) {
-						var first = true;
-						$scope.leg9Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg9Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg9Count;
-					} 
-				}
-				if($scope.legs > 9) {
-					$scope.formattedRunners += ' / ';
-					var trueLeg10Count = 1;
-					if($scope.leg10Runners && ($scope.leg10Runners.length > 0)) {
-						var first = true;
-						$scope.leg10Runners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-									trueLeg10Count ++;
-								}
-							}
-						});
-						$scope.multiplier = $scope.multiplier * trueLeg10Count;
-					} 
-				}
-				if($scope.wagerData.amount) {
-					$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
-				} else {
-					$scope.ticketCost = ($scope.multiplier * 2).toFixed(2);
-				}
-			} else {
-				$scope.finalRaceId = $scope.trId;
-				var firstRunnersTrueArray = [];
-				var secondRunnersTrueArray = [];
-				var thirdRunnersTrueArray = [];
-				var fourthRunnersTrueArray = [];
-				var fifthRunnersTrueArray = [];
-				if(partMap[$scope.wager] > 1) {
-					if($scope.firstRunners && ($scope.firstRunners.length > 0)) {
-						var first = true;
-						$scope.firstRunners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-								}
-								firstRunnersTrueArray.push(runner);
-							}
-						});
-					} 
-					$scope.formattedRunners += ' / ';
-					if($scope.secondRunners && ($scope.secondRunners.length > 0)) {
-						var first = true;
-						$scope.secondRunners.forEach(function(runner) {
-							if(runner > 0) {
-								if(first) {
-									$scope.formattedRunners += runner;
-									first = false;
-								} else {
-									$scope.formattedRunners += ',' + runner;
-								}
-								secondRunnersTrueArray.push(runner);
-							}
-						});
-					}
-					if(partMap[$scope.wager] > 2) {
-						$scope.formattedRunners += ' / ';
-						if($scope.thirdRunners && ($scope.thirdRunners.length > 0)) {
-							var first = true;
-							$scope.thirdRunners.forEach(function(runner) {
-								if(runner > 0) {
-									if(first) {
-										$scope.formattedRunners += runner;
-										first = false;
-									} else {
-										$scope.formattedRunners += ',' + runner;
-									}
-									thirdRunnersTrueArray.push(runner);
-								}
-							});
-						}
-					}
-					if(partMap[$scope.wager] > 3) {
-						$scope.formattedRunners += ' / ';
-						if($scope.fourthRunners && ($scope.fourthRunners.length > 0)) {
-							var first = true;
-							$scope.fourthRunners.forEach(function(runner) {
-								if(runner > 0) {
-									if(first) {
-										$scope.formattedRunners += runner;
-										first = false;
-									} else {
-										$scope.formattedRunners += ',' + runner;
-									}
-									fourthRunnersTrueArray.push(runner);
-								}
-							});
-						}
-					}
-					if(partMap[$scope.wager] > 4) {
-						$scope.formattedRunners += ' / ';
-						if($scope.fifthRunners && ($scope.fifthRunners.length > 0)) {
-							var first = true;
-							$scope.fifthRunners.forEach(function(runner) {
-								if(runner > 0) {
-									if(first) {
-										$scope.formattedRunners += runner;
-										first = false;
-									} else {
-										$scope.formattedRunners += ',' + runner;
-									}
-									fifthRunnersTrueArray.push(runner);
-								}
-							});
-						}
-					}
-					var multiPartMultiplier = getMultiMulti(
-						firstRunnersTrueArray,
-						secondRunnersTrueArray,
-						thirdRunnersTrueArray,
-						fourthRunnersTrueArray,
-						fifthRunnersTrueArray
-					);
-					if(!multiPartMultiplier) {
-						multiPartMultiplier = 1;
-					}
-					if($scope.wagerData.amount) {
-						$scope.ticketCost = (multiPartMultiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
-					} else {
-						$scope.ticketCost = (multiPartMultiplier * 2).toFixed(2);
-					}
-				} else {
-					// WPS
-					var first = true;
-					var selectedRunnerCount = 1;
-					$scope.selectedRunners.forEach(function(runner) {
-						if(runner > 0) {
-							if(first) {
-								$scope.formattedRunners = runner;
-								first = false;
-							} else {
-								$scope.formattedRunners += ',' + runner;
-								selectedRunnerCount ++;
-							}
-						}
-					});
-					if($scope.wagerData.amount) {
-						$scope.ticketCost = (selectedRunnerCount * parseFloat($scope.wagerData.amount)).toFixed(2);
-					} else {
-						$scope.ticketCost = (selectedRunnerCount * 2).toFixed(2);
-					}
-				}
-			}
-		}
-
-		var getMultiMulti = function(firsts, seconds, thirds, fourths, fifths) {
-			var usedNumbers = [];
-			var wagerCombos = [];
-			var multiple = 0;
-
-			if(
-				firsts.length > 0 && 
-				seconds.length > 0 &&
-				thirds.length > 0 &&
-				fourths.length > 0 &&
-				fifths.length > 0 &&
-				$scope.wager === 'Pentafecta' &&
-				multiple < 1
-				) {
-				firsts.forEach(function(first) {
-					usedNumbers.push(first);
-					seconds.forEach(function(second) {
-						if(usedNumbers.indexOf(second) < 0) {
-							usedNumbers.push(second);
-							thirds.forEach(function(third) {
-								if(usedNumbers.indexOf(third) < 0) {
-									usedNumbers.push(third);
-									fourths.forEach(function(fourth) {
-										if(usedNumbers.indexOf(fourth) < 0) {
-											usedNumbers.push(fourth);
-											fifths.forEach(function(fifth) {
-												if(usedNumbers.indexOf(fifth) < 0) {
-													multiple ++;
-													usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2], usedNumbers[3]];
-												}
-											});
-											usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2]];
-										}
-									});
-									usedNumbers = [usedNumbers[0], usedNumbers[1]];
-								}
-							});
-							usedNumbers = [usedNumbers[0]];
-						}
-					});
-					usedNumbers = [];
-				});
-			}
-			if(
-				firsts.length > 0 && 
-				seconds.length > 0 &&
-				thirds.length > 0 &&
-				fourths.length > 0 &&
-				$scope.wager === 'Superfecta' &&
-				multiple < 1
-				) {
-				firsts.forEach(function(first) {
-					usedNumbers.push(first);
-					seconds.forEach(function(second) {
-						if(usedNumbers.indexOf(second) < 0) {
-							usedNumbers.push(second);
-							thirds.forEach(function(third) {
-								if(usedNumbers.indexOf(third) < 0) {
-									usedNumbers.push(third);
-									fourths.forEach(function(fourth) {
-										if(usedNumbers.indexOf(fourth) < 0) {
-											multiple ++;
-											usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2]];
-										}
-									});
-									usedNumbers = [usedNumbers[0], usedNumbers[1]];
-								}
-							});
-							usedNumbers = [usedNumbers[0]];
-						}
-					});
-					usedNumbers = [];
-				});
-			}
-			if(
-				firsts.length > 0 && 
-				seconds.length > 0 &&
-				thirds.length > 0 &&
-				$scope.wager === 'Trifecta' &&
-				multiple < 1
-				) {
-				firsts.forEach(function(first) {
-					usedNumbers.push(first);
-					seconds.forEach(function(second) {
-						if(usedNumbers.indexOf(second) < 0) {
-							usedNumbers.push(second);
-							thirds.forEach(function(third) {
-								if(usedNumbers.indexOf(third) < 0) {
-									usedNumbers.push(third);
-									multiple ++;
-									usedNumbers = [usedNumbers[0], usedNumbers[1]];
-								}
-							});
-							usedNumbers = [usedNumbers[0]];
-						}
-					});
-					usedNumbers = [];
-				});
-			}
-			if(
-				firsts.length > 0 && 
-				seconds.length > 0 &&
-				$scope.wager === 'Exacta' &&
-				multiple < 1
-				) {
-				firsts.forEach(function(first) {
-					usedNumbers.push(first);
-					seconds.forEach(function(second) {
-						if(usedNumbers.indexOf(second) < 0) {
-							multiple ++;
-						}
-					});
-					usedNumbers = [];
-				});
-			}
-			return multiple;
-		}
-
-		$scope.clearSelectedRunners = function() {
-			$scope.formattedRunners = '';
-			$scope.selectedRunners = [];
-			$scope.firstRunners = [];
-			$scope.secondRunners = [];
-			$scope.thirdRunners = [];
-			$scope.fourthRunners = [];
-			$scope.fifthRunners = [];
-			$scope.leg1Runners = [];
-			$scope.leg2Runners = [];
-			$scope.leg3Runners = [];
-			$scope.leg4Runners = [];
-			$scope.leg5Runners = [];
-			$scope.leg6Runners = [];
-			$scope.leg7Runners = [];
-			$scope.leg8Runners = [];
-			$scope.leg9Runners = [];
-			$scope.leg10Runners = [];
-		}
-
+	function initRunners() {
+		$scope.formattedRunners = '';
 		$scope.selectedRunners = [];
 		$scope.firstRunners = [];
 		$scope.secondRunners = [];
@@ -776,294 +199,971 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 		$scope.leg8Runners = [];
 		$scope.leg9Runners = [];
 		$scope.leg10Runners = [];
+	}
 
+	///
+	// Event handlers
+	///
+	
+	function onCustomerLoggedIn(evt, args) {
+		$scope.customerId = args;
+		$scope.showLogin = false;
+		$scope.showLogout = true;
+		$scope.showSignup = false;
 
-		var getWagerAbbrev = function(wager) {
-			var wagerAbbrevMap = [];
-			wagerAbbrevMap['Win'] = 'Win';
-			wagerAbbrevMap['Place'] = 'Place';
-			wagerAbbrevMap['Show'] = 'Show';
-			wagerAbbrevMap['Exacta'] = 'Exacta';
-			wagerAbbrevMap['Trifecta'] = 'Tri';
-			wagerAbbrevMap['Superfecta'] = 'Super';
-			wagerAbbrevMap['Pentafecta'] = 'SH5';
-			wagerAbbrevMap['Daily Double'] = 'DD';
-			wagerAbbrevMap['Pick 3'] = 'P3';
-			wagerAbbrevMap['Pick 4'] = 'P4';
-			wagerAbbrevMap['Pick 5'] = 'P5';
-			wagerAbbrevMap['Pick 6'] = 'P6';
-			wagerAbbrevMap['Pick 7'] = 'P7';
-			wagerAbbrevMap['Pick 8'] = 'P8';
-			wagerAbbrevMap['Pick 9'] = 'P9';
-			wagerAbbrevMap['Pick 10'] = 'P10';
+		var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
+		getCustomerPromise.then(function(customer) {
+			$scope.customer = customer;
+		});
 
-			return wagerAbbrevMap[wager];
+		if($scope.activeTournamentId) {
+			var getTournamentPromise = tournamentMgmt.getTournament($scope.activeTournamentId);
+			getTournamentPromise.then(function(tournamentData) {
+				updateActiveTournamentBalance(tournamentData, $scope.customerId);
+			});
 		}
+		$scope.showHistory();
+	}
 
+	function onGetTournaments(currentTournamentsData) {
+		$scope.currentTournaments = currentTournamentsData;
 
-		$scope.submitWager = function(activeTournamentId) {
-			if(!$scope.customerId || !$scope.customer.id) {
-				layoutMgmt.logIn();
-			} else {
-				var customerId = $scope.customerId || $scope.customer.id;
-				var tournamentId = activeTournamentId;
-				var wagerAbbrev = getWagerAbbrev($scope.wager);
-				// wager schema
-				var wagerSubmission = {
-					tournamentId: tournamentId,
-					customerId: customerId,
-					trackRaceId: $scope.trId,
-					finalRaceId: $scope.finalRaceId,
-					wagerPool: $scope.wager,
-					wagerAbbrev: wagerAbbrev,
-					legs: $scope.legs,
-					parts: $scope.parts,
-					wagerSelections: $scope.formattedRunners,
-					wagerAmount: $scope.wagerData.amount,
-					wagerTotal: $scope.ticketCost
-				}
-				wagerMgmt.submitWager(wagerSubmission).then(function(response) {
-					$scope.tabShow = 'wagerResponse';
-					if(response.data.success) { 
-						$scope.successfulWager = response.data.confirmedWager;
-						$scope.wagerError = '';
-						var getTournamentPromise = tournamentMgmt.getTournament(activeTournamentId);
-						getTournamentPromise.then(function(tournamentData) {
-							updateActiveTournamentBalance(tournamentData, customerId);
-						});
-					} else {
-						if(response.data.failMsg === 'Incomplete Wager Data') {
-							$scope.successfulWager = '';
-							$scope.wagerError = 'General Wager Error - Please Refresh Your Browser';
-							if(response.data.missingPcs.length < 2 && response.data.missingPcs.indexOf('wagerAmount') >=0) {
-								$scope.wagerError = 'Please Select a Wager Amount';
-							}
-						} else {
-							$scope.wagerError = response.data.failMsg;
-						}
-					}
+		customerMgmt.getSession().then(function(sessionData) {
+
+			if(sessionData.customerId) {
+				$rootScope.customerId = sessionData.customerId;
+				$scope.customerId = $rootScope.customerId;
+				$scope.showLogin = false;
+				$scope.showSignup = false;
+				$scope.showLogout = true;
+
+				var getCustomerPromise = customerMgmt.getCustomer($scope.customerId);
+				getCustomerPromise.then(function(customer) {
+					$scope.customer = customer;
 				});
+
+			} else {
+				$scope.showLogin = true;
+				$scope.showSignup = true;
+				$scope.showLogout = false;
+			}
+
+			var tournaments = [];
+			$scope.currentTournaments.forEach(function(tournament) {
+				var tournamentData = {};
+				tournamentData.id = tournament.id;
+				tournamentData.name = tournament.name;
+				tournamentData.entryFee = tournament.entryFee;
+				tournamentData.siteFee = tournament.siteFee;
+				tournamentData.customersCount = tournament.customers.length;
+				tournamentData.max = tournament.max;
+				if(tournament.closed) {
+					if(tournament.scored) {
+						tournamentData.tournamentStatus = 'Final';
+					} else {
+						tournamentData.tournamentStatus = 'In Progress';
+					}
+				} else {
+					if(tournament.customers.length == tournament.max) {
+						tournamentData.tournamentStatus = 'Full';
+					} else {
+						tournamentData.tournamentStatus = 'Registering';
+					}
+				}
+				tournaments.push(tournamentData);
+			});
+			$scope.tournamentsData = tournaments;
+
+			var tournamentId = $routeParams.id
+			var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+			getTournamentPromise.then(function(tournament) {
+				$scope.setActiveTournament(tournament);
+			});
+
+		});
+	}
+
+	///
+	// Balance methods
+	///
+	
+	function updateBalance() {
+		var getSessionPromise = customerMgmt.getSession();
+		getSessionPromise.then(function(sessionData) {
+			if(sessionData.customerId) {
+				var getCustomerPromise = customerMgmt.getCustomer(sessionData.customerId);
+				getCustomerPromise.then(function(customer) {
+					$scope.customer = customer;
+				});
+			}
+		});
+	}
+
+	function updateActiveTournamentBalance(tournamentData, customerId) {
+		var customer = _.find(tournamentData.customers, {
+			customerId: customerId
+		});
+		$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
+	}
+
+
+	///
+	// Wager helpers
+	///
+	
+	function getWagerAbbrev(wager) {
+		return wagerAbbrevMap[wager];
+	}
+
+
+	///
+	// View methods
+	///
+
+	function showTrack(trackId) {
+		$scope.marketingShow = false;
+		$scope.trackShow = true;
+		$scope.showTrackRace(1, false);
+	}
+
+	function showTrackRace(raceNum, override) {
+		var trackRaceCount = $scope.track.races.length;
+		$scope.track.races.forEach(function(race) {
+			if(race.number == raceNum) {
+				if(!race.closed || override) {
+					$scope.race = race;
+					$scope.raceNum = raceNum;
+					$scope.trId = $scope.track.id+'-'+raceNum;
+					$scope.showRaceWager(raceNum, 'Win', 2);
+				} else {
+					raceNum ++;
+					if(raceNum > trackRaceCount) {
+						override = true;
+						$scope.showTrackRace(trackRaceCount, true);
+					} else {
+						$scope.showTrackRace(raceNum, false);
+					}
+				}
+			}
+		});
+	}
+
+	function showLeg(legNum) {
+		$scope.legShow = legNum;
+	}
+
+	function showRaceWager(raceNumber, wager, min) {
+		$scope.clearSelectedRunners();
+		$scope.selectedWager = wager;
+		$scope.wagerTmpl = wager;
+		$scope.wager = wager;
+
+		var track = $scope.track;
+
+		var races = [];
+		if(legMap[wager] < 2) {
+			$scope.track.races.forEach(function(race) {
+				if(race.number == raceNumber) {
+					races.push(race);
+				}
+			});
+		} else {
+			races.push(
+				$.grep(track.races, function(e) { 
+					return e.number == raceNumber; 
+				})[0]
+			);
+			var nextLeg = races[0].number;
+			while(races.length < legMap[wager]) {
+				nextLeg ++;
+				races.push(
+					$.grep(track.races, function(e) { 
+						return e.number == nextLeg; 
+					})[0]
+				);
 			}
 		}
 
-		$scope.cancelWager = function(wagerId) {
-			if(!$scope.customerId) {
-				layoutMgmt.logIn();
+		var wagerRunners = [];
+		races.forEach(function(race) {
+			wagerRunners.push(race.entries);
+		});
+
+		$scope.legs = legMap[wager];
+		$scope.parts = partMap[wager];
+
+		$scope.singleDesc = wager;
+
+		$scope.wagerRunners = wagerRunners;
+
+		$scope.showLeg(1);
+
+		$scope.amountOptions = {
+			repeatSelect: null,
+			availableOptions: amountMap[min]
+		}
+	}
+
+	function updateSelectedRunnersDisplay() {
+console.log('$scope.updateSelectedRunnersDisplay() called');
+		$scope.formattedRunners = '';
+		$scope.multiplier = 1;
+		if($scope.legs > 1) {
+			var trIdPcs = $scope.trId.split('-');
+			$scope.finalRaceId = trIdPcs[0] + '-' + (parseInt(trIdPcs[1]) + (parseInt($scope.legs) - 1));
+			var trueLeg1Count = 1;
+			if($scope.leg1Runners && ($scope.leg1Runners.length > 0)) {
+				var first = true;
+				$scope.leg1Runners.forEach(function(runner) {
+					if(runner > 0) {
+						if(first) {
+							$scope.formattedRunners += runner;
+							first = false;
+						} else {
+							$scope.formattedRunners += ',' + runner;
+							trueLeg1Count ++;
+						}
+					}
+				});
+				$scope.multiplier = $scope.multiplier * trueLeg1Count;
+			} 
+			$scope.formattedRunners += ' / ';
+			var trueLeg2Count = 1;
+			if($scope.leg2Runners && ($scope.leg2Runners.length > 0)) {
+				var first = true;
+				$scope.leg2Runners.forEach(function(runner) {
+					if(runner > 0) {
+						if(first) {
+							$scope.formattedRunners += runner;
+							first = false;
+						} else {
+							$scope.formattedRunners += ',' + runner;
+							trueLeg2Count ++;
+						}
+					}
+				});
+				$scope.multiplier = $scope.multiplier * trueLeg2Count;
+			}
+			if($scope.legs > 2) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg3Count = 1;
+				if($scope.leg3Runners && ($scope.leg3Runners.length > 0)) {
+					var first = true;
+					$scope.leg3Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg3Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg3Count;
+				} 
+			}
+			if($scope.legs > 3) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg4Count = 1;
+				if($scope.leg4Runners && ($scope.leg4Runners.length > 0)) {
+					var first = true;
+					$scope.leg4Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg4Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg4Count;
+				} 
+			}
+			if($scope.legs > 4) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg5Count = 1;
+				if($scope.leg5Runners && ($scope.leg5Runners.length > 0)) {
+					var first = true;
+					$scope.leg5Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg5Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg5Count;
+				} 
+			}
+			if($scope.legs > 5) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg6Count = 1;
+				if($scope.leg6Runners && ($scope.leg6Runners.length > 0)) {
+					var first = true;
+					$scope.leg6Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg6Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg6Count;
+				} 
+			}
+			if($scope.legs > 6) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg7Count = 1;
+				if($scope.leg7Runners && ($scope.leg7Runners.length > 0)) {
+					var first = true;
+					$scope.leg7Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg7Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg7Count;
+				} 
+			}
+			if($scope.legs > 7) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg8Count = 1;
+				if($scope.leg8Runners && ($scope.leg8Runners.length > 0)) {
+					var first = true;
+					$scope.leg8Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg8Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg8Count;
+				} 
+			}
+			if($scope.legs > 8) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg9Count = 1;
+				if($scope.leg9Runners && ($scope.leg9Runners.length > 0)) {
+					var first = true;
+					$scope.leg9Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg9Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg9Count;
+				} 
+			}
+			if($scope.legs > 9) {
+				$scope.formattedRunners += ' / ';
+				var trueLeg10Count = 1;
+				if($scope.leg10Runners && ($scope.leg10Runners.length > 0)) {
+					var first = true;
+					$scope.leg10Runners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+								trueLeg10Count ++;
+							}
+						}
+					});
+					$scope.multiplier = $scope.multiplier * trueLeg10Count;
+				} 
+			}
+			if($scope.wagerData.amount) {
+				$scope.ticketCost = ($scope.multiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
 			} else {
-				var cancelWagerPromise = wagerMgmt.cancelWager(wagerId);
-				cancelWagerPromise.then(function(response) {
-					$scope.tabShow = 'wagerResponse';
-					$scope.successfulWager = response[0];
-					var tournamentId = $scope.successfulWager.tournamentId;
-					var customerId = $scope.successfulWager.customerId;
-					var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+				$scope.ticketCost = ($scope.multiplier * 2).toFixed(2);
+			}
+		} else {
+			$scope.finalRaceId = $scope.trId;
+			var firstRunnersTrueArray = [];
+			var secondRunnersTrueArray = [];
+			var thirdRunnersTrueArray = [];
+			var fourthRunnersTrueArray = [];
+			var fifthRunnersTrueArray = [];
+			if(partMap[$scope.wager] > 1) {
+				if($scope.firstRunners && ($scope.firstRunners.length > 0)) {
+					var first = true;
+					$scope.firstRunners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+							}
+							firstRunnersTrueArray.push(runner);
+						}
+					});
+				} 
+				$scope.formattedRunners += ' / ';
+				if($scope.secondRunners && ($scope.secondRunners.length > 0)) {
+					var first = true;
+					$scope.secondRunners.forEach(function(runner) {
+						if(runner > 0) {
+							if(first) {
+								$scope.formattedRunners += runner;
+								first = false;
+							} else {
+								$scope.formattedRunners += ',' + runner;
+							}
+							secondRunnersTrueArray.push(runner);
+						}
+					});
+				}
+				if(partMap[$scope.wager] > 2) {
+					$scope.formattedRunners += ' / ';
+					if($scope.thirdRunners && ($scope.thirdRunners.length > 0)) {
+						var first = true;
+						$scope.thirdRunners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
+								thirdRunnersTrueArray.push(runner);
+							}
+						});
+					}
+				}
+				if(partMap[$scope.wager] > 3) {
+					$scope.formattedRunners += ' / ';
+					if($scope.fourthRunners && ($scope.fourthRunners.length > 0)) {
+						var first = true;
+						$scope.fourthRunners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
+								fourthRunnersTrueArray.push(runner);
+							}
+						});
+					}
+				}
+				if(partMap[$scope.wager] > 4) {
+					$scope.formattedRunners += ' / ';
+					if($scope.fifthRunners && ($scope.fifthRunners.length > 0)) {
+						var first = true;
+						$scope.fifthRunners.forEach(function(runner) {
+							if(runner > 0) {
+								if(first) {
+									$scope.formattedRunners += runner;
+									first = false;
+								} else {
+									$scope.formattedRunners += ',' + runner;
+								}
+								fifthRunnersTrueArray.push(runner);
+							}
+						});
+					}
+				}
+				var multiPartMultiplier = getMultiMulti(
+					firstRunnersTrueArray,
+					secondRunnersTrueArray,
+					thirdRunnersTrueArray,
+					fourthRunnersTrueArray,
+					fifthRunnersTrueArray
+				);
+				if(!multiPartMultiplier) {
+					multiPartMultiplier = 1;
+				}
+				if($scope.wagerData.amount) {
+					$scope.ticketCost = (multiPartMultiplier * parseFloat($scope.wagerData.amount)).toFixed(2);
+				} else {
+					$scope.ticketCost = (multiPartMultiplier * 2).toFixed(2);
+				}
+			} else {
+				// WPS
+				var first = true;
+				var selectedRunnerCount = 1;
+				$scope.selectedRunners.forEach(function(runner) {
+					if(runner > 0) {
+						if(first) {
+							$scope.formattedRunners = runner;
+							first = false;
+						} else {
+							$scope.formattedRunners += ',' + runner;
+							selectedRunnerCount ++;
+						}
+					}
+				});
+				if($scope.wagerData.amount) {
+					$scope.ticketCost = (selectedRunnerCount * parseFloat($scope.wagerData.amount)).toFixed(2);
+				} else {
+					$scope.ticketCost = (selectedRunnerCount * 2).toFixed(2);
+				}
+			}
+		}
+	}
+
+	function submitWager(activeTournamentId) {
+		if(!$scope.customerId || !$scope.customer.id) {
+			layoutMgmt.logIn();
+		} else {
+			var customerId = $scope.customerId || $scope.customer.id;
+			var tournamentId = activeTournamentId;
+			var wagerAbbrev = getWagerAbbrev($scope.wager);
+			// wager schema
+			var wagerSubmission = {
+				tournamentId: tournamentId,
+				customerId: customerId,
+				trackRaceId: $scope.trId,
+				finalRaceId: $scope.finalRaceId,
+				wagerPool: $scope.wager,
+				wagerAbbrev: wagerAbbrev,
+				legs: $scope.legs,
+				parts: $scope.parts,
+				wagerSelections: $scope.formattedRunners,
+				wagerAmount: $scope.wagerData.amount,
+				wagerTotal: $scope.ticketCost
+			}
+			wagerMgmt.submitWager(wagerSubmission).then(function(response) {
+				$scope.tabShow = 'wagerResponse';
+				if(response.data.success) { 
+					$scope.successfulWager = response.data.confirmedWager;
+					$scope.wagerError = '';
+					var getTournamentPromise = tournamentMgmt.getTournament(activeTournamentId);
 					getTournamentPromise.then(function(tournamentData) {
 						updateActiveTournamentBalance(tournamentData, customerId);
 					});
-				});
-			}
-		}
-
-		$scope.scoreRace = function(trdId, raceNum) {
-			$window.location.href = location.origin + "/app/scoreRace/" + trdId + '-' + raceNum;
-		};
-
-		$scope.showHistory = function() {
-			if(!$scope.customerId && !$scope.customer) {
-				$scope.wagerHistory = [{race: 'No Wagers'}];
-				$scope.tabShow = 'wagerHistory';
-			} else {
-				$scope.tabShow = 'wagerHistory';
-				var customerId = $scope.customerId || $scope.customer.id;
-				var dateObj = new Date();
-				var thisYear = dateObj.getFullYear();
-				var thisMonth = dateObj.getMonth();
-				var thisDay = dateObj.getDate();
-				var todayDate = new Date(thisYear, thisMonth, thisDay);
-				var todayMill = todayDate.getTime();
-				var params = customerId + '-' + todayMill;
-				var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
-				getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
-					var formattedHistory = [];
-					wagerHistory.forEach(function(wager) {
-						var formattedWager = {};
-						formattedWager.id = wager.id;
-						formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
-						formattedWager.track = wager.track;
-						var trIdPcs = wager.trackRaceId.split('-');
-						var trackId = trIdPcs[0];
-						var raceNumber = trIdPcs[1];
-						var getTrdPromise = trdMgmt.getTrd(trackId);
-						getTrdPromise.then(function(trdData) {
-							formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
-						});
-						formattedWager.amount = wager.wagerAmount;
-						formattedWager.type = wager.wagerAbbrev;
-						formattedWager.selection = wager.wagerSelections;
-						formattedWager.total = wager.wagerTotal;
-						var result;
-						if(wager.scored) {
-							result = wager.result.toFixed(2);
-						} else {
-							if(wager.cancelled) {
-								result = 'C';
-							} else {
-								if(wager.raceClosed) {
-									result = 'Pending';
-								} else {
-									result = 'Cancel';
-								}
-							}
+				} else {
+					if(response.data.failMsg === 'Incomplete Wager Data') {
+						$scope.successfulWager = '';
+						$scope.wagerError = 'General Wager Error - Please Refresh Your Browser';
+						if(response.data.missingPcs.length < 2 && response.data.missingPcs.indexOf('wagerAmount') >=0) {
+							$scope.wagerError = 'Please Select a Wager Amount';
 						}
-						formattedWager.result = result;
-						formattedHistory.push(formattedWager);
-					});
-					if(formattedHistory && formattedHistory.length > 0) {
-						$scope.wagerHistory = formattedHistory;
-					}	else {
-						$scope.wagerHistory = [{race: 'No Wagers'}];
+					} else {
+						$scope.wagerError = response.data.failMsg;
 					}
-				});
-			}
-		};
-
-		$scope.showHorseCenter = function() {
-			$scope.leaderboardsShow = false;
-			$scope.tournamentsShow = false;
-			$scope.horseCenterShow = true;
-			$scope.showTournament = false;
-			$scope.showLeaders = false;
-		};
-
-		$scope.showLeaderboards = function() {
-			$scope.horseCenterShow = false;
-			$scope.tournamentsShow = false;
-			$scope.leaderboardsShow = true;
-			$scope.showTournament = false;
-			$scope.showLeaders = false;
-		};
-
-		$scope.showTournaments = function() {
-			$scope.horseCenterShow = false;
-			$scope.leaderboardsShow = false;
-			$scope.tournamentsShow = true;
-			$scope.showTournament = false;
-			$scope.showLeaders = false;
-		};
-
-		$scope.showConfirmation = function() {
-			if(!$scope.customerId) {
-				layoutMgmt.logIn();
-			} else {
-				$scope.tabShow === 'wagerResponse';
-			}
-		};
-
-		$scope.closeRace = function(raceNum) {
-			var trackData = $scope.track;
-			trackData.races.forEach(function(race) {
-				if(race.number == raceNum) {
-					race.closed = true;
 				}
 			});
-			var updateTrdDataPromise = trdMgmt.updateTrd(trackData);
-			updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
-				var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
-				closeWagersPromise.then(function(closeWagersPromiseResponse) {
-					if(raceNum < 2) {
-						var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
-						closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
-							$window.location.href = location.origin + "/app/";
-						});
-					} else {
-						$window.location.href = location.origin + "/app/";
-					}
+		}
+	}
+
+	function cancelWager(wagerId) {
+		if(!$scope.customerId) {
+			layoutMgmt.logIn();
+		} else {
+			var cancelWagerPromise = wagerMgmt.cancelWager(wagerId);
+			cancelWagerPromise.then(function(response) {
+				$scope.tabShow = 'wagerResponse';
+				$scope.successfulWager = response[0];
+				var tournamentId = $scope.successfulWager.tournamentId;
+				var customerId = $scope.successfulWager.customerId;
+				var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
+				getTournamentPromise.then(function(tournamentData) {
+					updateActiveTournamentBalance(tournamentData, customerId);
 				});
 			});
-		};
-
-		$scope.showResults = function(trdId, raceNum) {
-console.log('$scope.showResults() called with trdId: '+trdId+' and race number: '+raceNum);
 		}
+	}
 
-		$scope.showTournamentDetails = function(tournyId) {
-console.log('$scope.showTournamentDetails() called');
+	function scoreRace(trdId, raceNum) {
+		$location.path('/scoreRace/' + trdId + '-' + raceNum);
+	}
+
+	function showHistory() {
+		if(!$scope.customerId && !$scope.customer) {
+			$scope.wagerHistory = [{race: 'No Wagers'}];
+			$scope.tabShow = 'wagerHistory';
+		} else {
+			$scope.tabShow = 'wagerHistory';
+			var customerId = $scope.customerId || $scope.customer.id;
 			var dateObj = new Date();
-			var now = dateObj.toString();
-console.log('now: '+now);
-			var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
-			getTournamentPromise.then(function(tournamentData) {
-console.log('getTournamentPromise called');
-				$scope.tournamentData = tournamentData;
-			});
-			if(!$scope.showLeaders) {
-				$scope.showTournament = true;
-			}
-		}
-
-		$scope.showTournamentLeaders = function(tournyId) {
-console.log('$scope.showTournamentLeaders() called');
-			$scope.showLeaders = true;
-			var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
-			getLeadersPromise.then(function(leadersData) {
-console.log('getLeadersPromise called');
-				$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
-				leadersData.pop();
-				var leaderBoardData = [];
-				leadersData.forEach(function(leader) {
-					var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
-					getCustomerPromise.then(function(customerData) {
-console.log('getCustomerPromise called');
-						var thisLeader = {};
-						thisLeader.id = leader.customerId;
-						thisLeader.fName = customerData.fName;
-						thisLeader.lName = customerData.lName;
-						thisLeader.city = customerData.city;
-						thisLeader.username = customerData.username;
-						thisLeader.credits = leader.credits;
-						leaderBoardData.push(thisLeader);
+			var thisYear = dateObj.getFullYear();
+			var thisMonth = dateObj.getMonth();
+			var thisDay = dateObj.getDate();
+			var todayDate = new Date(thisYear, thisMonth, thisDay);
+			var todayMill = todayDate.getTime();
+			var params = customerId + '-' + todayMill;
+			var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
+			getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
+				var formattedHistory = [];
+				wagerHistory.forEach(function(wager) {
+					var formattedWager = {};
+					formattedWager.id = wager.id;
+					formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
+					formattedWager.track = wager.track;
+					var trIdPcs = wager.trackRaceId.split('-');
+					var trackId = trIdPcs[0];
+					var raceNumber = trIdPcs[1];
+					var getTrdPromise = trdMgmt.getTrd(trackId);
+					getTrdPromise.then(function(trdData) {
+						formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
 					});
+					formattedWager.amount = wager.wagerAmount;
+					formattedWager.type = wager.wagerAbbrev;
+					formattedWager.selection = wager.wagerSelections;
+					formattedWager.total = wager.wagerTotal;
+					var result;
+					if(wager.scored) {
+						result = wager.result.toFixed(2);
+					} else {
+						if(wager.cancelled) {
+							result = 'C';
+						} else {
+							if(wager.raceClosed) {
+								result = 'Pending';
+							} else {
+								result = 'Cancel';
+							}
+						}
+					}
+					formattedWager.result = result;
+					formattedHistory.push(formattedWager);
 				});
-				$scope.leadersData = leaderBoardData;
+				if(formattedHistory && formattedHistory.length > 0) {
+					$scope.wagerHistory = formattedHistory;
+				}	else {
+					$scope.wagerHistory = [{race: 'No Wagers'}];
+				}
 			});
-			$scope.showTournamentDetails(tournyId);
 		}
+	}
 
-		$scope.tournamentRegister = function(tournyId) {
-console.log('$scope.tournamentRegister() called');
+	function showHorseCenter() {
+		$scope.leaderboardsShow = false;
+		$scope.tournamentsShow = false;
+		$scope.horseCenterShow = true;
+		$scope.showTournament = false;
+		$scope.showLeaders = false;
+	}
+
+	function showLeaderboards() {
+		$scope.horseCenterShow = false;
+		$scope.tournamentsShow = false;
+		$scope.leaderboardsShow = true;
+		$scope.showTournament = false;
+		$scope.showLeaders = false;
+	}
+
+	function showTournaments() {
+		$scope.horseCenterShow = false;
+		$scope.leaderboardsShow = false;
+		$scope.tournamentsShow = true;
+		$scope.showTournament = false;
+		$scope.showLeaders = false;
+	}
+
+	function showConfirmation() {
+		if(!$scope.customerId) {
+			layoutMgmt.logIn();
+		} else {
+			$scope.tabShow === 'wagerResponse';
+		}
+	};
+
+	function closeRace(raceNum) {
+		var trackData = $scope.track;
+		trackData.races.forEach(function(race) {
+			if(race.number == raceNum) {
+				race.closed = true;
+			}
+		});
+		var updateTrdDataPromise = trdMgmt.updateTrd(trackData);
+		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+			var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
+			closeWagersPromise.then(function(closeWagersPromiseResponse) {
+				if(raceNum < 2) {
+					var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
+					closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
+						$location.path('/');
+					});
+				} else {
+					$location.path('/');
+				}
+			});
+		});
+	};
+
+	function showResults(trdId, raceNum) {
+console.log('$scope.showResults() called with trdId: '+trdId+' and race number: '+raceNum);
+	}
+
+	function showTournamentDetails(tournyId) {
+console.log('$scope.showTournamentDetails() called');
+		var dateObj = new Date();
+		var now = dateObj.toString();
+console.log('now: '+now);
+		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
+		getTournamentPromise.then(function(tournamentData) {
+console.log('getTournamentPromise called');
+			$scope.tournamentData = tournamentData;
+		});
+		if(!$scope.showLeaders) {
+			$scope.showTournament = true;
+		}
+	}
+
+	function showTournamentLeaders(tournyId) {
+console.log('$scope.showTournamentLeaders() called');
+		$scope.showLeaders = true;
+		var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
+		getLeadersPromise.then(function(leadersData) {
+console.log('getLeadersPromise called');
+			$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
+			leadersData.pop();
+			var leaderBoardData = [];
+			leadersData.forEach(function(leader) {
+				var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
+				getCustomerPromise.then(function(customerData) {
+console.log('getCustomerPromise called');
+					var thisLeader = {};
+					thisLeader.id = leader.customerId;
+					thisLeader.fName = customerData.fName;
+					thisLeader.lName = customerData.lName;
+					thisLeader.city = customerData.city;
+					thisLeader.username = customerData.username;
+					thisLeader.credits = leader.credits;
+					leaderBoardData.push(thisLeader);
+				});
+			});
+			$scope.leadersData = leaderBoardData;
+		});
+		$scope.showTournamentDetails(tournyId);
+	}
+
+	function tournamentRegister(tournyId) {
 // TODO debug this, including handling errors
-			if(!$scope.customerId) {
-				layoutMgmt.logIn();
-			} else {
-				var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
-				registerTournamentPromise.then(function(response) {
+		if(!$scope.customerId) {
+			layoutMgmt.logIn();
+		} else {
+			var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
+			registerTournamentPromise.then(function(response) {
 console.log('response.data:');
 console.log(response.data);
-				});
-			}
-		}
-
-		$scope.setActiveTournament = function(tournament) {
-			$scope.activeTournament = tournament;
-			var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
-			getTrdPromise.then(function(trdData) {
-				var track = trdData;
-				$scope.track = track;
-				$scope.activeTournamentId = tournament.id;
-				$scope.showTrack($scope.track.id);
 			});
-			if($scope.customerId || ($scope.customer && $scope.customer.id)) {
-				var customerId = $scope.customerId || $scope.customer.id;
-				updateActiveTournamentBalance(tournament, customerId);
-			} else {
-				$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
-			}	
-			$scope.showHistory();
 		}
-
-		$scope.changeActiveTournament = function(tournament) {
-			$window.location.href = location.origin + "/app/tournament/" + tournament.id;
-		}
-
 	}
+
+	function setActiveTournament(tournament) {
+		$scope.activeTournament = tournament;
+		var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
+		getTrdPromise.then(function(trdData) {
+			var track = trdData;
+			$scope.track = track;
+			$scope.activeTournamentId = tournament.id;
+			$scope.showTrack($scope.track.id);
+		});
+		if($scope.customerId || ($scope.customer && $scope.customer.id)) {
+			var customerId = $scope.customerId || $scope.customer.id;
+			updateActiveTournamentBalance(tournament, customerId);
+		} else {
+			$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
+		}	
+		$scope.showHistory();
+	}
+
+	function changeActiveTournament(tournament) {
+		$location.path('/tournament/' + tournament.id);
+	}
+
+	function raceNumberTabClass(race) {
+		if(race.number != $scope.raceNum) {
+			return {raceNumberTabOff: true};
+		}
+
+		return {raceNumberTabOn: true};
+	}
+
+	function wagerTypeTabClass(wager) {
+		if($scope.wager === wager.wager) {
+			return {
+				wagerTypeTabOn: true,
+			};
+		}
+
+		return {
+			wagerTypeTabOff: true,
+		};
+	}
+
+	function wagerTypeTabStyle(wager) {
+		var isWager = $scope.wager === wager.wager;
+		var isShort = _.includes(['Tri', 'DD'], wager.abbrev);
+
+		if(isShort) {
+			return {
+				left: '10px',
+				position: 'relative',
+			};
+		}
+
+		if(isWager) {
+			return {
+				left: '-2px',
+				position: 'relative',
+			};
+		}
+
+		return {};
+	}
+
+
+	///
+	// Input validation
+	///
+
+	function getMultiMulti(firsts, seconds, thirds, fourths, fifths) {
+		var usedNumbers = [];
+		var wagerCombos = [];
+		var multiple = 0;
+
+		if(
+			firsts.length > 0 && 
+			seconds.length > 0 &&
+			thirds.length > 0 &&
+			fourths.length > 0 &&
+			fifths.length > 0 &&
+			$scope.wager === 'Pentafecta' &&
+			multiple < 1
+			) {
+			firsts.forEach(function(first) {
+				usedNumbers.push(first);
+				seconds.forEach(function(second) {
+					if(usedNumbers.indexOf(second) < 0) {
+						usedNumbers.push(second);
+						thirds.forEach(function(third) {
+							if(usedNumbers.indexOf(third) < 0) {
+								usedNumbers.push(third);
+								fourths.forEach(function(fourth) {
+									if(usedNumbers.indexOf(fourth) < 0) {
+										usedNumbers.push(fourth);
+										fifths.forEach(function(fifth) {
+											if(usedNumbers.indexOf(fifth) < 0) {
+												multiple ++;
+												usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2], usedNumbers[3]];
+											}
+										});
+										usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2]];
+									}
+								});
+								usedNumbers = [usedNumbers[0], usedNumbers[1]];
+							}
+						});
+						usedNumbers = [usedNumbers[0]];
+					}
+				});
+				usedNumbers = [];
+			});
+		}
+		if(
+			firsts.length > 0 && 
+			seconds.length > 0 &&
+			thirds.length > 0 &&
+			fourths.length > 0 &&
+			$scope.wager === 'Superfecta' &&
+			multiple < 1
+			) {
+			firsts.forEach(function(first) {
+				usedNumbers.push(first);
+				seconds.forEach(function(second) {
+					if(usedNumbers.indexOf(second) < 0) {
+						usedNumbers.push(second);
+						thirds.forEach(function(third) {
+							if(usedNumbers.indexOf(third) < 0) {
+								usedNumbers.push(third);
+								fourths.forEach(function(fourth) {
+									if(usedNumbers.indexOf(fourth) < 0) {
+										multiple ++;
+										usedNumbers = [usedNumbers[0], usedNumbers[1], usedNumbers[2]];
+									}
+								});
+								usedNumbers = [usedNumbers[0], usedNumbers[1]];
+							}
+						});
+						usedNumbers = [usedNumbers[0]];
+					}
+				});
+				usedNumbers = [];
+			});
+		}
+		if(
+			firsts.length > 0 && 
+			seconds.length > 0 &&
+			thirds.length > 0 &&
+			$scope.wager === 'Trifecta' &&
+			multiple < 1
+			) {
+			firsts.forEach(function(first) {
+				usedNumbers.push(first);
+				seconds.forEach(function(second) {
+					if(usedNumbers.indexOf(second) < 0) {
+						usedNumbers.push(second);
+						thirds.forEach(function(third) {
+							if(usedNumbers.indexOf(third) < 0) {
+								usedNumbers.push(third);
+								multiple ++;
+								usedNumbers = [usedNumbers[0], usedNumbers[1]];
+							}
+						});
+						usedNumbers = [usedNumbers[0]];
+					}
+				});
+				usedNumbers = [];
+			});
+		}
+		if(
+			firsts.length > 0 && 
+			seconds.length > 0 &&
+			$scope.wager === 'Exacta' &&
+			multiple < 1
+			) {
+			firsts.forEach(function(first) {
+				usedNumbers.push(first);
+				seconds.forEach(function(second) {
+					if(usedNumbers.indexOf(second) < 0) {
+						multiple ++;
+					}
+				});
+				usedNumbers = [];
+			});
+		}
+		return multiple;
+	}
+
+
+	///
+	// Debugging methods
+	///
+	
+	function debugLog(msg) {
+		var args = Array.prototype.slice.call(arguments);
+		console.log.apply(console, args);
+	}
+}
+
 }());

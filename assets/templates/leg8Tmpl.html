@@ -13,7 +13,10 @@
 																		ng-disabled="!entry.active"
 																		ng-show="!race.closed"
 																	>
-																	<ng-include src="'/templates/entryNumsPostsTmpl.html'"></ng-include>
+																	<entry-nums-posts
+																		entry="entry"
+																		race="race"
+																	></entry-nums-posts>
 																</div>
-																<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
+																<entries entry="entry"></entries>
 															</div>

@@ -4,7 +4,8 @@
 	var app = angular.module('app', [
 		'ngRoute', 'ui.bootstrap', 'angularPayments',
 		'angulartics', 'angulartics.google.analytics',
-		'uiGmapgoogle-maps', 'bm.bsTour', 'ngLodash'
+		'uiGmapgoogle-maps', 'bm.bsTour', 'ngLodash',
+		'angularSpinner',
 	]);
 	var $ = jQuery;
 
@@ -19,14 +20,16 @@
 		'$httpProvider',
 		'$analyticsProvider',
 		'uiGmapGoogleMapApiProvider',
-		'clientConfig'
+		'clientConfig',
+		'usSpinnerConfigProvider',
 	];
 
 	function appConfig(
 		$httpProvider,
 		$analyticsProvider,
 		uiGmapGoogleMapApiProvider,
-		clientConfig
+		clientConfig,
+		usSpinnerConfigProvider
 	) {
 		$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -42,6 +45,8 @@
 			v: '3.17',
 			libraries: 'weather,geometry,visualization'
 		});
+
+		usSpinnerConfigProvider.setDefaults({color: 'white'});
 	}
 
 

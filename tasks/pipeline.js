@@ -45,6 +45,8 @@ var jsFilesToInject = [
 	'packages/bootstrap/dist/js/bootstrap.min.js',
 	'packages/bootstrap-tour/build/js/bootstrap-tour.min.js',
 	'packages/angular-bootstrap-tour/dist/angular-bootstrap-tour.min.js',
+	'packages/spin.js/spin.min.js',
+	'packages/angular-spinner/angular-spinner.min.js',
 	'app.js',
 	'local.js',
 	// 'datatables.js',

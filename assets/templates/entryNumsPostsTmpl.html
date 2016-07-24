@@ -1,43 +1,17 @@
-													<label 
-														class="raceDetailsSmaller"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.altRunner && entry.post && (entry.post !== entry.number)"
-													>
-														{{entry.number}} ({{entry.post}})
-													</label>
-													<label 
-														class="raceDetailsSmaller"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.altRunner && !entry.post || (entry.post === entry.number)"
-													>
-														{{entry.number}}
-													</label>
-													<br/ ng-show="entry.altRunner">
-													<label 
-														class="raceDetailsSmaller"
-														style="top: -2px; left: 17px; position: relative;"
-														ng-show="entry.altRunner.post && !race.closed && (entry.altRunner.post !== entry.altRunner.number)"
-													>
-														{{entry.altRunner.number}} ({{entry.altRunner.post}})
-													</label>
-													<label 
-														class="raceDetailsSmaller"
-														style="top: -2px; left: 17px; position: relative;"
-														ng-show="!entry.altRunner.post && !race.closed || (entry.altRunner.post === entry.altRunner.number)"
-													>
-														{{entry.altRunner.number}}
-													</label>
-													<label 
-														class="raceDetailsSmaller"
-														style="top: -2px; position: relative;"
-														ng-show="entry.altRunner.post && race.closed && (entry.altRunner.post !== entry.altRunner.number)"
-													>
-														{{entry.altRunner.number}} ({{entry.altRunner.post}})
-													</label>
-													<label 
-														class="raceDetailsSmaller"
-														style="top: -2px; position: relative;"
-														ng-show="!entry.altRunner.post && race.closed || (entry.altRunner.post === entry.altRunner.number)"
-													>
-														{{entry.altRunner.number}}
-													</label>
+<label
+	class="raceDetailsSmaller"
+	style="top: -2px; position: relative;"
+>
+	{{getDetail(entry)}}
+</label>
+
+<br ng-show="entry.altRunner">
+
+<label
+	class="raceDetailsSmaller"
+	style="top: -2px; position: relative;"
+	ng-style="getAltRunnerStyle()"
+	ng-if="entry.altRunner"
+>
+	{{getDetail(entry.altRunner)}}
+</label>

@@ -1,260 +1,260 @@
-											<div 
-												class="row"
-												ng-show="wager === 'Exacta'"
-											>
-												<div class="col-md-2">
-													<span class="raceDetails">1</span>
-													<span 
-														class="raceDetails"
-														style="left: 6px; position: relative;"
-													>
-														2
-													</span>
-												</div>
-												<div class="col-md-4">
-													<span class="raceDetails">Runner</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Jockey</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Trainer</span>
-												</div>
-											</div>
-											<div 
-												class="row"
-												ng-show="wager === 'Trifecta'"
-											>
-												<div class="col-md-2">
-													<span class="raceDetails">1</span>
-													<span 
-														class="raceDetails"
-														style="left: 6px; position: relative;"
-													>
-															2
-													</span>
-													<span 
-														class="raceDetails"
-														style="left: 12px; position: relative;"
-													>
-														3
-													</span>
-												</div>
-												<div class="col-md-4">
-													<span class="raceDetails">Runner</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Jockey</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Trainer</span>
-												</div>
-											</div>
-											<div 
-												class="row"
-												ng-show="wager === 'Superfecta'"
-											>
-												<div class="col-md-2">
-													<span class="raceDetails">1</span>
-													<span 
-														class="raceDetails"
-														style="left: 6px; position: relative;"
-													>
-															2
-													</span>
-													<span 
-														class="raceDetails"
-														style="left: 12px; position: relative;"
-													>
-														3
-													</span>
-													<span 
-														class="raceDetails"
-														style="left: 18px; position: relative;"
-													>
-														4
-													</span>
-												</div>
-												<div class="col-md-4">
-													<span class="raceDetails">Runner</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Jockey</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Trainer</span>
-												</div>
-											</div>
-											<div 
-												class="row"
-												ng-show="wager === 'Pentafecta'"
-											>
-												<div class="col-md-2">
-													<span class="raceDetails">1</span>
-													<span class="raceDetails">2</span>
-													<span class="raceDetails">3</span>
-													<span class="raceDetails">4</span>
-													<span class="raceDetails">5</span>
-												</div>
-												<div class="col-md-4">
-													<span class="raceDetails">Runner</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Jockey</span>
-												</div>
-												<div class="col-md-3">
-													<span class="raceDetails">Trainer</span>
-												</div>
-											</div>
-											<div 
-												class="row"
-												ng-repeat="(idx, entry) in wagerRunners[0]"
-											>
-												<div 
-													class="col-md-2"
-													ng-show="wager === 'Exacta'"
-												>
-													<input 
-														type="checkbox"
-														ng-model="firstRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="secondRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-												</div>
-												<div 
-													class="col-md-2"
-													ng-show="wager === 'Trifecta'"
-												>
-													<input 
-														type="checkbox"
-														ng-model="firstRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="secondRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="thirdRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-												</div>
-												<div 
-													class="col-md-2"
-													ng-show="wager === 'Superfecta'"
-												>
-													<input 
-														type="checkbox"
-														ng-model="firstRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="secondRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="thirdRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="fourthRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-												</div>
-												<div 
-													class="col-md-2"
-													ng-show="wager === 'Pentafecta'"
-												>
-													<input 
-														type="checkbox"
-														ng-model="firstRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="secondRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="thirdRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="fourthRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-													<input 
-														type="checkbox"
-														ng-model="fifthRunners[idx]"
-														ng-true-value="{{entry.number}}"
-														ng-false-value="false"
-														ng-change="updateSelectedRunnersDisplay()"
-														ng-disabled="!entry.active"
-														ng-show="!race.closed"
-													>
-												</div>
-												<ng-include src="'/templates/entriesTmpl.html'"></ng-include>
-											</div>
+<div 
+	class="row"
+	ng-show="wager === 'Exacta'"
+>
+	<div class="col-md-2">
+		<span class="raceDetails">1</span>
+		<span 
+			class="raceDetails"
+			style="left: 6px; position: relative;"
+		>
+			2
+		</span>
+	</div>
+	<div class="col-md-4">
+		<span class="raceDetails">Runner</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Jockey</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Trainer</span>
+	</div>
+</div>
+<div 
+	class="row"
+	ng-show="wager === 'Trifecta'"
+>
+	<div class="col-md-2">
+		<span class="raceDetails">1</span>
+		<span 
+			class="raceDetails"
+			style="left: 6px; position: relative;"
+		>
+				2
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 12px; position: relative;"
+		>
+			3
+		</span>
+	</div>
+	<div class="col-md-4">
+		<span class="raceDetails">Runner</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Jockey</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Trainer</span>
+	</div>
+</div>
+<div 
+	class="row"
+	ng-show="wager === 'Superfecta'"
+>
+	<div class="col-md-2">
+		<span class="raceDetails">1</span>
+		<span 
+			class="raceDetails"
+			style="left: 6px; position: relative;"
+		>
+				2
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 12px; position: relative;"
+		>
+			3
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 18px; position: relative;"
+		>
+			4
+		</span>
+	</div>
+	<div class="col-md-4">
+		<span class="raceDetails">Runner</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Jockey</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Trainer</span>
+	</div>
+</div>
+<div 
+	class="row"
+	ng-show="wager === 'Pentafecta'"
+>
+	<div class="col-md-2">
+		<span class="raceDetails">1</span>
+		<span class="raceDetails">2</span>
+		<span class="raceDetails">3</span>
+		<span class="raceDetails">4</span>
+		<span class="raceDetails">5</span>
+	</div>
+	<div class="col-md-4">
+		<span class="raceDetails">Runner</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Jockey</span>
+	</div>
+	<div class="col-md-3">
+		<span class="raceDetails">Trainer</span>
+	</div>
+</div>
+<div 
+	class="row"
+	ng-repeat="(idx, entry) in wagerRunners[0]"
+>
+	<div 
+		class="col-md-2"
+		ng-show="wager === 'Exacta'"
+	>
+		<input 
+			type="checkbox"
+			ng-model="firstRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="secondRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+	</div>
+	<div 
+		class="col-md-2"
+		ng-show="wager === 'Trifecta'"
+	>
+		<input 
+			type="checkbox"
+			ng-model="firstRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="secondRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="thirdRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+	</div>
+	<div 
+		class="col-md-2"
+		ng-show="wager === 'Superfecta'"
+	>
+		<input 
+			type="checkbox"
+			ng-model="firstRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="secondRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="thirdRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="fourthRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+	</div>
+	<div 
+		class="col-md-2"
+		ng-show="wager === 'Pentafecta'"
+	>
+		<input 
+			type="checkbox"
+			ng-model="firstRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="secondRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="thirdRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="fourthRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+		<input 
+			type="checkbox"
+			ng-model="fifthRunners[idx]"
+			ng-true-value="{{entry.number}}"
+			ng-false-value="false"
+			ng-change="updateSelectedRunnersDisplay()"
+			ng-disabled="!entry.active"
+			ng-show="!race.closed"
+		>
+	</div>
+	<entries entry="entry"></entries>
+</div>
