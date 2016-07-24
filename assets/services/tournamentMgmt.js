@@ -17,27 +17,24 @@
 		$http, $q, $sce, configMgr, querystring
 	) {
 		var tournament;
-		var getTournamentPromise;
 		var registerTournamentPromise;
 		var getTournamentsByCustomerIdPromise;
 		var getTournamentsByDatePromise;
 		var getLeadersPromise;
 		var updateTournamentCustomersCreditsPromise;
 		var closeTournamentPromise;
+		var scoreTournamentPromise;
 
 		var service = {
 			getTournament: function(tournamentId) {
 				var url = '/tournaments/' + tournamentId;
-				getTournamentPromise = $http.get(url).then(function(res) {
-					mergeIntoTournament(res.data);
-					return tournament;
+				return $http.get(url).then(function(res) {
+					return res.data;
 				}).catch(function(err) {
 					console.log('GET ' + url + ': ajax failed');
 					console.error(err);
 					return $q.reject(err);
 				});
-
-				return getTournamentPromise;
 			},
 
 			registerTournament: function(tournamentId, customerId) {
@@ -120,6 +117,19 @@
 				});
 
 				return closeTournamentPromise;
+			},
+
+			scoreTournament: function(tournamentId) {
+				var url = '/tournaments/scoreTournament/' + tournamentId;
+				scoreTournamentPromise = $http.get(url).then(function(response) {
+					return response.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return scoreTournamentPromise;
 			},
 
 			createTournament: function(tournamentData) {

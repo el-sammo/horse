@@ -11,7 +11,7 @@ app.controller('TournamentController', controller);
 
 controller.$inject = [
 	'$scope', '$http', '$routeParams', '$rootScope', '$location', 
-	'$modal', '$timeout',
+	'$modal', '$timeout', '$window',
 	'signupPrompter', 'deviceMgr', 'layoutMgmt',
 	'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt',
 	'messenger', 
@@ -20,7 +20,7 @@ controller.$inject = [
 
 function controller(
 	$scope, $http, $routeParams, $rootScope, $location,
-	$modal, $timeout,
+	$modal, $timeout, $window,
 	signupPrompter, deviceMgr, layoutMgmt, 
 	customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt,
 	messenger, 
@@ -259,7 +259,7 @@ function controller(
 				tournamentData.max = tournament.max;
 				if(tournament.closed) {
 					if(tournament.scored) {
-						tournamentData.tournamentStatus = 'Final';
+						tournamentData.tournamentStatus = 'Finished';
 					} else {
 						tournamentData.tournamentStatus = 'In Progress';
 					}
@@ -402,10 +402,10 @@ function controller(
 			repeatSelect: null,
 			availableOptions: amountMap[min]
 		}
+		$scope.showHistory();
 	}
 
 	function updateSelectedRunnersDisplay() {
-console.log('$scope.updateSelectedRunnersDisplay() called');
 		$scope.formattedRunners = '';
 		$scope.multiplier = 1;
 		if($scope.legs > 1) {
@@ -757,6 +757,7 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 					var getTournamentPromise = tournamentMgmt.getTournament(activeTournamentId);
 					getTournamentPromise.then(function(tournamentData) {
 						updateActiveTournamentBalance(tournamentData, customerId);
+						showTournamentLeaders(tournamentId);
 					});
 				} else {
 					if(response.data.failMsg === 'Incomplete Wager Data') {
@@ -820,10 +821,7 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 					var trIdPcs = wager.trackRaceId.split('-');
 					var trackId = trIdPcs[0];
 					var raceNumber = trIdPcs[1];
-					var getTrdPromise = trdMgmt.getTrd(trackId);
-					getTrdPromise.then(function(trdData) {
-						formattedWager.race = trdData.name.substr(0,3) +'-'+ raceNumber;
-					});
+					formattedWager.race = $scope.track.name.substr(0,3) +'-'+ raceNumber;
 					formattedWager.amount = wager.wagerAmount;
 					formattedWager.type = wager.wagerAbbrev;
 					formattedWager.selection = wager.wagerSelections;
@@ -900,10 +898,10 @@ console.log('$scope.updateSelectedRunnersDisplay() called');
 				if(raceNum < 2) {
 					var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
 					closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
-						$location.path('/');
+						$location.path("/tournament/" + $scope.activeTournamentId);
 					});
 				} else {
-					$location.path('/');
+					$location.path("/tournament/" + $scope.activeTournamentId);
 				}
 			});
 		});
@@ -929,18 +927,15 @@ console.log('getTournamentPromise called');
 	}
 
 	function showTournamentLeaders(tournyId) {
-console.log('$scope.showTournamentLeaders() called');
 		$scope.showLeaders = true;
 		var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
 		getLeadersPromise.then(function(leadersData) {
-console.log('getLeadersPromise called');
 			$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
 			leadersData.pop();
 			var leaderBoardData = [];
 			leadersData.forEach(function(leader) {
 				var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
 				getCustomerPromise.then(function(customerData) {
-console.log('getCustomerPromise called');
 					var thisLeader = {};
 					thisLeader.id = leader.customerId;
 					thisLeader.fName = customerData.fName;
@@ -973,8 +968,7 @@ console.log(response.data);
 		$scope.activeTournament = tournament;
 		var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
 		getTrdPromise.then(function(trdData) {
-			var track = trdData;
-			$scope.track = track;
+			$scope.track = trdData;
 			$scope.activeTournamentId = tournament.id;
 			$scope.showTrack($scope.track.id);
 		});
@@ -983,12 +977,11 @@ console.log(response.data);
 			updateActiveTournamentBalance(tournament, customerId);
 		} else {
 			$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
-		}	
-		$scope.showHistory();
+		}
 	}
 
 	function changeActiveTournament(tournament) {
-		$location.path('/tournament/' + tournament.id);
+		$location.path("/tournament/" + tournament.id);
 	}
 
 	function raceNumberTabClass(race) {

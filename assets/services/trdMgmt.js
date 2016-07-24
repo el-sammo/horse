@@ -17,26 +17,18 @@
 		$http, $q, $sce, configMgr, querystring
 	) {
 		var trd;
-		var getTrdPromise;
 		var getTrdsByDatePromise;
 
 		var service = {
 			getTrd: function(trdId) {
-				if(getTrdPromise) {
-					return getTrdPromise;
-				}
-
 				var url = '/trds/' + trdId;
-				getTrdPromise = $http.get(url).then(function(res) {
-					mergeIntoTrd(res.data);
-					return trd;
+				return $http.get(url).then(function(res) {
+					return res.data;
 				}).catch(function(err) {
 					console.log('GET ' + url + ': ajax failed');
 					console.error(err);
 					return $q.reject(err);
 				});
-
-				return getTrdPromise;
 			},
 
 			getTrdsByDate: function(date) {

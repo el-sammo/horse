@@ -165,17 +165,10 @@
 			$scope.trId = trId;
 			$scope.raceNum = raceNum;
 			$scope.trdData = [];
-console.log('$scope.trdData (before):');
-console.log($scope.trdData);
-
-console.log('trId: '+trId);
-console.log('raceNum: '+raceNum);
 
 			var getTrdPromise = trdMgmt.getTrd(trId);
 			getTrdPromise.then(function(trdData) {
 				$scope.trdData = trdData;
-console.log('$scope.trdData (after):');
-console.log($scope.trdData);
 				var checkDouble = false;
 				var checkPick3 = false;
 				var checkPick4 = false;
@@ -1154,17 +1147,26 @@ console.log($scope.trdData);
 				}
 			});
 
-			$scope.trdData.races = newRaces;
+			var shouldScoreTournament = false;
+			var racesCount = $scope.trdData.races.length;
+			if(score.raceNum == racesCount) {
+				shouldScoreTournament = true;
+			}
 
-console.log('$scope.trdData:');
-console.log($scope.trdData);
+			$scope.trdData.races = newRaces;
 
 			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum, customerId: $scope.customerId});
 			scoreTrdPromise.then(function(scoreTrdPromiseResponse) {
 				if(scoreTrdPromiseResponse.data.success) {
+					var tournamentId = scoreTrdPromiseResponse.data.acIds[0];
 					var updateTournamentCustomersCredits = tournamentMgmt.updateTournamentCustomersCredits(score.trId+'-'+score.raceNum, scoreTrdPromiseResponse.data.acIds);
 					updateTournamentCustomersCredits.then(function(response) {
 						if(response.status == 200 && response.statusText === 'OK') {
+							if(shouldScoreTournament) {
+								var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
+								scoreTournament.then(function(scoreTournamentResponse) {
+								});
+							}
 							$window.location.href = location.origin + "/app/";
 						} else {
 console.log('response:');

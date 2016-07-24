@@ -97,6 +97,14 @@ module.exports = {
 		}
 	},
 	
+	scoreTournament: function(req, res) {
+		if(req.params.id) {
+			return scoreValidTournament(req, res);
+		} else {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid track data'}));
+		}
+	},
+	
 	register: function(req, res) {
 		var rpiPcs = req.params.id.split('-');
 		if(rpiPcs.length > 1) {
@@ -271,6 +279,22 @@ function closeValidTournament(req, res, self) {
     return {error: 'Server error'};
     console.error(err);
     throw err;
+	});
+}
+
+function scoreValidTournament(req, res, self) {
+	var tournamentId = req.params.id;
+	return Tournaments.update(
+		{id: tournamentId},
+		{scored: true},
+		false,
+		false
+	).then(function(scoreResponse) {
+		res.send(JSON.stringify(scoreResponse[0]));
+	}).catch(function(err) {
+		return {error: 'Server error'};
+		console.error(err);
+		throw err;
 	});
 }
 
