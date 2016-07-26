@@ -1,6 +1,6 @@
 db = new Mongo().getDB('horse');
 
-var useDate = 20160724;
+var useDate = 20160725;
 
 insertTestEntryData(useDate);
 insertTournamentData(useDate);
@@ -13,6 +13,7 @@ function insertTournamentData(useDate) {
 
 		var trackId = trdData._id;
 		assocId = trackId.str;
+		var startTime = trdData.races[0].time;
 
 		var assocTrackId = assocId;
 		var tournamentName = 'Belmont Daily';
@@ -35,6 +36,7 @@ function insertTournamentData(useDate) {
 			max: tournamentMax,
 			entryFee: entryFee,
 			siteFee: siteFee,
+			startTime: startTime,
 			closed: closed,
 			customers: customers
 		});
@@ -118,6 +120,7 @@ function insertTournamentData(useDate) {
 
 		var trackId = trdData._id;
 		assocId = trackId.str;
+		var startTime = trdData.races[0].time;
 
 		var assocTrackId = assocId;
 		var tournamentName = 'Del Mar Daily';
@@ -148,6 +151,7 @@ function insertTournamentData(useDate) {
 			max: tournamentMax,
 			entryFee: entryFee,
 			siteFee: siteFee,
+			startTime: startTime,
 			closed: closed,
 			customers: customers
 		});

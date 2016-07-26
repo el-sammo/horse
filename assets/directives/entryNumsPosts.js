@@ -31,11 +31,11 @@ function directive() {
 		}
 
 		function getDetail(runner) {
-			var number = runner.number;
-			var post = runner.post;
+			var number = runner.number.toString();
+			var post = runner.post.toString();
 
-			if(post && number !== post) {
-				return number + ' ' + post;
+			if(post && (number !== post)) {
+				return number + ' (' + post + ')';
 			}
 
 			return number;

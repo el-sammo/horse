@@ -912,14 +912,15 @@ console.log('$scope.showResults() called with trdId: '+trdId+' and race number: 
 	}
 
 	function showTournamentDetails(tournyId) {
-console.log('$scope.showTournamentDetails() called');
 		var dateObj = new Date();
 		var now = dateObj.toString();
 console.log('now: '+now);
+		var offsetMinutes = dateObj.getTimezoneOffset();
+console.log('offsetMinutes: '+offsetMinutes);
 		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 		getTournamentPromise.then(function(tournamentData) {
-console.log('getTournamentPromise called');
 			$scope.tournamentData = tournamentData;
+
 		});
 		if(!$scope.showLeaders) {
 			$scope.showTournament = true;

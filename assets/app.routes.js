@@ -80,6 +80,16 @@
 
 
 		///
+		// Import
+		///
+
+		$routeProvider.when('/import-lb-20160725-v1', {
+			controller: 'ImportController',
+			templateUrl: '/templates/import.html'
+		});
+
+
+		///
 		// Home
 		///
 
