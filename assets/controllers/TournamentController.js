@@ -86,6 +86,7 @@ function controller(
 		$scope.setActiveTournament = setActiveTournament;
 		$scope.changeActiveTournament = changeActiveTournament;
 
+		$scope.convertPostTime = convertPostTime;
 		$scope.raceNumberTabClass = raceNumberTabClass;
 		$scope.wagerTypeTabClass = wagerTypeTabClass;
 		$scope.wagerTypeTabStyle = wagerTypeTabStyle;
@@ -728,6 +729,44 @@ function controller(
 		}
 	}
 
+	function convertPostTime(postTime) {
+		var d = new Date()
+		var n = d.getTimezoneOffset() * 1000;
+		var localMills = (postTime - n);
+		var rt = new Date(localMills);
+		var tz = ' ';
+
+		var rtStr = rt.toString();
+		var rtPcs = rtStr.split('(');
+		if(rtPcs) {
+			var pt2Pcs = rtPcs[1].split(')');
+			if(pt2Pcs) {
+				var spPcs = pt2Pcs[0].split(' ');
+				if(spPcs) {
+					spPcs.forEach(function(piece) {
+						tz += piece.substring(0,1);
+					});
+				}
+			}
+		}
+
+		var hours = rt.getHours();
+		var minutes = rt.getMinutes();
+		var apm = ' am';
+
+		if(hours > 12) {
+			apm = ' pm';
+			hours = (hours - 12);
+		}
+
+		if(minutes < 10) {
+			minutes = '0' + minutes;
+		}
+
+		var formattedRT = hours + ':' + minutes + apm + tz;
+		return formattedRT;
+	}
+
 	function submitWager(activeTournamentId) {
 		if(!$scope.customerId || !$scope.customer.id) {
 			layoutMgmt.logIn();
@@ -757,6 +796,7 @@ function controller(
 					var getTournamentPromise = tournamentMgmt.getTournament(activeTournamentId);
 					getTournamentPromise.then(function(tournamentData) {
 						updateActiveTournamentBalance(tournamentData, customerId);
+						showLeaderboards()
 						showTournamentLeaders(tournamentId);
 					});
 				} else {
@@ -787,6 +827,8 @@ function controller(
 				var getTournamentPromise = tournamentMgmt.getTournament(tournamentId);
 				getTournamentPromise.then(function(tournamentData) {
 					updateActiveTournamentBalance(tournamentData, customerId);
+					showLeaderboards()
+					showTournamentLeaders(tournamentId);
 				});
 			});
 		}

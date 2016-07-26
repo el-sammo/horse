@@ -1,4 +1,15 @@
-<div class="col-md-4">
+<div class="col-md-1">
+	<span 
+		class="raceDetailsSmaller"
+	>
+		{{entry.ml}}
+		<br ng-show="entry.altRunner">
+		<span ng-if="entry.altRunner">
+			{{entry.altRunner.ml}}
+		</span>
+	</span>
+</div>
+<div class="col-md-3">
 	<span 
 		ng-class="getClass()" 
 		ng-style="getStyle()" 

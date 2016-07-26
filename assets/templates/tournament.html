@@ -169,6 +169,7 @@
 							"
 							ng-repeat="race in track.races" 
 							ng-if="trId === track.id+'-'+race.number"
+							ng-init="formattedPostTime = convertPostTime(race.postTime)"
 						>
 							<div 
 								class="col-md-12" 
@@ -181,51 +182,51 @@
 									<div class="col-md-12">
 										<span 
 											class="raceInfo"
-											ng-show="race.time"
+											ng-show="race.postTime"
 										>
-											Post: {{race.formattedTime}}
+											Post: {{formattedPostTime}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.distance"
 										>
-											| Distance: {{race.formattedDist}}
+											Distance: {{race.formattedDist}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.surface"
 										>
-											| Surface: {{race.surface}}
+											Surface: {{race.surface}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.sexes"
 										>
-											| {{race.sexes}}
+											{{race.sexes}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.ages"
 										>
-											| {{race.ages}}
+											{{race.ages}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.type"
 										>
-											| {{race.type}}
+											{{race.type}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.claim"
 										>
-											| Claim: ${{race.claim}}
+											Claim: ${{race.claim}} |
 										</span>
 										<span 
 											class="raceInfo"
 											ng-show="race.purse"
 										>
-											| Purse: ${{race.purse}}
+											Purse: ${{race.purse}}
 										</span>
 									</div>
 								</div>
@@ -328,7 +329,10 @@
 													<div class="col-md-2">
 														<span class="raceDetails">{{singleDesc}}</span>
 													</div>
-													<div class="col-md-4">
+													<div class="col-md-1">
+														<span class="raceDetails">ML</span>
+													</div>
+													<div class="col-md-3">
 														<span class="raceDetails">Runner</span>
 													</div>
 													<div class="col-md-3">
