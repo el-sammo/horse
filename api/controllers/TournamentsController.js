@@ -63,7 +63,7 @@ module.exports = {
 	
 	byDate: function(req, res) {
 		Tournaments.find({tournyDate: req.params.id}).sort({
-			name: 'asc', entryFee: 'asc'
+			startTime: 'asc', name: 'asc', entryFee: 'asc'
 		}).limit(30).then(function(results) {
 			res.send(JSON.stringify(results));
 		}).catch(function(err) {

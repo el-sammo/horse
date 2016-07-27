@@ -200,12 +200,23 @@ td {
 }
 
 .footerLink {
-	margin-right: 20px;
+	margin-right: 10px;
 	color: #FFF;
 	font-size: 14px;
 	text-align: left;
 	line-height: 20pt;
 	font-weight: 500;
+	font-style: normal;
+	text-decoration: none!important;
+	cursor: pointer;
+}
+
+.footerLinkSmaller {
+	color: #FFF;
+	font-size: 10px;
+	text-align: left;
+	line-height: 20pt;
+	font-weight: 300;
 	font-style: normal;
 	text-decoration: none!important;
 	cursor: pointer;
@@ -221,6 +232,18 @@ td {
 	font-style: normal;
 	text-decoration: none!important;
 	cursor: pointer;
+}
+
+.historyHeight {
+	height: 222px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.leadersHeight {
+	height: 108px;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .sunburst {

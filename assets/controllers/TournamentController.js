@@ -87,7 +87,8 @@ function controller(
 		$scope.changeActiveTournament = changeActiveTournament;
 
 		$scope.convertPostTime = convertPostTime;
-		$scope.getMinToPost = getMinToPost;
+		$scope.getTournamentMinToPost = getTournamentMinToPost;
+		$scope.getRaceMinToPost = getRaceMinToPost;
 		$scope.raceNumberTabClass = raceNumberTabClass;
 		$scope.wagerTypeTabClass = wagerTypeTabClass;
 		$scope.wagerTypeTabStyle = wagerTypeTabStyle;
@@ -228,6 +229,11 @@ function controller(
 	}
 
 	function onGetTournaments(currentTournamentsData) {
+		var formattedTournaments = []
+		currentTournamentsData.forEach(function(tournament) {
+			tournament.mtp = getTournamentMinToPost(tournament.startTime, tournament.scored, tournament.closed);
+			formattedTournaments.push(tournament);
+		});
 		$scope.currentTournaments = currentTournamentsData;
 
 		customerMgmt.getSession().then(function(sessionData) {
@@ -283,6 +289,9 @@ function controller(
 			});
 
 		});
+		setTimeout(function() { 
+			initTournaments();
+		}, 60000);
 	}
 
 	///
@@ -980,17 +989,20 @@ console.log('offsetMinutes: '+offsetMinutes);
 			$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
 			leadersData.pop();
 			var leaderBoardData = [];
+			var rank = 1;
 			leadersData.forEach(function(leader) {
 				var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
 				getCustomerPromise.then(function(customerData) {
 					var thisLeader = {};
 					thisLeader.id = leader.customerId;
+					thisLeader.rank = rank;
 					thisLeader.fName = customerData.fName;
 					thisLeader.lName = customerData.lName;
 					thisLeader.city = customerData.city;
 					thisLeader.username = customerData.username;
 					thisLeader.credits = leader.credits;
 					leaderBoardData.push(thisLeader);
+					rank ++;
 				});
 			});
 			$scope.leadersData = leaderBoardData;
@@ -1072,11 +1084,32 @@ console.log(response.data);
 		return {};
 	}
 
-	function getMinToPost(postTime) {
+	function getTournamentMinToPost(postTime, scored, closed) {
+		if(scored) {
+			return 'Results';
+		}
+		if(closed) {
+			return 'In Process';
+		}
 		var d = new Date();
 		var nowMills = d.getTime();
 		var difference = (postTime - nowMills);
-		return parseInt(difference / 60000) + ' MTP';
+		if(difference > 0) {
+			return parseInt(difference / 60000) + ' M';
+		} else {
+			return;
+		}
+	}
+
+	function getRaceMinToPost(postTime) {
+		var d = new Date();
+		var nowMills = d.getTime();
+		var difference = (postTime - nowMills);
+		if(difference > 0) {
+			return parseInt(difference / 60000) + 'M';
+		} else {
+			return;
+		}
 	}
 
 

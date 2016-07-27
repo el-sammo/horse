@@ -15,7 +15,7 @@
 				ng-click="changeActiveTournament(tournament)" 
 				ng-repeat="tournament in currentTournaments" track by $index
 			>
-				{{tournament.name}}
+				{{tournament.name}} <span class="footerLinkSmaller reservationYellow">{{tournament.mtp}}</span>
 			</span>
 			<span 
 				class="footerLink reservationYellow pull-right" 
@@ -130,7 +130,7 @@
 									ng-if="!race.closed"
 								>
 									<br/>
-									{{getMinToPost(race.postTime)}}
+									{{getRaceMinToPost(race.postTime)}}
 								</span>
 								<span 
 									class="raceDetailsSmaller"
@@ -574,31 +574,41 @@
 								</div>
 								<br/>
 								<div class="row">
-									<div class="col-md-7">
-										<span class="tournamentDetails">Name</span>
-									</div>
-									<div class="col-md-2">
-										<span class="tournamentDetails">City</span>
-									</div>
-									<div 
-										class="col-md-2"
-										class="text-align: right;"
-									>
-										<span class="tournamentDetails">Credits</span>
-									</div>
-								</div>
-								<div class="row" ng-repeat="leader in leadersData">
-									<div class="col-md-7">
-										<span class="tournamentDetails">{{leader.fName}} {{leader.lName}} ({{leader.username}})</span>
-									</div>
-									<div class="col-md-2">
-										<span class="tournamentDetails">{{leader.city}}</span>
-									</div>
-									<div 
-										class="col-md-2"
-										class="text-align: right;"
-									>
-										<span class="tournamentDetails">{{leader.credits}}</span>
+									<div class="col-md-11 leadersHeight">
+										<div class="row">
+											<div class="col-md-1">
+												<span class="tournamentDetails">Rank</span>
+											</div>
+											<div class="col-md-5">
+												<span class="tournamentDetails">Name</span>
+											</div>
+											<div class="col-md-3">
+												<span class="tournamentDetails">City</span>
+											</div>
+											<div 
+												class="col-md-2"
+												class="text-align: right;"
+											>
+												<span class="tournamentDetails">Credits</span>
+											</div>
+										</div>
+										<div class="row" ng-repeat="leader in leadersData">
+											<div class="col-md-1">
+												<span class="tournamentDetails">{{leader.rank}}</span>
+											</div>
+											<div class="col-md-5">
+												<span class="tournamentDetails">{{leader.fName}} {{leader.lName}}</span>
+											</div>
+											<div class="col-md-3">
+												<span class="tournamentDetails">{{leader.city}}</span>
+											</div>
+											<div 
+												class="col-md-2"
+												class="text-align: right;"
+											>
+												<span class="tournamentDetails">{{leader.credits}}</span>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -755,7 +765,7 @@
 									</div>
 								</div>
 								<div class="row" ng-show="tabShow === 'wagerHistory'">
-									<div class="col-md-12">
+									<div class="col-md-11 historyHeight">
 										<div class="row">
 											<div class="col-md-2">
 												<span class="historyDetailsHead">
