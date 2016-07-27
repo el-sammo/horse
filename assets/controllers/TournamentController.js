@@ -87,6 +87,7 @@ function controller(
 		$scope.changeActiveTournament = changeActiveTournament;
 
 		$scope.convertPostTime = convertPostTime;
+		$scope.getMinToPost = getMinToPost;
 		$scope.raceNumberTabClass = raceNumberTabClass;
 		$scope.wagerTypeTabClass = wagerTypeTabClass;
 		$scope.wagerTypeTabStyle = wagerTypeTabStyle;
@@ -304,7 +305,7 @@ function controller(
 		var customer = _.find(tournamentData.customers, {
 			customerId: customerId
 		});
-		$scope.activeTournamentCredits = tournamentData.name +' Credits: '+customer.credits;
+		$scope.activeTournamentCredits = tournamentData.name +' Credits: '+(customer.credits).toFixed(2);
 	}
 
 
@@ -730,7 +731,7 @@ function controller(
 	}
 
 	function convertPostTime(postTime) {
-		var d = new Date()
+		var d = new Date();
 		var n = d.getTimezoneOffset() * 1000;
 		var localMills = (postTime - n);
 		var rt = new Date(localMills);
@@ -768,6 +769,7 @@ function controller(
 	}
 
 	function submitWager(activeTournamentId) {
+		$scope.successfulWager = '';
 		if(!$scope.customerId || !$scope.customer.id) {
 			layoutMgmt.logIn();
 		} else {
@@ -777,6 +779,7 @@ function controller(
 			// wager schema
 			var wagerSubmission = {
 				tournamentId: tournamentId,
+				tournamentName: $scope.activeTournament.name,
 				customerId: customerId,
 				trackRaceId: $scope.trId,
 				finalRaceId: $scope.finalRaceId,
@@ -854,37 +857,38 @@ function controller(
 			var params = customerId + '-' + todayMill;
 			var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
 			getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
-				var formattedHistory = [];
-				wagerHistory.forEach(function(wager) {
-					var formattedWager = {};
-					formattedWager.id = wager.id;
-					formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
-					formattedWager.track = wager.track;
-					var trIdPcs = wager.trackRaceId.split('-');
-					var trackId = trIdPcs[0];
-					var raceNumber = trIdPcs[1];
-					formattedWager.race = $scope.track.name.substr(0,3) +'-'+ raceNumber;
-					formattedWager.amount = wager.wagerAmount;
-					formattedWager.type = wager.wagerAbbrev;
-					formattedWager.selection = wager.wagerSelections;
-					formattedWager.total = wager.wagerTotal;
-					var result;
-					if(wager.scored) {
-						result = wager.result.toFixed(2);
-					} else {
-						if(wager.cancelled) {
-							result = 'C';
+				if(wagerHistory.length > 0) {
+					var formattedHistory = [];
+					wagerHistory.forEach(function(wager) {
+						var formattedWager = {};
+						formattedWager.id = wager.id;
+						formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
+						var trIdPcs = wager.trackRaceId.split('-');
+						var trackId = trIdPcs[0];
+						var raceNumber = trIdPcs[1];
+						formattedWager.race = wager.tournamentName.substr(0,3) +'-'+ raceNumber;
+						formattedWager.amount = wager.wagerAmount;
+						formattedWager.type = wager.wagerAbbrev;
+						formattedWager.selection = wager.wagerSelections;
+						formattedWager.total = wager.wagerTotal;
+						var result;
+						if(wager.scored) {
+							result = wager.result.toFixed(2);
 						} else {
-							if(wager.raceClosed) {
-								result = 'Pending';
+							if(wager.cancelled) {
+								result = 'C';
 							} else {
-								result = 'Cancel';
+								if(wager.raceClosed) {
+									result = 'Pending';
+								} else {
+									result = 'Cancel';
+								}
 							}
 						}
-					}
-					formattedWager.result = result;
-					formattedHistory.push(formattedWager);
-				});
+						formattedWager.result = result;
+						formattedHistory.push(formattedWager);
+					});
+				}
 				if(formattedHistory && formattedHistory.length > 0) {
 					$scope.wagerHistory = formattedHistory;
 				}	else {
@@ -1066,6 +1070,13 @@ console.log(response.data);
 		}
 
 		return {};
+	}
+
+	function getMinToPost(postTime) {
+		var d = new Date();
+		var nowMills = d.getTime();
+		var difference = (postTime - nowMills);
+		return parseInt(difference / 60000) + ' MTP';
 	}
 
 

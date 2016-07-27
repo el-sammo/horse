@@ -26,10 +26,6 @@
 
 		var service = {
 			getWager: function(wagerId) {
-				if(getWagerPromise) {
-					return getWagerPromise;
-				}
-
 				var url = '/wagers/' + wagerId;
 				getWagerPromise = $http.get(url).then(function(res) {
 					return wager;

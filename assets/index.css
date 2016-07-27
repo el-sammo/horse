@@ -202,10 +202,10 @@ td {
 .footerLink {
 	margin-right: 20px;
 	color: #FFF;
-	font-size: 12pt;
+	font-size: 14px;
 	text-align: left;
 	line-height: 20pt;
-	font-weight: 600;
+	font-weight: 500;
 	font-style: normal;
 	text-decoration: none!important;
 	cursor: pointer;
@@ -214,10 +214,10 @@ td {
 .footerLinkRed {
 	margin-right: 20px;
 	color: #FF0000!important;
-	font-size: 12pt;
+	font-size: 14px;
 	text-align: left;
 	line-height: 20pt;
-	font-weight: 600;
+	font-weight: 500;
 	font-style: normal;
 	text-decoration: none!important;
 	cursor: pointer;
@@ -929,9 +929,15 @@ td {
 }
 
 .raceDetailsRed {
-	color: #FFFFFF;
+	color: #FF0000;
 	font-size: 16px;
 	font-weight: 500;
+}
+
+.raceDetailsRedBigger {
+	color: #FF0000;
+	font-size: 20px;
+	font-weight: 700;
 }
 
 .raceDetailsSmaller {

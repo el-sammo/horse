@@ -98,7 +98,7 @@ module.exports = {
 		var customerId = rpIdPcs[0];
 		var mill = rpIdPcs[1];
 		Wagers.find({customerId: customerId, wagerPlacedAt: {'gte': mill}}).sort({
-			created: 'asc'
+			wagerPlacedAt: 'desc'
 		}).then(function(results) {
 			res.send(JSON.stringify(results));
 		}).catch(function(err) {

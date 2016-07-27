@@ -21,15 +21,9 @@
 
 		var service = {
 			getCustomer: function(customerId) {
-// This does data caching
-//				if(getCustomerPromise) {
-//					return getCustomerPromise;
-//				}
-
 				var url = '/customers/' + customerId;
 				getCustomerPromise = $http.get(url).then(function(res) {
-					mergeIntoCustomer(res.data);
-					return customer;
+					return res.data;
 				}).catch(function(err) {
 					console.log('GET ' + url + ': ajax failed');
 					console.error(err);

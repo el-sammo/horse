@@ -127,6 +127,13 @@
 							>
 								<span 
 									class="raceDetailsSmaller"
+									ng-if="!race.closed"
+								>
+									<br/>
+									{{getMinToPost(race.postTime)}}
+								</span>
+								<span 
+									class="raceDetailsSmaller"
 									style="cursor: pointer;"
 									ng-click="closeRace(race.number)"
 									ng-if="customer.admin && !race.score && !race.closed"
@@ -190,7 +197,7 @@
 											class="raceInfo"
 											ng-show="race.distance"
 										>
-											Distance: {{race.formattedDist}} |
+											Distance: {{race.distance}} |
 										</span>
 										<span 
 											class="raceInfo"
@@ -332,13 +339,13 @@
 													<div class="col-md-1">
 														<span class="raceDetails">ML</span>
 													</div>
-													<div class="col-md-3">
+													<div class="col-md-4">
 														<span class="raceDetails">Runner</span>
 													</div>
 													<div class="col-md-3">
 														<span class="raceDetails">Jockey</span>
 													</div>
-													<div class="col-md-3">
+													<div class="col-md-2">
 														<span class="raceDetails">Trainer</span>
 													</div>
 												</div>
@@ -714,9 +721,9 @@
 								>
 									<div class="col-md-12" ng-show="wagerError">
 										<br/>
-										<span class="raceDetailsRed">Ticket Error</span>
+										<span class="raceDetailsRedBigger">Ticket Error</span>
 										<br/><br/>
-										<span class="raceDetailsSmaller">{{wagerError}}</span>
+										<span class="raceDetailsRed">{{wagerError}}</span>
 									</div>
 									<div class="col-md-12" ng-show="successfulWager">
 										<br/>
