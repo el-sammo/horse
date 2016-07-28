@@ -93,6 +93,19 @@ module.exports = {
 		});
 	},
 	
+	byTournyCustomerId: function(req, res) {
+		var rpPcs = req.params.id.split('-');
+		Wagers.find({tournamentId: rpPcs[0], customerId: rpPcs[1]}).sort({
+			wagerPlacedAt: 'asc'
+		}).then(function(results) {
+			res.send(JSON.stringify(results));
+		}).catch(function(err) {
+      res.json({error: 'Server error'}, 500);
+      console.error(err);
+      throw err;
+		});
+	},
+	
 	byCustomerIdSinceMilliseconds: function(req, res) {
 		var rpIdPcs = req.params.id.split('-');
 		var customerId = rpIdPcs[0];

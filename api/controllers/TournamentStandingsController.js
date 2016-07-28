@@ -1,5 +1,5 @@
 /**
- * TournamentsController
+ * TournamentStandingsController
  *
  * @description :: Server-side logic for managing tournaments
  * @help        :: See http://links.sailsjs.org/docs/controllers
@@ -14,8 +14,30 @@ var httpAdapter = 'http';
 var extra = {};
 
 module.exports = {
+	customerTournamentCredits: function(req, res) {
+		var rpPcs = req.params.id.split('-');
+		var tournamentId = rpPcs[0];
+		var customerId = rpPcs[1];
+		var resObj = [];
+		TournamentStandings.find({tournamentId: tournamentId}).then(function(results) {
+			results[0].customers.forEach(function(customer) {
+				if(customer.customerId === customerId) {
+					var thisObj = {}
+					thisObj.customerId = customer.customerId;
+					thisObj.credits = customer.credits;
+					resObj.push(thisObj);
+				}
+			});
+			res.send(JSON.stringify(resObj));
+		}).catch(function(err) {
+      res.json({error: 'Server error'}, 500);
+      console.error(err);
+      throw err;
+		});
+	},
+	
 	byName: function(req, res) {
-		Tournaments.find({name: req.params.id}).sort({
+		TournamentStandings.find({name: req.params.id}).sort({
 			name: 'asc', entryFee: 'asc'
 		}).limit(30).then(function(results) {
 			res.send(JSON.stringify(results));
@@ -27,7 +49,7 @@ module.exports = {
 	},
 	
 	byEntryFee: function(req, res) {
-		Tournaments.find({entryFee: req.params.id}).sort({
+		TournamentStandings.find({entryFee: req.params.id}).sort({
 			name: 'asc', entryFee: 'asc'
 		}).limit(30).then(function(results) {
 			res.send(JSON.stringify(results));
@@ -42,7 +64,7 @@ module.exports = {
 		var reqPcs = req.params.id.split('-');
 		var customerId = reqPcs[0];
 		var today = reqPcs[1];
-		Tournaments.find({tournyDate: today}).sort({
+		TournamentStandings.find({tournyDate: today}).sort({
 			name: 'asc', entryFee: 'asc'
 		}).then(function(tournaments) {
 			var customerTournaments = [];
@@ -62,7 +84,7 @@ module.exports = {
 	},
 	
 	byDate: function(req, res) {
-		Tournaments.find({tournyDate: req.params.id}).sort({
+		TournamentStandings.find({tournyDate: req.params.id}).sort({
 			startTime: 'asc', name: 'asc', entryFee: 'asc'
 		}).limit(30).then(function(results) {
 			res.send(JSON.stringify(results));
@@ -74,7 +96,6 @@ module.exports = {
 	},
 	
 	leaders: function(req, res) {
-console.log('leaders() called');
 		if(req.params.id) {
 			return tournamentLeaders(req, res);
 		} else {
@@ -83,17 +104,8 @@ console.log('leaders() called');
 	},
 	
 	updateTCC: function(req, res) {
-console.log('updateTCC() called');
 		if(req.body) {
-			return updateTournamentCustomersCredits(req, res);
-		} else {
-			return res.send(JSON.stringify({success: false, failMsg: 'Invalid updateTCC data'}));
-		}
-	},
-	
-	updateTSCredits: function(req, res) {
-		if(req.params.id) {
-			return updateTournamentStandingsCustomerCredits(req, res);
+			return updateTournamentCustomers(req, res);
 		} else {
 			return res.send(JSON.stringify({success: false, failMsg: 'Invalid updateTCC data'}));
 		}
@@ -124,15 +136,6 @@ console.log('updateTCC() called');
 		}
 	},
 	
-	unregister: function(req, res) {
-		var rpiPcs = req.params.id.split('-');
-		if(rpiPcs.length > 1) {
-			return tournamentUnregister(req, res);
-		} else {
-			return res.send(JSON.stringify({success: false, failMsg: 'Invalid unregistration data'}));
-		}
-	},
-	
   datatables: function(req, res) {
     var options = req.query;
 
@@ -150,14 +153,16 @@ function tournamentRegister(req, res, self) {
 	var rpiPcs = req.params.id.split('-');
 	var tournamentId = rpiPcs[0];
 	var customerId = rpiPcs[1];
-	return Tournaments.find({id: tournamentId}).then(function(results) {
+	return Tournaments.find({id: tournamentId}).sort({
+		name: 'asc', entryFee: 'asc'
+	}).limit(30).then(function(results) {
 		var tournamentData = results[0];
 		if(tournamentData.closed) {
 			return res.send(JSON.stringify({success: false, failMsg: 'Closed'}));
 		}
 		var customerFound = false;
 		tournamentData.customers.forEach(function(customer) {
-			if(customer === customerId) {
+			if(customer.customerId === customerId) {
 				customerFound = true;
 			}
 		});
@@ -170,11 +175,9 @@ function tournamentRegister(req, res, self) {
 				if(balanceData.balance >= totalFee) {
 					return TournamentsService.updateCustomerBalance(customerId, balanceData.balance, totalFee, 'subtract').then(function(customerData) {
 						if(customerData.success) {
-							tournamentData.customers.push(customerId);
+							tournamentData.customers.push({customerId: customerId, credits: 500});
 							return Tournaments.update({id: tournamentData.id}, {customers: tournamentData.customers}, false, false).then(function(result) {
-								return TournamentsService.addCustomer(tournamentData.id, customerId).then(function(tsData) {
-									res.send(JSON.stringify(tsData));
-								});
+								res.send(JSON.stringify(result));
 							}).catch(function(err) {
 								res.json({error: 'Server error'}, 500);
 								console.error(err);
@@ -188,7 +191,7 @@ function tournamentRegister(req, res, self) {
 						throw err;
 					});	
 				} else {
-					return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Funds '+totalFee}));
+					return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Funds'}));
 				}
 			}).catch(function(err) {
 				res.json({error: 'Server error'}, 500);
@@ -204,66 +207,8 @@ function tournamentRegister(req, res, self) {
     throw err;
 	});
 }
-function tournamentUnregister(req, res, self) {
-	var rpiPcs = req.params.id.split('-');
-	var tournamentId = rpiPcs[0];
-	var customerId = rpiPcs[1];
-	return Tournaments.find({id: tournamentId}).then(function(results) {
-		var tournamentData = results[0];
-		if(tournamentData.closed) {
-			return res.send(JSON.stringify({success: false, failMsg: 'Closed'}));
-		}
-		var customerFound = false;
-		tournamentData.customers.forEach(function(customer) {
-			if(customer === customerId) {
-				customerFound = true;
-			}
-		});
-		if(!customerFound) {
-			return res.send(JSON.stringify({success: false, failMsg: 'Not Registered'}));
-		}
-		var totalFee = parseFloat(parseFloat(tournamentData.entryFee) + parseFloat(tournamentData.siteFee));
-		return TournamentsService.getCustomerBalance(customerId).then(function(balanceData) {
-			return TournamentsService.updateCustomerBalance(customerId, balanceData.balance, totalFee, 'add').then(function(customerData) {
-				if(customerData.success) {
-					var newCustomers = [];
-					tournamentData.customers.forEach(function(customer) {
-						if(customer.customerId !== customerId) {
-							newCustomers.push(customer);
-						}
-					});
-					return Tournaments.update({id: tournamentData.id}, {customers: newCustomers}, false, false).then(function(result) {
-						return TournamentsService.removeCustomer(tournamentData.id, customerId).then(function(tsData) {
-							res.send(JSON.stringify(tsData));
-						});
-					}).catch(function(err) {
-						res.json({error: 'Server error'}, 500);
-						console.error(err);
-						throw err;
-					});
-				}
-				return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
-			}).catch(function(err) {
-				res.json({error: 'Server error'}, 500);
-				console.error(err);
-				throw err;
-			});	
-		}).catch(function(err) {
-			res.json({error: 'Server error'}, 500);
-			console.error(err);
-			throw err;
-		});
-	}).catch(function(err) {
-    return {error: 'Server error'};
-    console.error(err);
-    throw err;
-	});
-}
-
 
 function tournamentLeaders(req, res, self) {
-// TODO check this
-console.log('tournamentLeaders() called');
 	var tournamentId = req.params.id;
 	return Tournaments.find({id: tournamentId}).then(function(results) {
 		var tournamentLeadersData = [];
@@ -281,16 +226,12 @@ console.log('tournamentLeaders() called');
 	});
 }
 
-function updateTournamentCustomersCredits(req, res, self) {
-console.log('updateTournamentCustomersCredits() called');
-// TODO check this
+function updateTournamentCustomers(req, res, self) {
 	var finalRaceId = req.params.id;
 	var acIds = req.body;
 	var tournamentId = acIds[0];
 	acIds.reverse();
 	acIds.pop();
-console.log('acIds:');
-console.log(acIds);
 	return TournamentsService.getWagers(finalRaceId).then(function(wagersData) {
 		var wagers = wagersData.wagers;
 		var newCustomers = [];
@@ -334,20 +275,6 @@ console.log(acIds);
 			console.error(err);
 			throw err;
 		});
-	}).catch(function(err) {
-    return {error: 'Server error'};
-    console.error(err);
-    throw err;
-	});
-}
-
-function updateTournamentStandingsCustomerCredits(req, res, self) {
-	var rpPcs = req.params.id.split('-');
-	var tournamentId = rpPcs[0];
-	var customerId = rpPcs[1];
-	var credits = rpPcs[2];
-	return TournamentsService.updateTS(tournamentId, customerId, credits).then(function(utsResponse) {
-		res.send(JSON.stringify(utsResponse));
 	}).catch(function(err) {
     return {error: 'Server error'};
     console.error(err);

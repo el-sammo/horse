@@ -336,10 +336,10 @@
 													<div class="col-md-2">
 														<span class="raceDetails">{{singleDesc}}</span>
 													</div>
-													<div class="col-md-1">
+													<div class="col-md-2">
 														<span class="raceDetails">ML</span>
 													</div>
-													<div class="col-md-4">
+													<div class="col-md-3">
 														<span class="raceDetails">Runner</span>
 													</div>
 													<div class="col-md-3">
@@ -592,9 +592,9 @@
 												<span class="tournamentDetails">Credits</span>
 											</div>
 										</div>
-										<div class="row" ng-repeat="leader in leadersData">
+										<div class="row" ng-repeat="leader in leadersData track by $index">
 											<div class="col-md-1">
-												<span class="tournamentDetails">{{leader.rank}}</span>
+												<span class="tournamentDetails">{{$index + 1}}</span>
 											</div>
 											<div class="col-md-5">
 												<span class="tournamentDetails">{{leader.fName}} {{leader.lName}}</span>
@@ -672,6 +672,8 @@
 									<div class="col-md-11">
 										<span class="tournamentHead">{{tournamentData.name}}</span>
 									</div>
+								</div>
+								<div class="row">
 									<div class="col-md-11">
 										<span 
 											class="tournamentHead"
@@ -679,6 +681,29 @@
 											ng-click="tournamentRegister(tournamentData.id)"
 										>
 											Register
+										</span>
+									</div>
+								</div>
+								<div 
+									class="row"
+									ng-show="registerFailMsg"
+								>
+									<div class="col-md-11">
+										<span class="tournamentHeadFailRed">
+											{{registerFailMsg}}
+										</span>
+									</div>
+								</div>
+								<div 
+									class="row"
+									ng-show="registerFailAction === 'addFunds'"
+								>
+									<div class="col-md-11">
+										<span 
+											class="tournamentHead"
+											ng-click="addFunds()"
+										>
+											Click here to add funds
 										</span>
 									</div>
 								</div>

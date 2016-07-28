@@ -46,22 +46,11 @@ function directive(_) {
 		}
 
 		function getName(runner) {
-			var parts = [
-				runner.name,
-				runner.meds,
-				runner.equip,
-			];
-
-			return _.filter(parts).join(' - ');
+			return runner.name;
 		}
 
 		function getJockey(runner) {
-			var parts = [
-				runner.jockey,
-				runner.weight,
-			];
-
-			return _.filter(parts).join(' - ');
+			return runner.jockey;
 		}
 
 		function getTrainer(runner) {

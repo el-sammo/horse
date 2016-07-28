@@ -46,6 +46,36 @@ module.exports = {
 		});
 	},
 
+	updateTS: function(tournamentId, customerId, credits) {
+		return TournamentStandings.find({tournamentId: tournamentId}).then(function(tsData) {
+			var customers = tsData[0].customers;
+			var newCustomers = [];
+			customers.forEach(function(customer) {
+				if(customer.customerId === customerId) {
+					newCustomers.push(
+						{customerId: customerId, credits: parseFloat(credits)}
+					);
+				} else {
+					newCustomers.push(customer);
+				}
+			});
+			return TournamentStandings.update(
+				{tournamentId: tournamentId},
+				{customers: newCustomers},
+				false, 
+				false
+			).then(function(updatedTSData) {
+				return {success: true, updatedTSData: updatedTSData};
+			}).catch(function(err) {
+				console.log(err);
+				return {success: false, reason: 'invalid tournamentId'};
+			});
+		}).catch(function(err) {
+			console.log(err);
+			return {success: false, reason: 'invalid tournamentId'};
+		});
+	},
+
 	getTournamentByTrackId: function(trackId) {
 		return Tournaments.find(
 			{assocTrackId: trackId}
@@ -53,6 +83,59 @@ module.exports = {
 			return {success: true, tournamentData: tournamentData[0]};
 		}).catch(function(err) {
 			return {success: false, reason: 'invalid trackId'};
+		});
+	},
+
+	addCustomer: function(tournamentId, customerId) {
+		return TournamentStandings.find(
+			{tournamentId: tournamentId}
+		).then(function(tsDataResults) {
+			var tsData = tsDataResults[0];
+			tsData.customers.push({customerId: customerId, credits: 500});
+			return TournamentStandings.update(
+				{tournamentId: tournamentId},
+				{customers: tsData.customers},
+				false,
+				false
+			).then(function(updatedTSData) {
+				return {success: true, updatedTSData: updatedTSData};
+			}).catch(function(err) {
+				return {success: false, reason: 'invalid tournamentId or customers'};
+			});
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid tournamentId or customerId'};
+		});
+	},
+
+	removeCustomer: function(tournamentId, customerId) {
+		return TournamentStandings.find(
+			{tournamentId: tournamentId}
+		).then(function(tsDataResults) {
+			var tsData = tsDataResults[0];
+console.log(' ');
+console.log('tsData:');
+console.log(tsData);
+			var updatedCustomers = [];
+			tsData.customers.forEach(function(customer) {
+				if(customer.customerId !== customerId) {
+					updatedCustomers.push(customer)
+				}
+			});
+console.log(' ');
+console.log('updatedCustomers:');
+console.log(updatedCustomers);
+			return TournamentStandings.update(
+				{tournamentId: tournamentId},
+				{customers: updatedCustomers},
+				false,
+				false
+			).then(function(updatedTSData) {
+				return {success: true, updatedTSData: updatedTSData};
+			}).catch(function(err) {
+				return {success: false, reason: 'invalid tournamentId or customers'};
+			});
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid tournamentId or customerId'};
 		});
 	}
 }

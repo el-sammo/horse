@@ -310,11 +310,29 @@ function controller(
 		});
 	}
 
-	function updateActiveTournamentBalance(tournamentData, customerId) {
-		var customer = _.find(tournamentData.customers, {
-			customerId: customerId
+	function determineCustomerTournamentCredits(tournamentData, customerId) {
+		var credits = 500;
+		var getCustomerWagersByTournamentId = wagerMgmt.getCustomerWagersByTournamentId(tournamentData.id +'-'+ customerId);
+		return getCustomerWagersByTournamentId.then(function(customerWagers) {
+			customerWagers.forEach(function(wager) {
+				if(wager.scored) {
+					credits += parseFloat(wager.result - wager.wagerTotal);
+				} else {
+					credits -= parseFloat(wager.wagerTotal);
+				}
+			});
+			return credits;
 		});
-		$scope.activeTournamentCredits = tournamentData.name +' Credits: '+(customer.credits).toFixed(2);
+	}
+
+	function updateActiveTournamentBalance(tournamentData, customerId) {
+		var determineCustomerTournamentCreditsPromise = determineCustomerTournamentCredits(tournamentData, customerId);
+		determineCustomerTournamentCreditsPromise.then(function(credits) {
+			var updateTSCreditsPromise = tournamentMgmt.updateTSCredits(tournamentData.id, customerId, credits);
+			updateTSCreditsPromise.then(function(updateTSCreditsPromiseResponse) {
+			});
+			$scope.activeTournamentCredits = tournamentData.name +' Credits: '+(credits).toFixed(2);
+		});
 	}
 
 
@@ -984,25 +1002,44 @@ console.log('offsetMinutes: '+offsetMinutes);
 
 	function showTournamentLeaders(tournyId) {
 		$scope.showLeaders = true;
-		var getLeadersPromise = tournamentMgmt.getLeaders(tournyId);
-		getLeadersPromise.then(function(leadersData) {
-			$scope.tournamentLeadersDataTournamentName = leadersData[leadersData.length - 1];
-			leadersData.pop();
+		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
+		getTournamentPromise.then(function(tournamentData) {
+			$scope.tournamentLeadersDataTournamentName = tournamentData.name;
 			var leaderBoardData = [];
-			var rank = 1;
-			leadersData.forEach(function(leader) {
-				var getCustomerPromise = customerMgmt.getCustomer(leader.customerId);
+			tournamentData.customers.forEach(function(customer) {
+				var getCustomerPromise = customerMgmt.getCustomer(customer);
 				getCustomerPromise.then(function(customerData) {
-					var thisLeader = {};
-					thisLeader.id = leader.customerId;
-					thisLeader.rank = rank;
-					thisLeader.fName = customerData.fName;
-					thisLeader.lName = customerData.lName;
-					thisLeader.city = customerData.city;
-					thisLeader.username = customerData.username;
-					thisLeader.credits = leader.credits;
-					leaderBoardData.push(thisLeader);
-					rank ++;
+					var getCustomerTournamentCreditsPromise = tournamentMgmt.getCustomerTournamentCredits(tournyId + '-' + customerData.id);
+					getCustomerTournamentCreditsPromise.then(function(customerCredits) {
+						var creditsData = customerCredits[0];
+						if(!isNaN(creditsData.credits) &&  creditsData.credits >= 0) {
+							var thisLeader = {};
+							thisLeader.id = customerCredits.customerId;
+							thisLeader.fName = customerData.fName;
+							thisLeader.lName = customerData.lName;
+							thisLeader.city = customerData.city;
+							thisLeader.username = customerData.username;
+							thisLeader.credits = creditsData.credits;
+							leaderBoardData.push(thisLeader);
+						} else {
+							var determineCustomerTournamentCreditsPromise = determineCustomerTournamentCredits(tournamentData, customerData.id);
+							determineCustomerTournamentCreditsPromise.then(function(credits) {
+								var updateTSCreditsPromise = tournamentMgmt.updateTSCredits(tournamentData.id, customerData.id, credits);
+								updateTSCreditsPromise.then(function(updateCustomerTournamentCreditsPromiseResponse) {
+									var thisLeader = {};
+									thisLeader.id = customerData.id;
+									thisLeader.fName = customerData.fName;
+									thisLeader.lName = customerData.lName;
+									thisLeader.city = customerData.city;
+									thisLeader.username = customerData.username;
+									thisLeader.credits = credits;
+									leaderBoardData.push(thisLeader);
+								});
+							});
+						}
+						leaderBoardData.sort(dynamicSort("credits"));
+						leaderBoardData.reverse();
+					});
 				});
 			});
 			$scope.leadersData = leaderBoardData;
@@ -1011,14 +1048,27 @@ console.log('offsetMinutes: '+offsetMinutes);
 	}
 
 	function tournamentRegister(tournyId) {
-// TODO debug this, including handling errors
 		if(!$scope.customerId) {
 			layoutMgmt.logIn();
 		} else {
 			var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
 			registerTournamentPromise.then(function(response) {
+				if(response.data.success) {
+					var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
+					getTournamentPromise.then(function(tournamentData) {
+						showLeaderboards();
+						showTournamentLeaders(tournamentData.id);
+						updateActiveTournamentBalance(tournamentData, $scope.customerId);
+					});
+				} else {
 console.log('response.data:');
 console.log(response.data);
+					if(response.data.failMsg.indexOf('Insufficient Funds') > -1) {
+						var fmPcs = response.data.failMsg.split(' ');
+						$scope.registerFailMsg = 'Your real money account balance ($'+$scope.customer.dollars+') is less than the total entry fee ($'+fmPcs[2]+').';
+						$scope.registerFailAction = 'addFunds';
+					}
+				}
 			});
 		}
 	}
@@ -1033,7 +1083,13 @@ console.log(response.data);
 		});
 		if($scope.customerId || ($scope.customer && $scope.customer.id)) {
 			var customerId = $scope.customerId || $scope.customer.id;
-			updateActiveTournamentBalance(tournament, customerId);
+			tournament.customers.forEach(function(customer) {
+				if(customer === customerId) {
+					updateActiveTournamentBalance(tournament, customerId);
+				} else {
+					$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
+				}
+			});
 		} else {
 			$scope.activeTournamentCredits = 'Not Registered for '+tournament.name;
 		}
@@ -1233,6 +1289,18 @@ console.log(response.data);
 			});
 		}
 		return multiple;
+	}
+
+	function dynamicSort(property) {
+		var sortOrder = 1;
+		if(property[0] === "-") {
+			sortOrder = -1;
+			property = property.substr(1);
+		}
+		return function (a,b) {
+			var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+			return result * sortOrder;
+		}
 	}
 
 

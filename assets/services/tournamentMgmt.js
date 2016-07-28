@@ -21,7 +21,9 @@
 		var getTournamentsByCustomerIdPromise;
 		var getTournamentsByDatePromise;
 		var getLeadersPromise;
+		var getCustomerTournamentCreditsPromise;
 		var updateTournamentCustomersCreditsPromise;
+		var updateTSCreditsPromise;
 		var closeTournamentPromise;
 		var scoreTournamentPromise;
 
@@ -78,6 +80,7 @@
 			},
 
 			getLeaders: function(tournamentId) {
+console.log('getLeaders() called');
 				var url = '/tournaments/leaders/' + tournamentId;
 				getLeadersPromise = $http.get(url).then(function(leaders) {
 					return leaders.data;
@@ -90,7 +93,21 @@
 				return getLeadersPromise;
 			},
 
+			getCustomerTournamentCredits: function(tournyCustomerId) {
+				var url = '/tournamentstandings/customerTournamentCredits/' + tournyCustomerId;
+				getCustomerTournamentCreditsPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getCustomerTournamentCreditsPromise;
+			},
+
 			updateTournamentCustomersCredits: function(finalRaceId, acIds) {
+console.log('updateTournamentCustomersCredits() called');
 				var url = '/tournaments/updateTCC/' + finalRaceId;
 				return $http.put(url, acIds).success(
 					function(data, status, headers, config) {
@@ -104,6 +121,19 @@
 					console.error(err);
 					return $q.reject(err);
 				});
+			},
+
+			updateTSCredits: function(tournyId, customerId, credits) {
+				var url = '/tournaments/updateTSCredits/' + tournyId+'-'+customerId+'-'+credits;
+				updateTSCreditsPromise =  $http.get(url).then(function(response) {
+					return response.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return updateTSCreditsPromise;
 			},
 
 			closeTournament: function(trackId) {

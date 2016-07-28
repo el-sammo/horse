@@ -19,6 +19,7 @@
 		var wager;
 		var getWagerPromise;
 		var getWagersByCustomerIdPromise;
+		var getCustomerWagersByTournamentIdPromise;
 		var getWagersByCustomerIdSinceMillisecondsPromise;
 		var getLiveWagersByCustomerIdPromise;
 		var closeWagersPromise;
@@ -49,6 +50,19 @@
 				});
 
 				return getWagersByCustomerIdPromise;
+			},
+
+			getCustomerWagersByTournamentId: function(tournyCustomerId) {
+				var url = '/wagers/byTournyCustomerId/' + tournyCustomerId;
+				getCustomerWagersByTournamentIdPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getCustomerWagersByTournamentIdPromise;
 			},
 
 			getWagersByCustomerIdSinceMilliseconds: function(params) {

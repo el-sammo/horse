@@ -1159,20 +1159,17 @@
 			scoreTrdPromise.then(function(scoreTrdPromiseResponse) {
 				if(scoreTrdPromiseResponse.data.success) {
 					var tournamentId = scoreTrdPromiseResponse.data.acIds[0];
-					var updateTournamentCustomersCredits = tournamentMgmt.updateTournamentCustomersCredits(score.trId+'-'+score.raceNum, scoreTrdPromiseResponse.data.acIds);
-					updateTournamentCustomersCredits.then(function(response) {
-						if(response.status == 200 && response.statusText === 'OK') {
-							if(shouldScoreTournament) {
-								var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
-								scoreTournament.then(function(scoreTournamentResponse) {
-								});
-							}
+					if(shouldScoreTournament) {
+						var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
+						scoreTournament.then(function(scoreTournamentResponse) {
 							$window.location.href = location.origin + "/app/";
-						} else {
+						});
+					} else {
+						$window.location.href = location.origin + "/app/";
+					}
+				} else {
 console.log('response:');
 console.log(response);
-						}
-					});
 				}
 			});
 		}
