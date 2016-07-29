@@ -480,48 +480,62 @@
 				if(entry.number == getNumber) {
 					if(whichJockey === 'first') {
 						$scope.firstJockey = entry.jockey;
+						$scope.firstName = entry.name;
 					}
 					if(whichJockey === 'first1stTie') {
 						$scope.first1stTieJockey = entry.jockey;
+						$scope.first1stTieName = entry.name;
 					}
 					if(whichJockey === 'first2ndTie') {
 						$scope.first2ndTieJockey = entry.jockey;
+						$scope.first2ndTieName = entry.name;
 					}
 					if(whichJockey === 'second') {
 						$scope.secondJockey = entry.jockey;
+						$scope.secondName = entry.name;
 					}
 					if(whichJockey === 'second1stTie') {
 						$scope.second1stTieJockey = entry.jockey;
+						$scope.second1stTieName = entry.name;
 					}
 					if(whichJockey === 'second2ndTie') {
 						$scope.second2ndTieJockey = entry.jockey;
+						$scope.second2ndTieName = entry.Name;
 					}
 					if(whichJockey === 'third') {
 						$scope.thirdJockey = entry.jockey;
+						$scope.thirdName = entry.name;
 					}
 					if(whichJockey === 'third1stTie') {
 						$scope.third1stTieJockey = entry.jockey;
+						$scope.third1stTieName = entry.name;
 					}
 					if(whichJockey === 'third2ndTie') {
-						$scope.third2ndTieJockey = entry.jockey;
+						$scope.third2ndTieName = entry.name;
 					}
 					if(whichJockey === 'fourth') {
 						$scope.fourthJockey = entry.jockey;
+						$scope.fourthName = entry.name;
 					}
 					if(whichJockey === 'fourth1stTie') {
 						$scope.fourth1stTieJockey = entry.jockey;
+						$scope.fourth1stTieName = entry.name;
 					}
 					if(whichJockey === 'fourth2ndTie') {
 						$scope.fourth2ndTieJockey = entry.jockey;
+						$scope.fourth2ndTieName = entry.name;
 					}
 					if(whichJockey === 'fifth') {
 						$scope.fifthJockey = entry.jockey;
+						$scope.fifthName = entry.name;
 					}
 					if(whichJockey === 'fifth1stTie') {
 						$scope.fifth1stTieJockey = entry.jockey;
+						$scope.fifth1stTieName = entry.name;
 					}
 					if(whichJockey === 'fifth2ndTie') {
-						$scope.fifth2ndTieJockey = entry.jockey;
+						$scope.fifth2ndTieJockey = entry.name;
+						$scope.fifth2ndTieName = entry.name;
 					}
 				}
 			});
@@ -1043,6 +1057,7 @@
 			score.trId = $scope.trId;
 			score.raceNum = $scope.raceNum;
 			score.firstNumber = $scope.firstNumber;
+			score.firstName = $scope.firstName;
 			score.firstJockey = $scope.firstJockey;
 			score.firstWinPrice = $scope.firstWinPrice;
 			if($scope.firstPlacePrice) {
@@ -1053,6 +1068,7 @@
 			}
 			if($scope.secondNumber) {
 				score.secondNumber = $scope.secondNumber;
+				score.secondName = $scope.secondName;
 				score.secondJockey = $scope.secondJockey;
 				score.secondPlacePrice = $scope.secondPlacePrice;
 				if($scope.secondShowPrice) {
@@ -1063,6 +1079,7 @@
 			}
 			if($scope.thirdNumber) {
 				score.thirdNumber = $scope.thirdNumber;
+				score.thirdName = $scope.thirdName;
 				score.thirdJockey = $scope.thirdJockey;
 				score.thirdShowPrice = $scope.thirdShowPrice;
 				score.trifecta = $scope.trifecta;
@@ -1070,10 +1087,12 @@
 			}
 			if($scope.fourthNumber) {
 				score.fourthNumber = $scope.fourthNumber;
+				score.fourthName = $scope.fourthName;
 				score.fourthJockey = $scope.fourthJockey;
 			}
 			if($scope.fifthNumber) {
 				score.fifthNumber = $scope.fifthNumber;
+				score.fifthName = $scope.fifthName;
 				score.fifthJockey = $scope.fifthJockey;
 			}
 			if($scope.superfectaPrice) {

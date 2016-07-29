@@ -13,11 +13,9 @@
 		'$modal', '$rootScope', '$http'
 	];
 	
-	function service(
-		$modal, $rootScope, $http
-	) {
+	function service($modal, $rootScope, $http) {
 		var service = {
-			logIn: function() {
+			logIn: function(callerObject) {
 				$modal.open({
 					templateUrl: '/templates/login.html',
 					backdrop: true,

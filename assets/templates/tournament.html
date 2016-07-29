@@ -17,6 +17,7 @@
 			>
 				{{tournament.name}} <span class="footerLinkSmaller reservationYellow">{{tournament.mtp}}</span>
 			</span>
+			<!--
 			<span 
 				class="footerLink reservationYellow pull-right" 
 				ng-show="showSignup"
@@ -44,12 +45,21 @@
 			>
 				Log Out
 			</span>
+			-->
 			<span 
 				class="footerLink reservationYellow pull-right" 
-				ng-show="activeTournamentCredits" 
+				ng-show="showActiveTournamentCredits" 
 			>
 				{{activeTournamentCredits}}
 			</span>
+			<span 
+				class="footerLink reservationYellow pull-right" 
+				ng-show="showRegisterLink"
+				ng-click="tournamentRegister(activeTournament.id)"
+			>
+				Click Here to Register for {{activeTournament.name}}
+			</span>
+			<!--
 			<span 
 				class="footerLink reservationYellow pull-right" 
 				ng-show="customer" 
@@ -57,6 +67,7 @@
 			>
 				Hi, {{customer.fName}}!
 			</span>
+			-->
 		</div>
 	</div>
 	<div class="col-md-12">
@@ -650,7 +661,7 @@
 							>
 								<div class="row">
 									<div 
-										class="col-md-7"
+										class="col-md-5"
 										style="text-align: left;"
 									>
 										<span class="tournamentHead">Tournament</span>
@@ -667,6 +678,12 @@
 									>
 										<span class="tournamentHead">Entries</span>
 									</div>
+									<div 
+										class="col-md-2"
+										style="text-align: right;"
+									>
+										<span class="tournamentHead">Starts</span>
+									</div>
 								</div>
 								<br/>
 								<div 
@@ -674,7 +691,7 @@
 									ng-repeat="tournament in tournamentsData"
 								>
 									<div 
-										class="col-md-7"
+										class="col-md-5"
 										style="text-align: left; cursor: pointer;"
 										ng-click="showTournamentDetails(tournament.id)"
 									>
@@ -693,6 +710,13 @@
 										ng-click="showTournamentDetails(tournament.id)"
 									>
 										<span class="tournamentDetails">{{tournament.customersCount}}/{{tournament.max}}</span>
+									</div>
+									<div 
+										class="col-md-2"
+										style="text-align: right; cursor: pointer;"
+										ng-click="showTournamentDetails(tournament.id)"
+									>
+										<span class="tournamentDetails">{{tournament.mtp}}</span>
 									</div>
 								</div>
 							</div>
@@ -778,7 +802,20 @@
 										</span>
 									</div>
 									<div class="col-md-4 whiteBottom">
-										&nbsp;
+										<span 
+											class="boxHead ticketTabOff" 
+											ng-click="showResults(track.id, raceNum)"
+											ng-show="tabShow !== 'raceResults'"
+										>
+											Race Results
+										</span>
+										<span 
+											class="boxHead ticketTabOn" 
+											ng-click="showResults(track.id, raceNum)"
+											ng-show="tabShow === 'raceResults'"
+										>
+											Race Results
+										</span>
 									</div>
 								</div>
 								<br/>
@@ -915,85 +952,420 @@
 										</div>
 									</div>
 								</div>
-								<div class="row" ng-show="tabShow === 'liveWagers'">
+								<div class="row" ng-show="tabShow === 'raceResults'">
 									<div class="col-md-12">
-										<div class="row">
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Date
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Track
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Race
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Amount
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Type
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Selection
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Total
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetailsHead">
-													Result
-												</span>
+										<div 
+											class="row"
+											ng-show="raceResultsShow"
+										>
+											<div class="col-md-10 col-md-offset-1">
+												<div class="row">
+													<span class="raceDetails">
+														Results for {{raceResultsTrackRace}}
+													</span>
+												</div>
+												<div class="row">
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															#
+														</span>
+													</div>
+													<div class="col-md-3">
+														<span class="raceDetailsSmaller">
+															Name
+														</span>
+													</div>
+													<div class="col-md-3">
+														<span class="raceDetailsSmaller">
+															Jockey
+														</span>
+													</div>
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															Win
+														</span>
+													</div>
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															Place
+														</span>
+													</div>
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															Show
+														</span>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-1">
+														<span 
+															class="raceDetailsSmaller"
+														>
+															{{raceResults.firstNumber}}
+														</span>
+														<br / ng-show="raceResults.secondNumber">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.secondNumber"
+														>
+															{{raceResults.secondNumber}}
+														</span>
+														<br / ng-show="raceResults.thirdNumber">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.thirdNumber"
+														>
+															{{raceResults.thirdNumber}}
+														</span>
+														<br / ng-show="raceResults.fourthNumber">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.fourthNumber"
+														>
+															{{raceResults.fourthNumber}}
+														</span>
+														<br / ng-show="raceResults.fifthNumber">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.fifthNumber"
+														>
+															{{raceResults.fifthNumber}}
+														</span>
+													</div>
+													<div class="col-md-3">
+														<span class="raceDetailsSmaller">
+															{{raceResults.firstName}}
+														</span>
+														<br / ng-show="raceResults.secondName">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.secondName"
+														>
+															{{raceResults.secondName}}
+														</span>
+														<br / ng-show="raceResults.thirdName">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.thirdName"
+														>
+															{{raceResults.thirdName}}
+														</span>
+														<br / ng-show="raceResults.fourthName">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.fourthName"
+														>
+															{{raceResults.fourthName}}
+														</span>
+														<br / ng-show="raceResults.fifthName">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.fifthName"
+														>
+															{{raceResults.fifthName}}
+														</span>
+													</div>
+													<div class="col-md-3">
+														<span class="raceDetailsSmaller">
+															Jockey
+															{{raceResults.firstJockey}}
+														</span>
+														<br / ng-show="raceResults.secondJockey">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.secondJockey"
+														>
+															{{raceResults.secondJockey}}
+														</span>
+														<br / ng-show="raceResults.thirdJockey">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.thirdJockey"
+														>
+															{{raceResults.thirdJockey}}
+														</span>
+														<br / ng-show="raceResults.fourthJockey">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.fourthJockey"
+														>
+															{{raceResults.fourthJockey}}
+														</span>
+														<br / ng-show="raceResults.fifthJockey">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.fifthJockey"
+														>
+															{{raceResults.fifthJockey}}
+														</span>
+													</div>
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															Win
+															{{raceResults.firstWinPrice}}
+														</span>
+													</div>
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															Place
+															{{raceResults.firstPlacePrice}}
+														</span>
+														<br / ng-show="raceResults.secondPlacePrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.secondPlacePrice"
+														>
+															{{raceResults.secondPlacePrice}}
+														</span>
+													</div>
+													<div class="col-md-1">
+														<span class="raceDetailsSmaller">
+															Show
+															{{raceResults.firstShowPrice}}
+														</span>
+														<br / ng-show="raceResults.secondShowPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.secondShowPrice"
+														>
+															{{raceResults.secondShowPrice}}
+														</span>
+														<br / ng-show="raceResults.thirdShowPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.thirdShowPrice"
+														>
+															{{raceResults.thirdShowPrice}}
+														</span>
+													</div>
+												</div>
+												<div 
+													class="row"
+												>
+													<div class="col-md-3">
+														<span class="raceDetailsSmaller">
+															Wager
+														</span>
+													</div>
+													<div class="col-md-5">
+														<span class="raceDetailsSmaller">
+															Runner(s)
+														</span>
+													</div>
+													<div class="col-md-2">
+														<span class="raceDetailsSmaller">
+															Pay Out
+														</span>
+													</div>
+												</div>
+												<div 
+													class="row"
+												>
+													<div class="col-md-3">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.exacta && raceResults.exactaPrice"
+														>
+															$2 Exacta
+														</span>
+														<br / ng-show="raceResults.trifecta && raceResults.trifectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.trifecta && raceResults.trifectaPrice"
+														>
+															$2 Trifecta
+														</span>
+														<br / ng-show="raceResults.superfecta && raceResults.superfectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.superfecta && raceResults.superfectaPrice"
+														>
+															$2 Superfecta
+														</span>
+														<br / ng-show="raceResults.pentafecta && raceResults.pentafectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pentafecta && raceResults.pentafectaPrice"
+														>
+															$2 Pentafecta
+														</span>
+														<br / ng-show="raceResults.dailyDouble && raceResults.dailyDoublePrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.dailyDouble && raceResults.dailyDoublePrice"
+														>
+															$2 Daily Double
+														</span>
+														<br / ng-show="raceResults.pick3 && raceResults.pick3Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick3 && raceResults.pick3Price"
+														>
+															$2 Pick 3
+														</span>
+														<br / ng-show="raceResults.pick4 && raceResults.pick4Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick4 && raceResults.pick4Price"
+														>
+															$2 Pick 4
+														</span>
+														<br / ng-show="raceResults.pick5 && raceResults.pick5Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick5 && raceResults.pick5Price"
+														>
+															$2 Pick 5
+														</span>
+														<br / ng-show="raceResults.pick6 && raceResults.pick6Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick6 && raceResults.pick6Price"
+														>
+															$2 Pick 6
+														</span>
+													</div>
+													<div class="col-md-5">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.exacta && raceResults.exactaPrice"
+														>
+															{{raceResults.exacta}}
+														</span>
+														<br / ng-show="raceResults.trifecta && raceResults.trifectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.trifecta && raceResults.trifectaPrice"
+														>
+															{{raceResults.trifecta}}
+														</span>
+														<br / ng-show="raceResults.superfecta && raceResults.superfectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.superfecta && raceResults.superfectaPrice"
+														>
+															{{raceResults.superfecta}}
+														</span>
+														<br / ng-show="raceResults.pentafecta && raceResults.pentafectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pentafecta && raceResults.pentafectaPrice"
+														>
+															{{raceResults.pentafecta}}
+														</span>
+														<br / ng-show="raceResults.dailyDouble && raceResults.dailyDoublePrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.dailyDouble && raceResults.dailyDoublePrice"
+														>
+															{{raceResults.dailyDouble}}
+														</span>
+														<br / ng-show="raceResults.pick3 && raceResults.pick3Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick3 && raceResults.pick3Price"
+														>
+															{{raceResults.pick3}}
+														</span>
+														<br / ng-show="raceResults.pick4 && raceResults.pick4Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick4 && raceResults.pick4Price"
+														>
+															{{raceResults.pick4}}
+														</span>
+														<br / ng-show="raceResults.pick5 && raceResults.pick5Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick5 && raceResults.pick5Price"
+														>
+															{{raceResults.pick5}}
+														</span>
+														<br / ng-show="raceResults.pick6 && raceResults.pick6Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick6 && raceResults.pick6Price"
+														>
+															{{raceResults.pick6}}
+														</span>
+													</div>
+													<div class="col-md-2">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.exacta && raceResults.exactaPrice"
+														>
+															{{raceResults.exactaPrice}}
+														</span>
+														<br / ng-show="raceResults.trifecta && raceResults.trifectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.trifecta && raceResults.trifectaPrice"
+														>
+															{{raceResults.trifectaPrice}}
+														</span>
+														<br / ng-show="raceResults.superfecta && raceResults.superfectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.superfecta && raceResults.superfectaPrice"
+														>
+															{{raceResults.superfectaPrice}}
+														</span>
+														<br / ng-show="raceResults.pentafecta && raceResults.pentafectaPrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pentafecta && raceResults.pentafectaPrice"
+														>
+															{{raceResults.pentafectaPrice}}
+														</span>
+														<br / ng-show="raceResults.dailyDouble && raceResults.dailyDoublePrice">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.dailyDouble && raceResults.dailyDoublePrice"
+														>
+															{{raceResults.dailyDoublePrice}}
+														</span>
+														<br / ng-show="raceResults.pick3 && raceResults.pick3Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick3 && raceResults.pick3Price"
+														>
+															{{raceResults.pick3Price}}
+														</span>
+														<br / ng-show="raceResults.pick4 && raceResults.pick4Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick4 && raceResults.pick4Price"
+														>
+															{{raceResults.pick4Price}}
+														</span>
+														<br / ng-show="raceResults.pick5 && raceResults.pick5Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick5 && raceResults.pick5Price"
+														>
+															{{raceResults.pick5Price}}
+														</span>
+														<br / ng-show="raceResults.pick6 && raceResults.pick6Price">
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="raceResults.pick6 && raceResults.pick6Price"
+														>
+															{{raceResults.pick6Price}}
+														</span>
+													</div>
+												</div>
 											</div>
 										</div>
-										<div class="row" ng-repeat="wager in wagerHistory">
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.createdAt}}
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.track}}
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.trackRaceId}}
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.wagerAmount}}
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.wagerPool}}
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.wagerSelections}}
-												</span>
-											</div>
-											<div class="col-md-2">
-												<span class="historyDetails">
-													{{wager.wagerTotal}}
-												</span>
+										<div 
+											class="row"
+											ng-show="!raceResultsShow"
+										>
+											<div class="col-md-10 col-md-offset-1">
+												<div class="row">
+													<span class="raceDetails">
+														No Results for {{raceResultsTrackRace}}
+													</span>
+												</div>
 											</div>
 										</div>
 									</div>
