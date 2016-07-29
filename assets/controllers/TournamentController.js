@@ -88,6 +88,7 @@ function controller(
 		$scope.changeActiveTournament = changeActiveTournament;
 
 		$scope.convertPostTime = convertPostTime;
+		$scope.formatPrice = formatPrice;
 		$scope.getTournamentMinToPost = getTournamentMinToPost;
 		$scope.getRaceMinToPost = getRaceMinToPost;
 		$scope.raceNumberTabClass = raceNumberTabClass;
@@ -234,6 +235,7 @@ function controller(
 					$scope.showRegisterLink = false;
 					$scope.showActiveTournamentCredits = true;
 				} else {
+console.log('the customer just logged in');
 					$scope.showActiveTournamentCredits = false;
 					$scope.showRegisterLink = true;
 				}
@@ -380,7 +382,7 @@ function controller(
 		var trackRaceCount = $scope.track.races.length;
 		$scope.track.races.forEach(function(race) {
 			if(race.number == raceNum) {
-				if(!race.closed || override || $scope.activeTournament.closed) {
+				if(!race.closed || override || $scope.activeTournament.scored) {
 					$scope.race = race;
 					$scope.raceNum = raceNum;
 					$scope.trId = $scope.track.id+'-'+raceNum;
@@ -816,6 +818,10 @@ function controller(
 		return formattedRT;
 	}
 
+	function formatPrice(price) {
+		return parseFloat(price).toFixed(2);
+	}
+
 	function setAmount(amount) {
 		if(amount === 'customAmount') {
 			$scope.wagerData.amount = $scope.customAmount;
@@ -924,7 +930,7 @@ function controller(
 						var trackId = trIdPcs[0];
 						var raceNumber = trIdPcs[1];
 						formattedWager.race = wager.tournamentName.substr(0,3) +'-'+ raceNumber;
-						formattedWager.amount = wager.wagerAmount;
+						formattedWager.amount = parseFloat(wager.wagerAmount).toFixed(2);
 						formattedWager.type = wager.wagerAbbrev;
 						formattedWager.selection = wager.wagerSelections;
 						formattedWager.total = wager.wagerTotal;
@@ -1024,19 +1030,17 @@ function controller(
 					if(race.score) {
 						raceScoreFound = true;
 						race.score.trackName = trackName;
-console.log('race.score:');
-console.log(race.score);
 						$scope.raceResults = race.score;
 					}
 				}
 			});
+			if(raceScoreFound) {
+				$scope.raceResultsShow = true;
+			} else {
+				$scope.raceResultsShow = false;
+			}
+			$scope.tabShow = 'raceResults';
 		});
-		if(raceScoreFound) {
-			$scope.raceResultsShow = true;
-		} else {
-			$scope.raceResultsShow = false;
-		}
-		$scope.tabShow = 'raceResults';
 	}
 
 	function showTournamentDetails(tournyId) {
@@ -1138,16 +1142,20 @@ console.log(response.data);
 		});
 		if($scope.customerId || ($scope.customer && $scope.customer.id)) {
 			var customerId = $scope.customerId || $scope.customer.id;
+			var customerMatchFound = false;
 			tournament.customers.forEach(function(customer) {
 				if(customer === customerId) {
-					$scope.showRegisterLink = false;
-					$scope.showActiveTournamentCredits = true;
-					updateActiveTournamentBalance(tournament, customerId);
-				} else {
-					$scope.showActiveTournamentCredits = false;
-					$scope.showRegisterLink = true;
+					customerMatchFound = true;
 				}
 			});
+			if(customerMatchFound) {
+				$scope.showRegisterLink = false;
+				$scope.showActiveTournamentCredits = true;
+				updateActiveTournamentBalance(tournament, customerId);
+			} else {
+				$scope.showActiveTournamentCredits = false;
+				$scope.showRegisterLink = true;
+			}
 		} else {
 			$scope.showActiveTournamentCredits = false;
 			$scope.showRegisterLink = true;
