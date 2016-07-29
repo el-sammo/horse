@@ -27,8 +27,8 @@ module.exports = {
 	},
 
 	getCustomerTournamentCreditBalance: function(tournamentId, customerId) {
-		return Tournaments.find(
-			{id: tournamentId}
+		return TournamentStandings.find(
+			{tournamentId: tournamentId}
 		).then(function(tournamentData) {
 			var customerFound = false;
 			var credits;

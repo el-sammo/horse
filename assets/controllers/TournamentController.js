@@ -71,6 +71,7 @@ function controller(
 		$scope.scoreRace = scoreRace;
 		$scope.updateSelectedRunnersDisplay = updateSelectedRunnersDisplay;
 		$scope.clearSelectedRunners = initRunners;
+		$scope.setAmount = setAmount;
 		$scope.submitWager = submitWager;
 		$scope.cancelWager = cancelWager;
 		$scope.showHistory = showHistory;
@@ -289,6 +290,9 @@ function controller(
 			});
 
 		});
+
+		showTournamentLeaders($routeParams.id);
+
 		setTimeout(function() { 
 			initTournaments();
 		}, 60000);
@@ -318,7 +322,9 @@ function controller(
 				if(wager.scored) {
 					credits += parseFloat(wager.result - wager.wagerTotal);
 				} else {
-					credits -= parseFloat(wager.wagerTotal);
+					if(!wager.cancelled) {
+						credits -= parseFloat(wager.wagerTotal);
+					}
 				}
 			});
 			return credits;
@@ -359,7 +365,7 @@ function controller(
 		var trackRaceCount = $scope.track.races.length;
 		$scope.track.races.forEach(function(race) {
 			if(race.number == raceNum) {
-				if(!race.closed || override) {
+				if(!race.closed || override || $scope.activeTournament.closed) {
 					$scope.race = race;
 					$scope.raceNum = raceNum;
 					$scope.trId = $scope.track.id+'-'+raceNum;
@@ -427,10 +433,8 @@ function controller(
 
 		$scope.showLeg(1);
 
-		$scope.amountOptions = {
-			repeatSelect: null,
-			availableOptions: amountMap[min]
-		}
+		$scope.amountOptions = amountMap[min];
+
 		$scope.showHistory();
 	}
 
@@ -782,9 +786,11 @@ function controller(
 		var minutes = rt.getMinutes();
 		var apm = ' am';
 
-		if(hours > 12) {
+		if(hours > 11) {
 			apm = ' pm';
-			hours = (hours - 12);
+			if(hours > 12) {
+				hours = (hours - 12);
+			}
 		}
 
 		if(minutes < 10) {
@@ -793,6 +799,15 @@ function controller(
 
 		var formattedRT = hours + ':' + minutes + apm + tz;
 		return formattedRT;
+	}
+
+	function setAmount(amount) {
+		if(amount === 'customAmount') {
+			$scope.wagerData.amount = $scope.customAmount;
+		} else {
+			$scope.wagerData.amount = amount;
+		}
+		updateSelectedRunnersDisplay();
 	}
 
 	function submitWager(activeTournamentId) {
@@ -971,9 +986,11 @@ function controller(
 				if(raceNum < 2) {
 					var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
 					closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
+						alert('Race Closed');
 						$location.path("/tournament/" + $scope.activeTournamentId);
 					});
 				} else {
+					alert('Race Closed');
 					$location.path("/tournament/" + $scope.activeTournamentId);
 				}
 			});

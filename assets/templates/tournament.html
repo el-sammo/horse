@@ -384,29 +384,61 @@
 							class="row"
 							style="padding-left: 12px;"
 						>
-							<div class="col-md-12">
+							<div class="col-md-11 col-md-offset-1">
 								<div class="row">
 									<div class="col-md-2">
-										<div class="row">
+										<div 
+											class="row"
+											style="
+												text-align: center;
+												border-bottom: 1px solid white;
+											"
+										>
 											<div class="col-md-12">
 												<span class="raceDetails">Amount</span>
 											</div>
 										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<select 
-													name="repeatSelect" 
-													id="repeatSelect" 
-													ng-model="wagerData.amount"
-													ng-change="updateSelectedRunnersDisplay()"
+										<div 
+											class="row"
+											style="
+												text-align: center;
+												cursor: pointer;
+												border-left: 1px solid white;
+												border-right: 1px solid white;
+												border-bottom: 1px solid white;
+											"
+											ng-repeat="amount in amountOptions"
+											ng-click="setAmount(amount)"
+										>
+											<div 
+												class="col-md-12"
+												style="text-align: right;"
+											>
+												<span class="raceDetailsSmaller">
+													{{amount}}
+												</span>
+											</div>
+										</div>
+										<div 
+											class="row"
+											style="text-align: center;"
+										>
+											<div 
+												class="col-md-12"
+											>
+												<input 
+													type="text"
+													style="
+														width: 141%;
+														left: -20%;
+														position: relative;
+													"
+													name="customAmount" 
+													id="customerAmount" 
+													ng-model="customAmount"
+													ng-change="setAmount('customAmount')"
+													placeholder="other"
 												>
-													<option 
-														ng-repeat="option in amountOptions.availableOptions" 
-														value="{{option}}"
-													>
-														{{option}}
-													</option>
-												</select>
 											</div>
 										</div>
 									</div>
