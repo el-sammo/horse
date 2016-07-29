@@ -630,7 +630,7 @@
 											</div>
 											<div 
 												class="col-md-2"
-												class="text-align: right;"
+												style="text-align: right;"
 											>
 												<span class="tournamentDetails">Credits</span>
 											</div>
@@ -647,7 +647,7 @@
 											</div>
 											<div 
 												class="col-md-2"
-												class="text-align: right;"
+												style="text-align: right;"
 											>
 												<span class="tournamentDetails">{{leader.credits}}</span>
 											</div>
@@ -861,7 +861,7 @@
 								<div class="row" ng-show="tabShow === 'wagerHistory'">
 									<div class="col-md-11 historyHeight">
 										<div class="row">
-											<div class="col-md-2">
+											<div class="col-md-1">
 												<span class="historyDetailsHead">
 													Race
 												</span>
@@ -874,18 +874,18 @@
 													Amount
 												</span>
 											</div>
-											<div class="col-md-2">
+											<div class="col-md-1">
 												<span class="historyDetailsHead">
 													Type
 												</span>
 											</div>
 											<div class="col-md-3">
 												<span class="historyDetailsHead">
-													Selection
+													Selection(s)
 												</span>
 											</div>
 											<div 
-												class="col-md-1"
+												class="col-md-2"
 												style="text-align: right;"
 											>
 												<span class="historyDetailsHead">
@@ -893,7 +893,7 @@
 												</span>
 											</div>
 											<div 
-												class="col-md-1"
+												class="col-md-2"
 												style="text-align: right;"
 											>
 												<span class="historyDetailsHead">
@@ -902,8 +902,11 @@
 											</div>
 										</div>
 										<div class="row" ng-repeat="wager in wagerHistory">
-											<div class="col-md-2">
-												<span class="historyDetails">
+											<div class="col-md-1">
+												<span 
+													class="historyDetails"
+													style="white-space: nowrap;"
+												>
 													{{wager.race}}
 												</span>
 											</div>
@@ -915,7 +918,7 @@
 													{{wager.amount}}
 												</span>
 											</div>
-											<div class="col-md-2">
+											<div class="col-md-1">
 												<span class="historyDetails">
 													{{wager.type}}
 												</span>
@@ -926,7 +929,7 @@
 												</span>
 											</div>
 											<div 
-												class="col-md-1"
+												class="col-md-2"
 												style="text-align: right;"
 											>
 												<span class="historyDetails">
@@ -934,7 +937,7 @@
 												</span>
 											</div>
 											<div 
-												class="col-md-1"
+												class="col-md-2"
 												style="text-align: right;"
 												ng-show="wager.result !== 'Pending' && wager.result !== 'Cancel'"
 											>
@@ -943,7 +946,7 @@
 												</span>
 											</div>
 											<div 
-												class="col-md-1"
+												class="col-md-2"
 												style="text-align: right;"
 												ng-show="wager.result === 'Pending'"
 											>
@@ -952,7 +955,7 @@
 												</span>
 											</div>
 											<div 
-												class="col-md-1"
+												class="col-md-2"
 												style="text-align: right; cursor: pointer;"
 												ng-show="wager.result === 'Cancel'"
 												ng-click="cancelWager(wager.id)"
