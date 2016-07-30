@@ -879,6 +879,27 @@ td {
 	position: relative;
 }
 
+.wagerAmountTabOn {
+	top: 1px;
+	padding-left: 4px;
+	padding-right: 4px;
+	border-left: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	border-bottom: 1px solid #5E4747;
+	position: relative;
+	z-index: 99;
+}
+
+.wagerAmountTabOff {
+	top: 1px;
+	text-align: center;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #FFFFFF;
+	position: relative;
+}
+
 .legNumberTabOn {
 	top: 1px;
 	padding-left: 12px;

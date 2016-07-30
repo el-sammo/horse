@@ -94,6 +94,7 @@ function controller(
 		$scope.raceNumberTabClass = raceNumberTabClass;
 		$scope.wagerTypeTabClass = wagerTypeTabClass;
 		$scope.wagerTypeTabStyle = wagerTypeTabStyle;
+		$scope.wagerAmountTabClass = wagerAmountTabClass;
 
 		// For debugging
 		$scope.debugLog = debugLog;
@@ -162,10 +163,11 @@ function controller(
 		partMap['Pick 10'] = 1;
 
 		amountMap = [];
-		amountMap[.1] = ['.10','.20','.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
-		amountMap[.5] = ['.50','1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
+		amountMap[.1] = ['.10','.20','.50','1.00','2.00','5.00','10.00','20.00','50.00','100.00'];
+		amountMap[.2] = ['.20','.50','1.00','2.00','3.00','5.00','10.00','20.00','50.00','100.00'];
+		amountMap[.5] = ['.50','1.00','2.00','3.00','4.00','5.00','10.00','20.00','50.00','100.00'];
 		amountMap[1] = ['1.00','2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
-		amountMap[2] = ['2.00','3.00','4.00','5.00','6.00','10.00','20.00','50.00','100.00'];
+		amountMap[2] = ['2.00','3.00','4.00','5.00','6.00','10.00','20.00','25.00','50.00','100.00'];
 
 		wagerAbbrevMap = [];
 		wagerAbbrevMap['Win'] = 'Win';
@@ -464,6 +466,7 @@ function controller(
 		$scope.showLeg(1);
 
 		$scope.amountOptions = amountMap[min];
+		$scope.wagerData.amount = amountMap[min][0];
 
 		$scope.showHistory();
 	}
@@ -1196,6 +1199,18 @@ console.log(response.data);
 
 		return {
 			wagerTypeTabOff: true,
+		};
+	}
+
+	function wagerAmountTabClass(amount) {
+		if($scope.wagerData.amount === amount) {
+			return {
+				wagerAmountTabOn: true,
+			};
+		}
+
+		return {
+			wagerAmountTabOff: true,
 		};
 	}
 

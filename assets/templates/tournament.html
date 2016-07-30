@@ -280,6 +280,48 @@
 									style="padding-top: 6px;"
 								>
 									<div 
+										class="col-md-1 whiteBottom"
+										ng-repeat="amount in amountOptions"
+									>
+										<span 
+											class="raceDetails"
+											ng-class="wagerAmountTabClass(amount)"
+											style="cursor: pointer;"
+											ng-click="setAmount(amount)"
+										>
+											${{amount}}
+										</span>
+									</div>
+									<div 
+										class="col-md-2 whiteBottom"
+										style="
+											top: -1px;
+											position: relative;
+										"
+									>
+										<input 
+											style="
+												top: 0px;
+												left: 6px;
+												height: 21px;
+												width: 100%;
+												position: relative;
+											"
+											type="text"
+											name="customAmount"
+											id="customAmount"
+											ng-model="customAmount"
+											ng-change="setAmount('customAmount')"
+											placeholder="other"
+										>
+									</div>
+								</div>
+								<br/>
+								<div 
+									class="row"
+									style="padding-top: 6px;"
+								>
+									<div 
 										class="col-md-12"
 									>
 										<div class="row" ng-if="legs > 1">
@@ -446,63 +488,7 @@
 						>
 							<div class="col-md-11 col-md-offset-1">
 								<div class="row">
-									<div class="col-md-2">
-										<div 
-											class="row"
-											style="
-												text-align: center;
-												border-bottom: 1px solid white;
-											"
-										>
-											<div class="col-md-12">
-												<span class="raceDetails">Amount</span>
-											</div>
-										</div>
-										<div 
-											class="row"
-											style="
-												text-align: center;
-												cursor: pointer;
-												border-left: 1px solid white;
-												border-right: 1px solid white;
-												border-bottom: 1px solid white;
-											"
-											ng-repeat="amount in amountOptions"
-											ng-click="setAmount(amount)"
-										>
-											<div 
-												class="col-md-12"
-												style="text-align: right;"
-											>
-												<span class="raceDetailsSmaller">
-													{{amount}}
-												</span>
-											</div>
-										</div>
-										<div 
-											class="row"
-											style="text-align: center;"
-										>
-											<div 
-												class="col-md-12"
-											>
-												<input 
-													type="text"
-													style="
-														width: 141%;
-														left: -20%;
-														position: relative;
-													"
-													name="customAmount" 
-													id="customerAmount" 
-													ng-model="customAmount"
-													ng-change="setAmount('customAmount')"
-													placeholder="other"
-												>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-5">
+									<div class="col-md-7">
 										<span class="raceDetails" ng-show="wager && wagerData.amount">${{wagerData.amount}} {{wager}}:</span>
 										<br/>
 										<span class="raceDetails" ng-show="wager">{{formattedRunners}}</span>
