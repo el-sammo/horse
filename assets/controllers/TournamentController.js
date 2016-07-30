@@ -235,7 +235,6 @@ function controller(
 					$scope.showRegisterLink = false;
 					$scope.showActiveTournamentCredits = true;
 				} else {
-console.log('the customer just logged in');
 					$scope.showActiveTournamentCredits = false;
 					$scope.showRegisterLink = true;
 				}
@@ -401,6 +400,20 @@ console.log('the customer just logged in');
 	}
 
 	function showLeg(legNum) {
+		var displayRaceNum = (($scope.raceNum - 1) + legNum);
+		var legData = {};
+		$scope.track.races.forEach(function(race) {
+			if(parseInt(race.number) == displayRaceNum) {
+				legData.distance = race.distance;
+				legData.surface = race.surface;
+				legData.sexes = race.sexes;
+				legData.ages = race.ages;
+				legData.type = race.type;
+				legData.claim = race.claim;
+				legData.purse = race.purse;
+			}
+		});
+		$scope.legData = legData;
 		$scope.legShow = legNum;
 	}
 

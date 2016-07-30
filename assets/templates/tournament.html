@@ -322,6 +322,55 @@
 													<div 
 														class="col-md-12" 
 													>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.distance"
+														>
+															Distance: {{legData.distance}} |
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.surface"
+														>
+															Surface: {{legData.surface}} |
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.sexes"
+														>
+															{{legData.sexes}} |
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.ages"
+														>
+															{{legData.ages}} |
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.type"
+														>
+															{{legData.type}} |
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.claim"
+														>
+															Claim: ${{legData.claim}} |
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															ng-show="legData.purse"
+														>
+															Purse: ${{legData.purse}}
+														</span>
+													</div>
+												</div>
+												<br/>
+												<div class="row">
+													<div 
+														class="col-md-12" 
+													>
 														<div class="row">
 															<div class="col-md-12">
 																<ng-include src="'/templates/entryDataTmpl.html'"></ng-include>

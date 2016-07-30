@@ -1,11 +1,12 @@
 <div class="col-md-2">
 	<span 
-		class="raceDetailsSmaller"
+		ng-class="getClass()" 
+		ng-style="getStyle()" 
 	>
-		{{entry.ml}}
+		{{getMl(entry)}}
 		<br ng-show="entry.altRunner">
 		<span ng-if="entry.altRunner">
-			{{entry.altRunner.ml}}
+			{{getMl(entry.altRunner)}}
 		</span>
 	</span>
 </div>

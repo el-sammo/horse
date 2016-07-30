@@ -21,6 +21,7 @@ function directive(_) {
 	function link(scope, element, attrs) {
 		scope.getStyle = getStyle;
 		scope.getClass = getClass;
+		scope.getMl = getMl;
 		scope.getName = getName;
 		scope.getJockey = getJockey;
 		scope.getTrainer = getTrainer;
@@ -43,6 +44,10 @@ function directive(_) {
 			return {
 				raceDetailsShade: true,
 			};
+		}
+
+		function getMl(runner) {
+			return runner.ml;
 		}
 
 		function getName(runner) {
