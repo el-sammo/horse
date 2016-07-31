@@ -18,6 +18,8 @@
 	) {
 		var trd;
 		var getTrdsByDatePromise;
+		var closeRacePromise;
+		var scratchEntryPromise;
 
 		var service = {
 			getTrd: function(trdId) {
@@ -77,6 +79,32 @@
 					console.error(err);
 					return $q.reject(err);
 				});
+			},
+
+			closeRace: function(trdId, raceNum, customerId) {
+				var url = '/trds/closeRace/' + trdId +'-' + raceNum +'-'+ customerId;
+				closeRacePromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('get ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return closeRacePromise;
+			},
+
+			scratchEntry: function(trdId, raceNum, entryNum, customerId) {
+				var url = '/trds/scratchEntry/' + trdId +'-'+ raceNum +'-'+ entryNum +'-'+ customerId;
+				scratchEntryPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('get ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return scratchEntryPromise;
 			},
 
 			scoreTrd: function(scoreData) {

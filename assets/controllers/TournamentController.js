@@ -80,6 +80,7 @@ function controller(
 		$scope.showTournaments = showTournaments;
 		$scope.showConfirmation = showConfirmation;
 		$scope.closeRace = closeRace;
+		$scope.scratchEntry = scratchEntry;
 		$scope.showResults = showResults;
 		$scope.showTournamentDetails = showTournamentDetails;
 		$scope.showTournamentLeaders = showTournamentLeaders;
@@ -1011,26 +1012,38 @@ function controller(
 
 	function closeRace(raceNum) {
 		var trackData = $scope.track;
-		trackData.races.forEach(function(race) {
-			if(race.number == raceNum) {
-				race.closed = true;
-			}
-		});
-		var updateTrdDataPromise = trdMgmt.updateTrd(trackData);
+		var updateTrdDataPromise = trdMgmt.closeRace(trackData.id, raceNum, $scope.customerId || $scope.customer.id);
 		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
-			var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
-			closeWagersPromise.then(function(closeWagersPromiseResponse) {
-				if(raceNum < 2) {
-					var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
-					closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
+			if(updateTrdDataPromiseResponse.success) {
+				var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
+				closeWagersPromise.then(function(closeWagersPromiseResponse) {
+					if(raceNum < 2) {
+						var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
+						closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
+							alert('Race Closed');
+							$location.path("/tournament/" + $scope.activeTournamentId);
+						});
+					} else {
 						alert('Race Closed');
 						$location.path("/tournament/" + $scope.activeTournamentId);
-					});
-				} else {
-					alert('Race Closed');
-					$location.path("/tournament/" + $scope.activeTournamentId);
-				}
-			});
+					}
+				});
+			} else {
+console.log('closeRace() updateTrdDataPromise failed');
+			}
+		});
+	};
+
+	function scratchEntry(entryNum) {
+		var trdId = $scope.track.id;
+		var raceNum = $scope.raceNum;
+		var updateTrdDataPromise = trdMgmt.scratchEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
+updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+			if(updateTrdDataPromiseResponse.success) {
+				alert('Entry Scratched');
+			} else {
+console.log('scratchEntry() updateTrdDataPromise failed');
+			}
 		});
 	};
 

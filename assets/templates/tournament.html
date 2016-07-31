@@ -466,6 +466,14 @@
 															ng-disabled="!entry.active"
 															ng-show="!race.closed"
 														>
+														<span 
+															class="raceDetailsSmaller"
+															style="cursor: pointer;"
+															ng-show="customer && customer.admin"
+															ng-click="scratchEntry(entry.number)"
+														>
+															SCR
+														</span>
 														<entry-nums-posts
 															entry="entry"
 															race="race"
