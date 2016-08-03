@@ -768,12 +768,26 @@
 								ng-show="showTournament"
 							>
 								<div class="row">
-									<div class="col-md-11">
+									<div class="col-md-4">
 										<span class="tournamentHead">{{tournamentData.name}}</span>
+									</div>
+									<div 
+										class="col-md-5 col-md-offset-1"
+										style="text-align: right;"
+									>
+										<timer
+											ng-if="showTournamentTimer"
+											class="tournamentHead"
+											countdown="tournamentCountdownTimer"
+											max-time-unit="'hour'" 
+											interval="1000"
+										>
+										{{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}
+										</timer>
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-11">
+									<div class="col-md-5">
 										<span 
 											class="tournamentHead"
 											style="cursor: pointer;"

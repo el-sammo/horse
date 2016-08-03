@@ -312,9 +312,9 @@ function controller(
 		showLeaderboards();
 		showTournamentLeaders($routeParams.id);
 
-		setTimeout(function() { 
-			initTournaments();
-		}, 60000);
+//		setTimeout(function() { 
+//			initTournaments();
+//		}, 60000);
 	}
 
 	///
@@ -1074,12 +1074,15 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 
 	function showTournamentDetails(tournyId) {
 		var dateObj = new Date();
+		var nowMills = dateObj.getTime();
 		var now = dateObj.toString();
 		var offsetMinutes = dateObj.getTimezoneOffset();
+		$scope.showTournamentTimer = false;
 		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 		getTournamentPromise.then(function(tournamentData) {
 			$scope.tournamentData = tournamentData;
-
+			$scope.tournamentCountdownTimer = parseInt((tournamentData.startTime - nowMills) / 1000);
+			$scope.showTournamentTimer = true;
 		});
 		if(!$scope.showLeaders) {
 			$scope.showTournament = true;
