@@ -247,9 +247,12 @@ function controller(
 	}
 
 	function onGetTournaments(currentTournamentsData) {
+		var dateObj = new Date();
+		var nowMills = dateObj.getTime();
+		var formattedTournaments = []
 		var formattedTournaments = []
 		currentTournamentsData.forEach(function(tournament) {
-			tournament.mtp = getTournamentMinToPost(tournament.startTime, tournament.scored, tournament.closed);
+			tournament.mtp = parseInt((tournament.startTime - nowMills) / 1000);
 			formattedTournaments.push(tournament);
 		});
 		$scope.currentTournaments = currentTournamentsData;
@@ -1075,8 +1078,6 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 	function showTournamentDetails(tournyId) {
 		var dateObj = new Date();
 		var nowMills = dateObj.getTime();
-		var now = dateObj.toString();
-		var offsetMinutes = dateObj.getTimezoneOffset();
 		$scope.showTournamentTimer = false;
 		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 		getTournamentPromise.then(function(tournamentData) {

@@ -1020,6 +1020,12 @@ td {
 	font-weight: 400;
 }
 
+.tournamentHeadSmaller {
+	color: #FFFFFF;
+	font-size: 10px;
+	font-weight: 300;
+}
+
 .tournamentHeadFailRed {
 	color: #FF0000;
 	font-size: 14px;

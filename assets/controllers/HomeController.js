@@ -104,9 +104,11 @@ function controller(
 	}
 
 	function onGetTournaments(currentTournamentsData) {
+		var dateObj = new Date();
+		var nowMills = dateObj.getTime();
 		var formattedTournaments = []
 		currentTournamentsData.forEach(function(tournament) {
-			tournament.mtp = getMinToPost(tournament.startTime);
+			tournament.mtp = parseInt((tournament.startTime - nowMills) / 1000);
 			formattedTournaments.push(tournament);
 		});
 		$scope.currentTournaments = formattedTournaments;

@@ -15,7 +15,15 @@
 				ng-click="changeActiveTournament(tournament)" 
 				ng-repeat="tournament in currentTournaments" track by $index
 			>
-				{{tournament.name}} <span class="footerLinkSmaller reservationYellow">{{tournament.mtp}}</span>
+				{{tournament.name}}
+				<timer
+					class="footerLinkSmaller reservationYellow"
+					countdown="tournament.mtp"
+					max-time-unit="'minute'" 
+					interval="1000"
+				>
+					{{mminutes}}M
+				</timer>
 			</span>
 			<!--
 			<span 
