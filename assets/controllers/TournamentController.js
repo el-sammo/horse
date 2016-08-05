@@ -1167,8 +1167,16 @@ console.log(response.data);
 
 	function setActiveTournament(tournament) {
 		$scope.activeTournament = tournament;
+		var dateObj = new Date();
+		var nowMills = dateObj.getTime();
 		var getTrdPromise = trdMgmt.getTrd(tournament.assocTrackId);
 		getTrdPromise.then(function(trdData) {
+			var races = [];
+			trdData.races.forEach(function(race) {
+				race.mtp = parseInt((race.postTime - nowMills) / 1000);
+				races.push(race);
+			});
+			trdData.races = races;
 			$scope.track = trdData;
 			$scope.activeTournamentId = tournament.id;
 			$scope.showTrack($scope.track.id);

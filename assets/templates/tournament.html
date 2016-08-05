@@ -149,7 +149,13 @@
 									ng-if="!race.closed"
 								>
 									<br/>
-									{{getRaceMinToPost(race.postTime)}}
+									<timer
+										countdown="race.mtp"
+										max-time-unit="'minute'" 
+										interval="1000"
+									>
+										{{mminutes}}M
+									</timer>
 								</span>
 								<span 
 									class="raceDetailsSmaller"
@@ -790,7 +796,7 @@
 											max-time-unit="'hour'" 
 											interval="1000"
 										>
-										{{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}
+											{{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}
 										</timer>
 									</div>
 								</div>
