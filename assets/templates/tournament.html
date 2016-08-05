@@ -17,6 +17,7 @@
 			>
 				{{tournament.name}}
 				<timer
+					ng-if="tournament.mtp >= 0"
 					class="footerLinkSmaller reservationYellow"
 					countdown="tournament.mtp"
 					max-time-unit="'minute'" 
@@ -24,6 +25,19 @@
 				>
 					{{mminutes}}M
 				</timer>
+				<span
+					class="footerLinkSmaller reservationYellow"
+					ng-if="tournament.mtp < 0 && tournament.closed && !tournament.scored"
+				>
+					In Progress
+				</span>
+				<span
+					class="footerLinkSmaller reservationYellow"
+					ng-if="tournament.mtp < 0 && tournament.closed && tournament.scored"
+					ng-click="showTournamentLeaders(tournament.id)"
+				>
+					Results
+				</span>
 			</span>
 			<!--
 			<span 
@@ -146,7 +160,7 @@
 							>
 								<span 
 									class="raceDetailsSmaller"
-									ng-if="!race.closed"
+									ng-if="!race.closed && race.mtp >= 0"
 								>
 									<br/>
 									<timer
