@@ -284,7 +284,11 @@ function controller(
 				tournamentData.entryFee = tournament.entryFee;
 				tournamentData.siteFee = tournament.siteFee;
 				tournamentData.customersCount = tournament.customers.length;
-				tournamentData.max = tournament.max;
+				if(tournament.max == 99999) {
+					tournamentData.max = 'UNLMTD';
+				} else {
+					tournamentData.max = tournament.max;
+				}
 				if(tournament.closed) {
 					if(tournament.scored) {
 						tournamentData.tournamentStatus = 'Finished';
@@ -428,6 +432,7 @@ function controller(
 		$scope.selectedWager = wager;
 		$scope.wagerTmpl = wager;
 		$scope.wager = wager;
+		$scope.wagerMin = min;
 
 		var track = $scope.track;
 
@@ -843,8 +848,9 @@ function controller(
 	}
 
 	function setAmount(amount) {
-		if(amount === 'customAmount') {
-			$scope.wagerData.amount = $scope.customAmount;
+		if(amount < $scope.wagerMin) {
+			$scope.wagerData.amount = $scope.wagerMin;
+			alert('The minimum wager amount is '+$scope.wagerMin);
 		} else {
 			$scope.wagerData.amount = amount;
 		}

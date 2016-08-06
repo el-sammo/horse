@@ -152,6 +152,13 @@ function tournamentRegister(req, res, self) {
 	var customerId = rpiPcs[1];
 	return Tournaments.find({id: tournamentId}).then(function(results) {
 		var tournamentData = results[0];
+		var MournamentMax;
+		if(tournamentData.max == 99999) {
+			tournamentMax = 999999999999;
+		} else {
+			tournamentMax = tournamentData.max;
+		}
+
 		if(tournamentData.closed) {
 			return res.send(JSON.stringify({success: false, failMsg: 'Closed'}));
 		}
@@ -165,7 +172,7 @@ function tournamentRegister(req, res, self) {
 			return res.send(JSON.stringify({success: false, failMsg: 'Already Registered'}));
 		}
 		var totalFee = parseFloat(parseFloat(tournamentData.entryFee) + parseFloat(tournamentData.siteFee));
-		if(tournamentData.customers.length < tournamentData.max) {
+		if(tournamentData.customers.length < tournamentMax) {
 			return TournamentsService.getCustomerBalance(customerId).then(function(balanceData) {
 				if(balanceData.balance >= totalFee) {
 					return TournamentsService.updateCustomerBalance(customerId, balanceData.balance, totalFee, 'subtract').then(function(customerData) {
