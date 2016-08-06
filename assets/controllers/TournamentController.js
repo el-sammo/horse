@@ -951,7 +951,6 @@ function controller(
 					wagerHistory.forEach(function(wager) {
 						var formattedWager = {};
 						formattedWager.id = wager.id;
-						formattedWager.date = wager.createdAt.substr(0,10) +' '+wager.createdAt.substr(11,8);
 						var trIdPcs = wager.trackRaceId.split('-');
 						var trackId = trIdPcs[0];
 						var raceNumber = trIdPcs[1];
