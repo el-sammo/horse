@@ -353,7 +353,7 @@ function controller(
 					}
 				}
 			});
-			return credits;
+			return parseFloat(credits.toFixed(2));
 		});
 	}
 
@@ -1114,7 +1114,7 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 							thisLeader.lName = customerData.lName;
 							thisLeader.city = customerData.city;
 							thisLeader.username = customerData.username;
-							thisLeader.credits = creditsData.credits;
+							thisLeader.credits = parseFloat(creditsData.credits);
 							leaderBoardData.push(thisLeader);
 						} else {
 							var determineCustomerTournamentCreditsPromise = determineCustomerTournamentCredits(tournamentData, customerData.id);
@@ -1127,7 +1127,8 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 									thisLeader.lName = customerData.lName;
 									thisLeader.city = customerData.city;
 									thisLeader.username = customerData.username;
-									thisLeader.credits = credits;
+console.log('typeof credits: '+typeof credits);
+									thisLeader.credits = parseFloat(credits.toFixed(2));
 									leaderBoardData.push(thisLeader);
 								});
 							});
@@ -1140,6 +1141,10 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 			$scope.leadersData = leaderBoardData;
 		});
 		$scope.showTournamentDetails(tournyId);
+
+		setTimeout(function() { 
+			showTournamentLeaders(tournyId);
+		}, 30000);
 	}
 
 	function tournamentRegister(tournyId) {

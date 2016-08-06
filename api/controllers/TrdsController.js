@@ -406,255 +406,275 @@ console.log('first NOT correct');
 					}
 					if(wager.wagerPool === 'Daily Double') {
 console.log('evaluating dd');
-						var wsPcs = wager.wagerSelections.split(' / ');
-						var ddPcs = scoreData.dailyDouble.split('/');
-						var firstRunners = wsPcs[0];
-						var secondRunners = wsPcs[1];
-						var firstWinners = ddPcs[0];
-						var secondWinners = ddPcs[1];
-						var firstCorrect = false;
-						var secondCorrect = false;
-						var firstRunnersArray = firstRunners.split(',');
-						var secondRunnersArray = secondRunners.split(',');
-						var firstWinnersArray = firstWinners.split(',');
-						var secondWinnersArray = secondWinners.split(',');
-						firstWinnersArray.forEach(function(firstWinner) {
-							firstRunnersArray.forEach(function(firstRunner) {
-								if(firstWinner.toString() === firstRunner.toString()) {
-									firstCorrect = true;
-								}
-							});
-						});
-						if(firstCorrect) {
-							secondWinnersArray.forEach(function(secondWinner) {
-								secondRunnersArray.forEach(function(secondRunner) {
-									if(secondWinner.toString() === secondRunner.toString()) {
-										secondCorrect = true;
+						if(scoreData.dailyDouble) {
+							var wsPcs = wager.wagerSelections.split(' / ');
+							var ddPcs = scoreData.dailyDouble.split('/');
+							var firstRunners = wsPcs[0];
+							var secondRunners = wsPcs[1];
+							var firstWinners = ddPcs[0];
+							var secondWinners = ddPcs[1];
+							var firstCorrect = false;
+							var secondCorrect = false;
+							var firstRunnersArray = firstRunners.split(',');
+							var secondRunnersArray = secondRunners.split(',');
+							var firstWinnersArray = firstWinners.split(',');
+							var secondWinnersArray = secondWinners.split(',');
+							firstWinnersArray.forEach(function(firstWinner) {
+								firstRunnersArray.forEach(function(firstRunner) {
+									if(firstWinner.toString() === firstRunner.toString()) {
+										firstCorrect = true;
 									}
 								});
 							});
-							if(secondCorrect) {
-								result += ((wager.wagerAmount / 2) * scoreData.dailyDoublePrice);
-console.log('result: '+result);
+							if(firstCorrect) {
+								secondWinnersArray.forEach(function(secondWinner) {
+									secondRunnersArray.forEach(function(secondRunner) {
+										if(secondWinner.toString() === secondRunner.toString()) {
+											secondCorrect = true;
+										}
+									});
+								});
+								if(secondCorrect) {
+									result += ((wager.wagerAmount / 2) * scoreData.dailyDoublePrice);
+	console.log('result: '+result);
+								} else {
+	console.log('second NOT correct');
+								}
 							} else {
-console.log('second NOT correct');
+	console.log('first NOT correct');
 							}
 						} else {
-console.log('first NOT correct');
+// TODO debug this
+console.log('scoreData.dailyDouble expected but not found');
 						}
 					}
 					if(wager.wagerPool === 'Pick 3') {
 console.log('evaluating p3');
-						var wsPcs = wager.wagerSelections.split(' / ');
-						var p3Pcs = scoreData.pick3.split('/');
-						var firstRunners = wsPcs[0];
-						var secondRunners = wsPcs[1];
-						var thirdRunners = wsPcs[2];
-						var firstWinners = p3Pcs[0];
-						var secondWinners = p3Pcs[1];
-						var thirdWinners = p3Pcs[2];
-						var firstCorrect = false;
-						var secondCorrect = false;
-						var thirdCorrect = false;
-						var firstRunnersArray = firstRunners.split(',');
-						var secondRunnersArray = secondRunners.split(',');
-						var thirdRunnersArray = thirdRunners.split(',');
-						var firstWinnersArray = firstWinners.split(',');
-						var secondWinnersArray = secondWinners.split(',');
-						var thirdWinnersArray = thirdWinners.split(',');
-						firstWinnersArray.forEach(function(firstWinner) {
-							firstRunnersArray.forEach(function(firstRunner) {
-								if(firstWinner.toString() === firstRunner.toString()) {
-									firstCorrect = true;
-								}
-							});
-						});
-						if(firstCorrect) {
-							secondWinnersArray.forEach(function(secondWinner) {
-								secondRunnersArray.forEach(function(secondRunner) {
-									if(secondWinner.toString() === secondRunner.toString()) {
-										secondCorrect = true;
+						if(scoreData.pick3) {
+							var wsPcs = wager.wagerSelections.split(' / ');
+							var p3Pcs = scoreData.pick3.split('/');
+							var firstRunners = wsPcs[0];
+							var secondRunners = wsPcs[1];
+							var thirdRunners = wsPcs[2];
+							var firstWinners = p3Pcs[0];
+							var secondWinners = p3Pcs[1];
+							var thirdWinners = p3Pcs[2];
+							var firstCorrect = false;
+							var secondCorrect = false;
+							var thirdCorrect = false;
+							var firstRunnersArray = firstRunners.split(',');
+							var secondRunnersArray = secondRunners.split(',');
+							var thirdRunnersArray = thirdRunners.split(',');
+							var firstWinnersArray = firstWinners.split(',');
+							var secondWinnersArray = secondWinners.split(',');
+							var thirdWinnersArray = thirdWinners.split(',');
+							firstWinnersArray.forEach(function(firstWinner) {
+								firstRunnersArray.forEach(function(firstRunner) {
+									if(firstWinner.toString() === firstRunner.toString()) {
+										firstCorrect = true;
 									}
 								});
 							});
-							if(secondCorrect) {
-								thirdWinnersArray.forEach(function(thirdWinner) {
-									thirdRunnersArray.forEach(function(thirdRunner) {
-										if(thirdWinner.toString() === thirdRunner.toString()) {
-											thirdCorrect = true;
+							if(firstCorrect) {
+								secondWinnersArray.forEach(function(secondWinner) {
+									secondRunnersArray.forEach(function(secondRunner) {
+										if(secondWinner.toString() === secondRunner.toString()) {
+											secondCorrect = true;
 										}
 									});
 								});
-								if(thirdCorrect) {
-									result += ((wager.wagerAmount / 2) * scoreData.pick3Price);
+								if(secondCorrect) {
+									thirdWinnersArray.forEach(function(thirdWinner) {
+										thirdRunnersArray.forEach(function(thirdRunner) {
+											if(thirdWinner.toString() === thirdRunner.toString()) {
+												thirdCorrect = true;
+											}
+										});
+									});
+									if(thirdCorrect) {
+										result += ((wager.wagerAmount / 2) * scoreData.pick3Price);
 console.log('result: '+result);
-								} else {
+									} else {
 console.log('third NOT correct');
+									}
+								} else {
+console.log('second NOT correct');
 								}
 							} else {
-console.log('second NOT correct');
+console.log('first NOT correct');
 							}
 						} else {
-console.log('first NOT correct');
+// TODO debug this
+console.log('scoreData.pick3 expected but not found');
 						}
 					}
 					if(wager.wagerPool === 'Pick 4') {
 console.log('evaluating p4');
-						var wsPcs = wager.wagerSelections.split(' / ');
-						var p4Pcs = scoreData.pick4.split('/');
-						var firstRunners = wsPcs[0];
-						var secondRunners = wsPcs[1];
-						var thirdRunners = wsPcs[2];
-						var fourthRunners = wsPcs[2];
-						var firstWinners = p4Pcs[0];
-						var secondWinners = p4Pcs[1];
-						var thirdWinners = p4Pcs[2];
-						var fourthWinners = p4Pcs[2];
-						var firstCorrect = false;
-						var secondCorrect = false;
-						var thirdCorrect = false;
-						var fourthCorrect = false;
-						var firstRunnersArray = firstRunners.split(',');
-						var secondRunnersArray = secondRunners.split(',');
-						var thirdRunnersArray = thirdRunners.split(',');
-						var fourthRunnersArray = fourthRunners.split(',');
-						var firstWinnersArray = firstWinners.split(',');
-						var secondWinnersArray = secondWinners.split(',');
-						var thirdWinnersArray = thirdWinners.split(',');
-						var fourthWinnersArray = fourthWinners.split(',');
-						firstWinnersArray.forEach(function(firstWinner) {
-							firstRunnersArray.forEach(function(firstRunner) {
-								if(firstWinner.toString() === firstRunner.toString()) {
-									firstCorrect = true;
-								}
-							});
-						});
-						if(firstCorrect) {
-							secondWinnersArray.forEach(function(secondWinner) {
-								secondRunnersArray.forEach(function(secondRunner) {
-									if(secondWinner.toString() === secondRunner.toString()) {
-										secondCorrect = true;
+						if(scoreData.pick4) {
+							var wsPcs = wager.wagerSelections.split(' / ');
+							var p4Pcs = scoreData.pick4.split('/');
+							var firstRunners = wsPcs[0];
+							var secondRunners = wsPcs[1];
+							var thirdRunners = wsPcs[2];
+							var fourthRunners = wsPcs[2];
+							var firstWinners = p4Pcs[0];
+							var secondWinners = p4Pcs[1];
+							var thirdWinners = p4Pcs[2];
+							var fourthWinners = p4Pcs[2];
+							var firstCorrect = false;
+							var secondCorrect = false;
+							var thirdCorrect = false;
+							var fourthCorrect = false;
+							var firstRunnersArray = firstRunners.split(',');
+							var secondRunnersArray = secondRunners.split(',');
+							var thirdRunnersArray = thirdRunners.split(',');
+							var fourthRunnersArray = fourthRunners.split(',');
+							var firstWinnersArray = firstWinners.split(',');
+							var secondWinnersArray = secondWinners.split(',');
+							var thirdWinnersArray = thirdWinners.split(',');
+							var fourthWinnersArray = fourthWinners.split(',');
+							firstWinnersArray.forEach(function(firstWinner) {
+								firstRunnersArray.forEach(function(firstRunner) {
+									if(firstWinner.toString() === firstRunner.toString()) {
+										firstCorrect = true;
 									}
 								});
 							});
-							if(secondCorrect) {
-								thirdWinnersArray.forEach(function(thirdWinner) {
-									thirdRunnersArray.forEach(function(thirdRunner) {
-										if(thirdWinner.toString() === thirdRunner.toString()) {
-											thirdCorrect = true;
+							if(firstCorrect) {
+								secondWinnersArray.forEach(function(secondWinner) {
+									secondRunnersArray.forEach(function(secondRunner) {
+										if(secondWinner.toString() === secondRunner.toString()) {
+											secondCorrect = true;
 										}
 									});
 								});
-								if(thirdCorrect) {
-									fourthWinnersArray.forEach(function(fourthWinner) {
-										fourthRunnersArray.forEach(function(fourthRunner) {
-											if(fourthWinner.toString() === fourthRunner.toString()) {
-												fourthCorrect = true;
+								if(secondCorrect) {
+									thirdWinnersArray.forEach(function(thirdWinner) {
+										thirdRunnersArray.forEach(function(thirdRunner) {
+											if(thirdWinner.toString() === thirdRunner.toString()) {
+												thirdCorrect = true;
 											}
 										});
 									});
-									if(fourthCorrect) {
-										result += ((wager.wagerAmount / 2) * scoreData.pick4Price);
+									if(thirdCorrect) {
+										fourthWinnersArray.forEach(function(fourthWinner) {
+											fourthRunnersArray.forEach(function(fourthRunner) {
+												if(fourthWinner.toString() === fourthRunner.toString()) {
+													fourthCorrect = true;
+												}
+											});
+										});
+										if(fourthCorrect) {
+											result += ((wager.wagerAmount / 2) * scoreData.pick4Price);
 console.log('result: '+result);
-									} else {
+										} else {
 console.log('fourth NOT correct');
+										}
+									} else {
+console.log('third NOT correct');
 									}
 								} else {
-console.log('third NOT correct');
+console.log('second NOT correct');
 								}
 							} else {
-console.log('second NOT correct');
+console.log('first NOT correct');
 							}
 						} else {
-console.log('first NOT correct');
+// TODO debug this
+console.log('scoreData.pick4 expected but not found');
 						}
 					}
 					if(wager.wagerPool === 'Pick 5') {
 console.log('evaluating p5');
-						var wsPcs = wager.wagerSelections.split(' / ');
-						var p5Pcs = scoreData.pick5.split('/');
-						var firstRunners = wsPcs[0];
-						var secondRunners = wsPcs[1];
-						var thirdRunners = wsPcs[2];
-						var fourthRunners = wsPcs[2];
-						var fifthRunners = wsPcs[2];
-						var firstWinners = p5Pcs[0];
-						var secondWinners = p5Pcs[1];
-						var thirdWinners = p5Pcs[2];
-						var fourthWinners = p5Pcs[2];
-						var fifthWinners = p5Pcs[2];
-						var firstCorrect = false;
-						var secondCorrect = false;
-						var thirdCorrect = false;
-						var fourthCorrect = false;
-						var fifthCorrect = false;
-						var firstRunnersArray = firstRunners.split(',');
-						var secondRunnersArray = secondRunners.split(',');
-						var thirdRunnersArray = thirdRunners.split(',');
-						var fourthRunnersArray = fourthRunners.split(',');
-						var fifthRunnersArray = fifthRunners.split(',');
-						var firstWinnersArray = firstWinners.split(',');
-						var secondWinnersArray = secondWinners.split(',');
-						var thirdWinnersArray = thirdWinners.split(',');
-						var fourthWinnersArray = fourthWinners.split(',');
-						var fifthWinnersArray = fifthWinners.split(',');
-						firstWinnersArray.forEach(function(firstWinner) {
-							firstRunnersArray.forEach(function(firstRunner) {
-								if(firstWinner.toString() === firstRunner.toString()) {
-									firstCorrect = true;
-								}
-							});
-						});
-						if(firstCorrect) {
-							secondWinnersArray.forEach(function(secondWinner) {
-								secondRunnersArray.forEach(function(secondRunner) {
-									if(secondWinner.toString() === secondRunner.toString()) {
-										secondCorrect = true;
+						if(scoreData.pick5) {
+							var wsPcs = wager.wagerSelections.split(' / ');
+							var p5Pcs = scoreData.pick5.split('/');
+							var firstRunners = wsPcs[0];
+							var secondRunners = wsPcs[1];
+							var thirdRunners = wsPcs[2];
+							var fourthRunners = wsPcs[2];
+							var fifthRunners = wsPcs[2];
+							var firstWinners = p5Pcs[0];
+							var secondWinners = p5Pcs[1];
+							var thirdWinners = p5Pcs[2];
+							var fourthWinners = p5Pcs[2];
+							var fifthWinners = p5Pcs[2];
+							var firstCorrect = false;
+							var secondCorrect = false;
+							var thirdCorrect = false;
+							var fourthCorrect = false;
+							var fifthCorrect = false;
+							var firstRunnersArray = firstRunners.split(',');
+							var secondRunnersArray = secondRunners.split(',');
+							var thirdRunnersArray = thirdRunners.split(',');
+							var fourthRunnersArray = fourthRunners.split(',');
+							var fifthRunnersArray = fifthRunners.split(',');
+							var firstWinnersArray = firstWinners.split(',');
+							var secondWinnersArray = secondWinners.split(',');
+							var thirdWinnersArray = thirdWinners.split(',');
+							var fourthWinnersArray = fourthWinners.split(',');
+							var fifthWinnersArray = fifthWinners.split(',');
+							firstWinnersArray.forEach(function(firstWinner) {
+								firstRunnersArray.forEach(function(firstRunner) {
+									if(firstWinner.toString() === firstRunner.toString()) {
+										firstCorrect = true;
 									}
 								});
 							});
-							if(secondCorrect) {
-								thirdWinnersArray.forEach(function(thirdWinner) {
-									thirdRunnersArray.forEach(function(thirdRunner) {
-										if(thirdWinner.toString() === thirdRunner.toString()) {
-											thirdCorrect = true;
+							if(firstCorrect) {
+								secondWinnersArray.forEach(function(secondWinner) {
+									secondRunnersArray.forEach(function(secondRunner) {
+										if(secondWinner.toString() === secondRunner.toString()) {
+											secondCorrect = true;
 										}
 									});
 								});
-								if(thirdCorrect) {
-									fourthWinnersArray.forEach(function(fourthWinner) {
-										fourthRunnersArray.forEach(function(fourthRunner) {
-											if(fourthWinner.toString() === fourthRunner.toString()) {
-												fourthCorrect = true;
+								if(secondCorrect) {
+									thirdWinnersArray.forEach(function(thirdWinner) {
+										thirdRunnersArray.forEach(function(thirdRunner) {
+											if(thirdWinner.toString() === thirdRunner.toString()) {
+												thirdCorrect = true;
 											}
 										});
 									});
-									if(fourthCorrect) {
-										fifthWinnersArray.forEach(function(fifthWinner) {
-											fifthRunnersArray.forEach(function(fifthRunner) {
-												if(fifthWinner.toString() === fifthRunner.toString()) {
-													fifthCorrect = true;
+									if(thirdCorrect) {
+										fourthWinnersArray.forEach(function(fourthWinner) {
+											fourthRunnersArray.forEach(function(fourthRunner) {
+												if(fourthWinner.toString() === fourthRunner.toString()) {
+													fourthCorrect = true;
 												}
 											});
 										});
-										if(fifthCorrect) {
-											result += ((wager.wagerAmount / 2) * scoreData.pick5Price);
+										if(fourthCorrect) {
+											fifthWinnersArray.forEach(function(fifthWinner) {
+												fifthRunnersArray.forEach(function(fifthRunner) {
+													if(fifthWinner.toString() === fifthRunner.toString()) {
+														fifthCorrect = true;
+													}
+												});
+											});
+											if(fifthCorrect) {
+												result += ((wager.wagerAmount / 2) * scoreData.pick5Price);
 console.log('result: '+result);
-										} else {
+											} else {
 console.log('fifth NOT correct');
+											}
+										} else {
+console.log('fourth NOT correct');
 										}
 									} else {
-console.log('fourth NOT correct');
+console.log('third NOT correct');
 									}
 								} else {
-console.log('third NOT correct');
+console.log('second NOT correct');
 								}
 							} else {
-console.log('second NOT correct');
-							}
-						} else {
 console.log('first NOT correct');
+							}
 						}
+					} else {
+// TODO debug this
+console.log('score.pick5 expected but not found');
 					}
 // TODO P6, P7, P8, P9, P10
 					TrdsService.scoreWager(wager.id, result).then(function(updateWagerResponse) {

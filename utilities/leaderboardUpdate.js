@@ -53,7 +53,7 @@ print('newCustomers:');
 print(JSON.stringify(newCustomers));
 		db.tournamentstandings.update(
 			{tournamentId: tournamentId},
-			{customers: newCustomers},
+			{$set: {customers: newCustomers}},
 			false,
 			false
 		)
@@ -77,8 +77,8 @@ function getCustomerTournamentCredits(customerId, tournamentId) {
 		}
 	}
 print(' ');
-print('credits: '+credits);
-	return credits;
+print('credits: '+credits.toFixed(2));
+	return credits.toFixed(2);
 }
 
 function randomIntFromInterval(min,max) {

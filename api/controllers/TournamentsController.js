@@ -392,6 +392,10 @@ function scoreValidTournament(req, res, self) {
 		false,
 		false
 	).then(function(scoreResponse) {
+// TODO
+// update tournamentstandings
+// then
+// award prize pool
 		res.send(JSON.stringify(scoreResponse[0]));
 	}).catch(function(err) {
 		return {error: 'Server error'};
