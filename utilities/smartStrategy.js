@@ -14,20 +14,25 @@ if(date < 10) {
 }
 
 var useDate = year + month + date;
+// useDate = 20160806; // <-- debug code
+print('useDate: '+useDate);
 
 getTracks(useDate);
 //getWagerRunners('2x4x3x5x5') // <-- debug code
 
 function getTracks(useDate) {
+print('getTracks() called');
 	var cursor = db.trds.find({raceDate: parseInt(useDate)});
 	while(cursor.hasNext()) {
 		var trdData = cursor.next();
+print('trdData found for '+trdData.name);
 		var trackId = (trdData._id.toString()).substring(10,34);
 		getTournamentsByAssocTrackId(trdData, trackId);
 	}
 }
 
 function getTournamentsByAssocTrackId(trdData, trackId) {
+print('getTournamentsByAssocTrackId() called');
 	var cursor = db.tournaments.find({assocTrackId: trackId});
 	while(cursor.hasNext()) {
 		var tournamentData = cursor.next();
@@ -38,6 +43,7 @@ function getTournamentsByAssocTrackId(trdData, trackId) {
 }
 
 function getTournamentStandingsByTournamentId(trdData, trackId, tournamentId, tournamentName) {
+print('getTournamentStandingsByTournamentId() called');
 	var cursor = db.tournamentstandings.find({tournamentId: tournamentId});
 	while(cursor.hasNext()) {
 		var tsData = cursor.next();
@@ -48,6 +54,7 @@ function getTournamentStandingsByTournamentId(trdData, trackId, tournamentId, to
 }
 
 function getCustomer(trdData, trackId, customerId, tournamentId, tournamentName) {
+print('getCustomer() called');
 	var _id = new ObjectId(customerId);
 	var cursor = db.customers.find({_id: _id});
 	while(cursor.hasNext()) {
@@ -60,6 +67,7 @@ function getCustomer(trdData, trackId, customerId, tournamentId, tournamentName)
 }
 
 function getCustomerBalance(trdData, trackId, customer, customerId, tournamentId, tournamentName) {
+print('getCustomerBalance() called');
 	var credits = 500;
 	var cursor = db.wagers.find({
 		customerId: customerId,
@@ -75,12 +83,18 @@ function getCustomerBalance(trdData, trackId, customer, customerId, tournamentId
 			}
 		}
 	}
+print('credits: '+credits);
 	if(credits > 0) {
 		makeStrategicWager(trdData, trackId, customer, customerId, tournamentId, tournamentName, credits);
 	}
 }
 
 function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId, tournamentName, credits) {
+print(' ');
+print(' ');
+print(' ');
+print('makeStrategicWager() called for '+customer.fName+' ('+customer.wagerPreference+'-'+customer.wagerAggression+') and '+credits+' credits');
+print(' ');
 	var raceFound = false;
 	var wagerFound = false;
 	var foundRace;
@@ -1092,7 +1106,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 		if(customer.wagerPreference === 'wps') {
 			if(customer.wagerAggression === 'high') {
 				if(credits >= 300) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1105,7 +1119,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 240) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1118,7 +1132,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 120) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1131,7 +1145,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 60) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1146,7 +1160,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 			}
 			if(customer.wagerAggression === 'medium') {
 				if(credits >= 300) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1159,7 +1173,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 240) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1172,7 +1186,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 120) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1185,7 +1199,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 60) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1200,7 +1214,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 			}
 			if(customer.wagerAggression === 'low') {
 				if(credits >= 300) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1213,7 +1227,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 240) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1226,7 +1240,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 120) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1239,7 +1253,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 					}
 				}
 				if(credits >= 60) {
-					if(wagerTypes.indexOf('Win') && !wagerFound) {
+					if(wagerTypes.indexOf('Win') > -1 && !wagerFound) {
 						wager.finalRaceId = trackId + '-' + foundRace.number;
 						wager.wagerPool = 'Win';
 						wager.wagerAbbrev = 'Win';
@@ -1263,7 +1277,7 @@ function makeStrategicWager(trdData, trackId, customer, customerId, tournamentId
 		wager.tournamentName = tournamentName;
 		wager.ss = true;
 
-print('inserting wager with selections: '+wager.wagerSelections);
+print(JSON.stringify(wager));
 		db.wagers.insert(wager);
 	}
 }

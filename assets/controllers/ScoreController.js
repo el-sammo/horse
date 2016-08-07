@@ -1179,6 +1179,7 @@
 				if(scoreTrdPromiseResponse.data.success) {
 					var tournamentId = scoreTrdPromiseResponse.data.acIds[0];
 					if(shouldScoreTournament) {
+console.log('shouldScoreTournament');
 						var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
 						scoreTournament.then(function(scoreTournamentResponse) {
 							$window.location.href = location.origin + "/app/";
