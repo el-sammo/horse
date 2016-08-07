@@ -291,6 +291,7 @@ function controller(
 					tournamentData.max = tournament.max;
 				}
 				if(tournament.closed) {
+					tournamentData.showTDTimer = false;
 					if(tournament.scored) {
 						tournamentData.tournamentStatus = 'Finished';
 					} else {
@@ -298,6 +299,7 @@ function controller(
 					}
 				} else {
 					var mtp = getTournamentMinToPost(tournament.startTime, false, false);
+					tournamentData.showTDTimer = true;
 					tournamentData.mtp = mtp;
 					if(tournament.customers.length == tournament.max) {
 						tournamentData.tournamentStatus = 'Full';
@@ -1029,11 +1031,11 @@ function controller(
 					if(raceNum < 2) {
 						var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
 						closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
-							alert('Race Closed');
+							alert('Race '+raceNum+' Closed');
 							$location.path("/tournament/" + $scope.activeTournamentId);
 						});
 					} else {
-						alert('Race Closed');
+						alert('Race '+raceNum+' Closed');
 						$location.path("/tournament/" + $scope.activeTournamentId);
 					}
 				});
@@ -1128,7 +1130,7 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 							thisLeader.lName = customerData.lName;
 							thisLeader.city = customerData.city;
 							thisLeader.username = customerData.username;
-							thisLeader.credits = parseFloat(creditsData.credits);
+							thisLeader.credits = parseFloat(creditsData.credits.toFixed(2));
 							leaderBoardData.push(thisLeader);
 						} else {
 							var determineCustomerTournamentCreditsPromise = determineCustomerTournamentCredits(tournamentData, customerData.id);
@@ -1141,7 +1143,6 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 									thisLeader.lName = customerData.lName;
 									thisLeader.city = customerData.city;
 									thisLeader.username = customerData.username;
-console.log('typeof credits: '+typeof credits);
 									thisLeader.credits = parseFloat(credits.toFixed(2));
 									leaderBoardData.push(thisLeader);
 								});

@@ -740,7 +740,7 @@
 							>
 								<div class="row">
 									<div 
-										class="col-md-5"
+										class="col-md-4"
 										style="text-align: left;"
 									>
 										<span class="tournamentHead">Tournament</span>
@@ -758,10 +758,10 @@
 										<span class="tournamentHead">Entries</span>
 									</div>
 									<div 
-										class="col-md-2"
+										class="col-md-3"
 										style="text-align: right;"
 									>
-										<span class="tournamentHead">Starts</span>
+										<span class="tournamentHead">Status</span>
 									</div>
 								</div>
 								<br/>
@@ -770,7 +770,7 @@
 									ng-repeat="tournament in tournamentsData"
 								>
 									<div 
-										class="col-md-5"
+										class="col-md-4"
 										style="text-align: left; cursor: pointer;"
 										ng-click="showTournamentDetails(tournament.id)"
 									>
@@ -791,11 +791,35 @@
 										<span class="tournamentDetails">{{tournament.customersCount}}/{{tournament.max}}</span>
 									</div>
 									<div 
-										class="col-md-2"
+										class="col-md-3"
 										style="text-align: right; cursor: pointer;"
 										ng-click="showTournamentDetails(tournament.id)"
 									>
-										<span class="tournamentDetails">{{tournament.mtp}}</span>
+										<span 
+											class="tournamentDetails"
+											ng-if="tournament.showTDTimer && tournament.tournamentStatus === 'Registering'"
+										>
+											<timer
+												class="footerLinkSmaller reservationYellow"
+												countdown="tournament.mtp"
+												max-time-unit="'minute'" 
+												interval="1000"
+											>
+												Closes in {{mminutes}} min
+											</timer>
+										</span>
+										<span 
+											class="tournamentDetails"
+											ng-if="tournament.showTDTimer && tournament.tournamentStatus === 'Full'"
+										>
+											{{tournament.tournamentStatus}}
+										</span>
+										<span 
+											class="tournamentDetails"
+											ng-if="!tournament.showTDTimer"
+										>
+											{{tournament.tournamentStatus}}
+										</span>
 									</div>
 								</div>
 							</div>

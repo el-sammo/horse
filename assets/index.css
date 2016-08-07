@@ -978,6 +978,12 @@ td {
 	font-weight: 500;
 }
 
+.raceDetailsBigger {
+	color: #FFFFFF;
+	font-size: 20px;
+	font-weight: 700;
+}
+
 .raceDetailsRed {
 	color: #FF0000;
 	font-size: 16px;
