@@ -77,8 +77,8 @@ function getCustomerTournamentCredits(customerId, tournamentId) {
 		}
 	}
 print(' ');
-print('credits: '+credits.toFixed(2));
-	return credits.toFixed(2);
+print('credits: '+parseFloat(credits));
+	return parseFloat(credits);
 }
 
 function randomIntFromInterval(min,max) {

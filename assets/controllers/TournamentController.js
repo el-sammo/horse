@@ -81,6 +81,7 @@ function controller(
 		$scope.showConfirmation = showConfirmation;
 		$scope.closeRace = closeRace;
 		$scope.scratchEntry = scratchEntry;
+		$scope.unScratchEntry = unScratchEntry;
 		$scope.showResults = showResults;
 		$scope.showTournamentDetails = showTournamentDetails;
 		$scope.showTournamentLeaders = showTournamentLeaders;
@@ -1048,7 +1049,20 @@ console.log('closeRace() updateTrdDataPromise failed');
 		var updateTrdDataPromise = trdMgmt.scratchEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
 updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
 			if(updateTrdDataPromiseResponse.success) {
-				alert('Entry Scratched');
+				alert(entryNum+' Scratched');
+			} else {
+console.log('scratchEntry() updateTrdDataPromise failed');
+			}
+		});
+	};
+
+	function unScratchEntry(entryNum) {
+		var trdId = $scope.track.id;
+		var raceNum = $scope.raceNum;
+		var updateTrdDataPromise = trdMgmt.unScratchEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
+updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+			if(updateTrdDataPromiseResponse.success) {
+				alert(entryNum+' Unscratched');
 			} else {
 console.log('scratchEntry() updateTrdDataPromise failed');
 			}

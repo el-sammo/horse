@@ -20,6 +20,7 @@
 		var getTrdsByDatePromise;
 		var closeRacePromise;
 		var scratchEntryPromise;
+		var unScratchEntryPromise;
 
 		var service = {
 			getTrd: function(trdId) {
@@ -105,6 +106,19 @@
 				});
 
 				return scratchEntryPromise;
+			},
+
+			unScratchEntry: function(trdId, raceNum, entryNum, customerId) {
+				var url = '/trds/unScratchEntry/' + trdId +'-'+ raceNum +'-'+ entryNum +'-'+ customerId;
+				unScratchEntryPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('get ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return unScratchEntryPromise;
 			},
 
 			scoreTrd: function(scoreData) {

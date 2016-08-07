@@ -497,10 +497,18 @@
 														<span 
 															class="raceDetailsSmaller"
 															style="cursor: pointer;"
-															ng-show="customer && customer.admin"
+															ng-show="customer && customer.admin && entry.active"
 															ng-click="scratchEntry(entry.number)"
 														>
 															SCR
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															style="cursor: pointer;"
+															ng-show="customer && customer.admin && !entry.active"
+															ng-click="unScratchEntry(entry.number)"
+														>
+															UNS
 														</span>
 														<entry-nums-posts
 															entry="entry"
