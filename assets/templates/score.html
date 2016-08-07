@@ -420,13 +420,12 @@
 							</span>
 						</div>
 						<div class="col-md-2">
-							<input type="text" ng-model="fifthNumber" ng-change="getJockey('fifth')">
+							<input type="text" ng-model="fifthNumber" ng-change="getJockey('fifth'); updateExotics('fifth-fifthNumber')">
 						</div>
 						<div class="col-md-2">
 							<input 
 								type="text" 
 								ng-model="fifthJockey"
-								ng-change="updateExotics('fifth-fifthNumber')"
 							>
 						</div>
 						<div class="col-md-1">

@@ -1277,8 +1277,20 @@ print(' ');
 		wager.tournamentName = tournamentName;
 		wager.ss = true;
 
+		if(
+			wager.finalRaceId &&
+			wager.wagerPool &&
+			wager.wagerAbbrev &&
+			wager.legs &&
+			wager.parts &&
+			wager.wagerSelections &&
+			wager.wagerAmount &&
+			wager.wagerTotal &&
+			wagerFound
+		) {
 print(JSON.stringify(wager));
-		db.wagers.insert(wager);
+			db.wagers.insert(wager);
+		}
 	}
 }
 

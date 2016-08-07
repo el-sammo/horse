@@ -828,8 +828,8 @@
 				$scope.superfectaPcs[3];
 		}
 
-		$scope.updatePentfecta = function(pos, val) {
-			if($scope.pentafecta.length > 1){
+		$scope.updatePentafecta = function(pos, val) {
+			if($scope.pentafecta.length > 1) {
 				$scope.pentafectaPcs = $scope.pentafecta.split('/');
 				if(pos === 'first') {
 					if(val === 'firstNumber') {
