@@ -110,7 +110,8 @@ module.exports = {
 		var rpIdPcs = req.params.id.split('-');
 		var customerId = rpIdPcs[0];
 		var mill = rpIdPcs[1];
-		Wagers.find({customerId: customerId, wagerPlacedAt: {'gte': mill}}).sort({
+		var tournamentId = rpIdPcs[2];
+		Wagers.find({tournamentId: tournamentId, customerId: customerId, wagerPlacedAt: {'gte': mill}}).sort({
 			wagerPlacedAt: 'desc'
 		}).then(function(results) {
 			res.send(JSON.stringify(results));

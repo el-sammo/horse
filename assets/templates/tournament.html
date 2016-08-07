@@ -173,6 +173,13 @@
 								</span>
 								<span 
 									class="raceDetailsSmaller"
+									ng-if="!race.closed && race.mtp < 0"
+								>
+									<br/>
+									ATG
+								</span>
+								<span 
+									class="raceDetailsSmaller"
 									style="cursor: pointer;"
 									ng-click="closeRace(race.number)"
 									ng-if="customer.admin && !race.score && !race.closed"

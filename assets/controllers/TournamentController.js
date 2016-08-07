@@ -946,7 +946,7 @@ function controller(
 			var thisDay = dateObj.getDate();
 			var todayDate = new Date(thisYear, thisMonth, thisDay);
 			var todayMill = todayDate.getTime();
-			var params = customerId + '-' + todayMill;
+			var params = customerId + '-' + todayMill + '-' + $routeParams.id;
 			var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
 			getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
 				if(wagerHistory.length > 0) {
@@ -1066,7 +1066,7 @@ updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
 			if(updateTrdDataPromiseResponse.success) {
 				alert(entryNum+' Unscratched');
 			} else {
-console.log('scratchEntry() updateTrdDataPromise failed');
+console.log('unScratchEntry() updateTrdDataPromise failed');
 			}
 		});
 	};
@@ -1112,6 +1112,7 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 	}
 
 	function showTournamentLeaders(tournyId) {
+		var tdObj = new Date();
 		$scope.showLeaders = true;
 		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 		getTournamentPromise.then(function(tournamentData) {
@@ -1158,8 +1159,10 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 		$scope.showTournamentDetails(tournyId);
 
 		setTimeout(function() { 
-			showTournamentLeaders(tournyId);
-		}, 30000);
+			if($routeParams.id === tournyId) {
+				showTournamentLeaders(tournyId);
+			}
+		}, 60000);
 	}
 
 	function tournamentRegister(tournyId) {
