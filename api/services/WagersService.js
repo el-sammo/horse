@@ -12,6 +12,16 @@ module.exports = {
 		});
 	},
 
+	getTournament: function(tournamentId) {
+		return TournamentStandings.find(
+			{tournamentId: tournamentId}
+		).then(function(tournamentsData) {
+			return {success: true, tournamentData: tournamentsData[0]};
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid tournamentId'};
+		});
+	},
+
 	getCustomerBalance: function(customerId) {
 		return Customers.find(
 			{id: customerId}

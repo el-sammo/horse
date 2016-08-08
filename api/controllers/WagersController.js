@@ -170,7 +170,7 @@ function validateCancelWager(req, res, self) {
 		var trIdPcs = wagerData.trackRaceId.split('-');
 		return WagersService.getTrd(trIdPcs[0]).then(function(trackData) {
 			if(! trackData) {
-				console.log('trackData ajax failed in WagerController-validateWager() for trackRaceId '+wagerData.trackRaceId);
+				console.log('trackData ajax failed in WagerController-validateCancelWager() for trackRaceId '+wagerData.trackRaceId);
 // TODO: what should this return?
 				return errorHandler(trdsError)();
 			}
@@ -238,66 +238,135 @@ function validateWager(req, res, self) {
 	 		return errorHandler(trdsError)();
 		}
 
-		var validStartingRace = false;
+		return WagersService.getTournament(wagerData.tournamentId).then(function(getTournamentResponse) {
+			var tournamentData = getTournamentResponse.tournamentData;
+			var customerRegistered = false;
 
-		trackData.trd.races.forEach(function(race) {
-			if(race.number == trIdPcs[1]) {
-				if(race.closed) {
+			tournamentData.customers.forEach(function(customer) {
+				if(customer.customerId === wagerData.customerId) {
+					customerRegistered = true;
+				} else {
+				}
+			});
+
+			if(!customerRegistered) {
+				return res.send(JSON.stringify({success: false, failMsg: 'Customer Not Registered'}));
+			} else {
+
+				var validStartingRace = false;
+
+				trackData.trd.races.forEach(function(race) {
+					if(race.number == trIdPcs[1]) {
+						if(race.closed) {
 console.log('Race Closed');
-					return res.send(JSON.stringify({success: false, failMsg: 'Race Closed'}));
-				}
-				validStartingRace = true;
-				var validWagerPool = false;
-				var validWager = true;
-				var wagerMin = 2;
-				race.wagers.forEach(function(wager) {
-					if(wagerData.wagerPool == wager.wager) {
-						validWagerPool = true;
-						wagerMin = wager.min;
-					} 
-				});
-				if(!validWagerPool) {
-					validWager = false;
+							return res.send(JSON.stringify({success: false, failMsg: 'Race Closed'}));
+						}
+						validStartingRace = true;
+						var validWagerPool = false;
+						var validWager = true;
+						var wagerMin = 2;
+						race.wagers.forEach(function(wager) {
+							if(wagerData.wagerPool == wager.wager) {
+								validWagerPool = true;
+								wagerMin = wager.min;
+							} 
+						});
+						if(!validWagerPool) {
+							validWager = false;
 console.log('Invalid Wager Pool');
-					return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
-				} 
-				if(parseFloat(wagerData.wagerAmount) < wagerMin) {
-					validWager = false;
+							return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Pool'}));
+						} 
+						if(parseFloat(wagerData.wagerAmount) < wagerMin) {
+							validWager = false;
 console.log('Invalid Wager Amount');
-					return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
-				}
-				return WagersService.getCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId).then(function(balanceData) {
-					if(balanceData.balance < wagerData.wagerTotal) {
-						validWager = false;
-console.log('Insufficient Customer Balance');
-						return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Funds'}));
-					} else {
-						if(wagerData.legs > 1) {
-
-							// multi-leg
-console.log('validating multi-leg');
-
-							var wsPcsCounter = 0;
-							var wsPcs = wagerData.wagerSelections.split(' / ');
-							var raceCounter = trIdPcs[1];
-							if(wagerData.legs != wsPcs.length) {
+							return res.send(JSON.stringify({success: false, failMsg: 'Invalid Wager Amount'}));
+						}
+						return WagersService.getCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId).then(function(balanceData) {
+							if(balanceData.balance < wagerData.wagerTotal) {
 								validWager = false;
-								return res.send(JSON.stringify({success: false, failMsg: 'Missing Leg Runner'}));
-							}
-							wsPcs.forEach(function(wsPc) {
-								if(wsPc.length < 1) {
-									validWager = false;
-									return res.send(JSON.stringify({success: false, failMsg: 'Missing Leg Runner'}));
-								}
-							});
-							while(raceCounter < (parseInt(trIdPcs[1]) + wsPcs.length)) {
-								trackData.trd.races.forEach(function(race) {
-									if(race.number == raceCounter) {
-										var raceRunners = wsPcs[wsPcsCounter];
-										var rrPcs = raceRunners.split(',');
-										rrPcs.forEach(function(rr) {
-											race.entries.forEach(function(entry) {
-												if(entry.number == parseInt(rr)) {
+console.log('Insufficient Customer Balance');
+								return res.send(JSON.stringify({success: false, failMsg: 'Insufficient Funds'}));
+							} else {
+								if(wagerData.legs > 1) {
+		
+									// multi-leg
+console.log('validating multi-leg');
+		
+									var wsPcsCounter = 0;
+									var wsPcs = wagerData.wagerSelections.split(' / ');
+									var raceCounter = trIdPcs[1];
+									if(wagerData.legs != wsPcs.length) {
+										validWager = false;
+										return res.send(JSON.stringify({success: false, failMsg: 'Missing Leg Runner'}));
+									}
+									wsPcs.forEach(function(wsPc) {
+										if(wsPc.length < 1) {
+											validWager = false;
+											return res.send(JSON.stringify({success: false, failMsg: 'Missing Leg Runner'}));
+										}
+									});
+									while(raceCounter < (parseInt(trIdPcs[1]) + wsPcs.length)) {
+										trackData.trd.races.forEach(function(race) {
+											if(race.number == raceCounter) {
+												var raceRunners = wsPcs[wsPcsCounter];
+												var rrPcs = raceRunners.split(',');
+												rrPcs.forEach(function(rr) {
+													race.entries.forEach(function(entry) {
+														if(entry.number == parseInt(rr)) {
+															if(!entry.active) {
+																validWager = false;
+																return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
+															}
+														}
+													});
+												});
+												wsPcsCounter ++;
+											}
+										});
+										raceCounter++;
+									}
+									if(validWager) {
+console.log('appears to be a valid multi-leg wager');
+										return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
+											if(customerData.success) {
+												return Wagers.create(wagerData).then(function(confirmedWagerData) {
+													return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+												}).catch(function(err) {
+													res.json({error: 'Server error'}, 500);
+													console.error(err);
+													throw err;
+												});
+											}
+											return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
+										}).catch(function(err) {
+											res.json({error: 'Server error'}, 500);
+											console.error(err);
+											throw err;
+										});
+									} else {
+console.log('appears to be an INVALID multi-leg wager');
+									}
+								} else {
+									var allUsedNumbers = [];
+									if(wagerData.parts < 2) {
+		
+									// wps 
+console.log('validating wps');
+		
+										if(typeof wagerData.wagerSelections === 'number') {
+											allUsedNumbers.push(wagerData.wagerSelections);
+										} else {
+											var wsPcs = wagerData.wagerSelections.split(',');
+											// [ '2', '3,6,7', '1,3,6,7' ]
+											wsPcs.forEach(function(number) {
+												if(allUsedNumbers.indexOf(number) < 0) {
+													allUsedNumbers.push(number);
+												}
+											});
+										}
+										race.entries.forEach(function(entry) {
+											allUsedNumbers.forEach(function(number) {
+												if(parseInt(number) == entry.number) {
 													if(!entry.active) {
 														validWager = false;
 														return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
@@ -305,137 +374,85 @@ console.log('validating multi-leg');
 												}
 											});
 										});
-										wsPcsCounter ++;
-									}
-								});
-								raceCounter++;
-							}
-							if(validWager) {
-console.log('appears to be a valid multi-leg wager');
-								return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
-									if(customerData.success) {
-										return Wagers.create(wagerData).then(function(confirmedWagerData) {
-											return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
-										}).catch(function(err) {
-											res.json({error: 'Server error'}, 500);
-											console.error(err);
-											throw err;
-										});
-									}
-									return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
-								}).catch(function(err) {
-									res.json({error: 'Server error'}, 500);
-									console.error(err);
-									throw err;
-								});
-							} else {
-console.log('appears to be an INVALID multi-leg wager');
-							}
-						} else {
-							var allUsedNumbers = [];
-							if(wagerData.parts < 2) {
-
-							// wps 
-console.log('validating wps');
-
-								if(typeof wagerData.wagerSelections === 'number') {
-									allUsedNumbers.push(wagerData.wagerSelections);
-								} else {
-									var wsPcs = wagerData.wagerSelections.split(',');
-									// [ '2', '3,6,7', '1,3,6,7' ]
-									wsPcs.forEach(function(number) {
-										if(allUsedNumbers.indexOf(number) < 0) {
-											allUsedNumbers.push(number);
-										}
-									});
-								}
-								race.entries.forEach(function(entry) {
-									allUsedNumbers.forEach(function(number) {
-										if(parseInt(number) == entry.number) {
-											if(!entry.active) {
-												validWager = false;
-												return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
-											}
-										}
-									});
-								});
-								if(validWager) {
+										if(validWager) {
 console.log('appears to be a valid wps wager');
-									return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(response) {
-										if(response.success) {
-											return Wagers.create(wagerData).then(function(confirmedWagerData) {
-												return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+											return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(response) {
+												if(response.success) {
+													return Wagers.create(wagerData).then(function(confirmedWagerData) {
+														return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+													}).catch(function(err) {
+														res.json({error: 'Server error'}, 500);
+														console.error(err);
+														throw err;
+													});
+												}
+												return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
 											}).catch(function(err) {
 												res.json({error: 'Server error'}, 500);
 												console.error(err);
 												throw err;
 											});
-										}
-										return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
-									}).catch(function(err) {
-										res.json({error: 'Server error'}, 500);
-										console.error(err);
-										throw err;
-									});
-								} else {
+										} else {
 console.log('appears to be an INVALID wps wager');
-								}
-							} else {
-
-							// multi-part 
-console.log('validating multi-part');
-
-								var wsPcs = wagerData.wagerSelections.split(' / ');
-								// [ '2', '3,6,7', '1,3,6,7' ]
-								if(wsPcs.length != wagerData.parts) {
-									validWager = false;
-									return res.send(JSON.stringify({success: false, failMsg: 'Missing Part Runner'}));
-								}
-								wsPcs.forEach(function(wsPc) {
-									if(wsPc.length < 1) {
-										validWager = false;
-										return res.send(JSON.stringify({success: false, failMsg: 'Missing Part Runner'}));
+										}
 									} else {
-										wsPcs.forEach(function(number) {
-											if(allUsedNumbers.indexOf(number) < 0) {
-												allUsedNumbers.push(number);
+		
+									// multi-part 
+console.log('validating multi-part');
+		
+										var wsPcs = wagerData.wagerSelections.split(' / ');
+										// [ '2', '3,6,7', '1,3,6,7' ]
+										if(wsPcs.length != wagerData.parts) {
+											validWager = false;
+											return res.send(JSON.stringify({success: false, failMsg: 'Missing Part Runner'}));
+										}
+										wsPcs.forEach(function(wsPc) {
+											if(wsPc.length < 1) {
+												validWager = false;
+												return res.send(JSON.stringify({success: false, failMsg: 'Missing Part Runner'}));
+											} else {
+												wsPcs.forEach(function(number) {
+													if(allUsedNumbers.indexOf(number) < 0) {
+														allUsedNumbers.push(number);
+													}
+												});
 											}
 										});
-									}
-								});
-								race.entries.forEach(function(entry) {
-									allUsedNumbers.forEach(function(number) {
-										if(parseInt(number) == entry.number) {
-											if(!entry.active) {
-												validWager = false;
-												return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
-											}
-										}
-									});
-								});
-								if(validWager) {
+										race.entries.forEach(function(entry) {
+											allUsedNumbers.forEach(function(number) {
+												if(parseInt(number) == entry.number) {
+													if(!entry.active) {
+														validWager = false;
+														return res.send(JSON.stringify({success: false, failMsg: 'Invalid Runner'}));
+													}
+												}
+											});
+										});
+										if(validWager) {
 console.log('appears to be a valid multi-part wager');
-									return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
-										if(customerData.success) {
-											return Wagers.create(wagerData).then(function(confirmedWagerData) {
-												return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+											return WagersService.updateCustomerTournamentCreditBalance(wagerData.tournamentId, wagerData.customerId, balanceData.balance, wagerData.wagerTotal, 'subtract').then(function(customerData) {
+												if(customerData.success) {
+													return Wagers.create(wagerData).then(function(confirmedWagerData) {
+														return res.send(JSON.stringify({success: true, confirmedWager: confirmedWagerData}));
+													}).catch(function(err) {
+														res.json({error: 'Server error'}, 500);
+														console.error(err);
+														throw err;
+													});
+												}
+												return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
 											}).catch(function(err) {
 												res.json({error: 'Server error'}, 500);
 												console.error(err);
 												throw err;
 											});
-										}
-										return res.send(JSON.stringify({success: false, failMsg: 'Customer Balance Error'}));
-									}).catch(function(err) {
-										res.json({error: 'Server error'}, 500);
-										console.error(err);
-										throw err;
-									});
-								} else {
+										} else {
 console.log('appears to be an INVALID multi-part wager');
+										}
+									}
 								}
 							}
-						}
+						});
 					}
 				});
 			}
