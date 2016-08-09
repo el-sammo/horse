@@ -31,12 +31,13 @@ function getTournamentsByAssocTrackId(trackId) {
 	while(cursor.hasNext()) {
 		var tournamentData = cursor.next();
 		var tournamentId = (tournamentData._id.toString()).substring(10,34);
+		var tournamentCredits = tournamentData.credits;
 		var tournamentName = tournamentData.name;
-		getTournamentStandingsByTournamentId(tournamentId);
+		getTournamentStandingsByTournamentId(tournamentId, tournamentCredits);
 	}
 }
 
-function getTournamentStandingsByTournamentId(tournamentId) {
+function getTournamentStandingsByTournamentId(tournamentId, tournamentCredits) {
 	var newCustomers = [];
 	var cursor = db.tournamentstandings.find({tournamentId: tournamentId});
 	while(cursor.hasNext()) {
@@ -44,11 +45,12 @@ function getTournamentStandingsByTournamentId(tournamentId) {
 		tsData.customers.forEach(function(customer) {
 			var thisCustomer = {};
 			thisCustomer.customerId = customer.customerId;
-			thisCustomer.credits = getCustomerTournamentCredits(customer.customerId, tournamentId);
+			thisCustomer.credits = getCustomerTournamentCredits(customer.customerId, tournamentId, tournamentCredits);
 			newCustomers.push(thisCustomer);
 		});
 print(' ');
 print('tournamentId: '+tournamentId);
+print('tournamentCredits: '+tournamentCredits);
 print('newCustomers:');
 print(JSON.stringify(newCustomers));
 		db.tournamentstandings.update(
@@ -60,8 +62,10 @@ print(JSON.stringify(newCustomers));
 	}
 }
 
-function getCustomerTournamentCredits(customerId, tournamentId) {
-	var credits = 500;
+function getCustomerTournamentCredits(customerId, tournamentId, tournamentCredits) {
+	var credits = tournamentCredits || 500;
+print(' ');
+print('tournamentCredits: '+tournamentCredits);
 	var cursor = db.wagers.find({
 		customerId: customerId,
 		tournamentId: tournamentId

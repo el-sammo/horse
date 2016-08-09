@@ -90,6 +90,7 @@ function controller(
 		$scope.tournamentRegister = tournamentRegister;
 		$scope.setActiveTournament = setActiveTournament;
 		$scope.changeActiveTournament = changeActiveTournament;
+		$scope.goToTournament = goToTournament;
 
 		$scope.convertPostTime = convertPostTime;
 		$scope.formatPrice = formatPrice;
@@ -252,11 +253,8 @@ function controller(
 	function onGetTournaments(currentTournamentsData) {
 		var dateObj = new Date();
 		var nowMills = dateObj.getTime();
-		var formattedTournaments = []
-		var formattedTournaments = []
 		currentTournamentsData.forEach(function(tournament) {
 			tournament.mtp = parseInt((tournament.startTime - nowMills) / 1000);
-			formattedTournaments.push(tournament);
 		});
 		$scope.currentTournaments = currentTournamentsData;
 
@@ -286,6 +284,7 @@ function controller(
 				tournamentData.name = tournament.name;
 				tournamentData.entryFee = tournament.entryFee;
 				tournamentData.siteFee = tournament.siteFee;
+				tournamentData.credits = tournament.credits;
 				tournamentData.customersCount = tournament.customers.length;
 				if(tournament.max == 99999) {
 					tournamentData.max = 'UNLMTD';
@@ -346,7 +345,7 @@ function controller(
 	}
 
 	function determineCustomerTournamentCredits(tournamentData, customerId) {
-		var credits = 500;
+		var credits = tournamentData.credits || 500;
 		var getCustomerWagersByTournamentId = wagerMgmt.getCustomerWagersByTournamentId(tournamentData.id +'-'+ customerId);
 		return getCustomerWagersByTournamentId.then(function(customerWagers) {
 			customerWagers.forEach(function(wager) {
@@ -1114,62 +1113,62 @@ console.log('unScratchEntry() updateTrdDataPromise failed');
 	}
 
 	function showTournamentLeaders(tournyId) {
-		var tdObj = new Date();
-		$scope.showLeaders = true;
-		var tournamentClosed = false;
-		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
-		getTournamentPromise.then(function(tournamentData) {
-			if(tournamentData.closed) {
-				tournamentClosed = true;
-			}
-console.log('tournamentClosed: '+tournamentClosed);
-			$scope.tournamentLeadersDataTournamentName = tournamentData.name;
-			var leaderBoardData = [];
-			tournamentData.customers.forEach(function(customer) {
-				var getCustomerPromise = customerMgmt.getCustomer(customer);
-				getCustomerPromise.then(function(customerData) {
-					var getCustomerTournamentCreditsPromise = tournamentMgmt.getCustomerTournamentCredits(tournyId + '-' + customerData.id);
-					getCustomerTournamentCreditsPromise.then(function(customerCredits) {
-						var creditsData = customerCredits[0];
-						if(!isNaN(creditsData.credits) &&  creditsData.credits >= 0) {
-							var thisLeader = {};
-							thisLeader.id = customerCredits.customerId;
-							thisLeader.fName = customerData.fName;
-							thisLeader.lName = customerData.lName;
-							thisLeader.city = customerData.city;
-							thisLeader.username = customerData.username;
-							thisLeader.credits = parseFloat(creditsData.credits.toFixed(2));
-							leaderBoardData.push(thisLeader);
-						} else {
-							var determineCustomerTournamentCreditsPromise = determineCustomerTournamentCredits(tournamentData, customerData.id);
-							determineCustomerTournamentCreditsPromise.then(function(credits) {
-								var updateTSCreditsPromise = tournamentMgmt.updateTSCredits(tournamentData.id, customerData.id, credits);
-								updateTSCreditsPromise.then(function(updateCustomerTournamentCreditsPromiseResponse) {
-									var thisLeader = {};
-									thisLeader.id = customerData.id;
-									thisLeader.fName = customerData.fName;
-									thisLeader.lName = customerData.lName;
-									thisLeader.city = customerData.city;
-									thisLeader.username = customerData.username;
-									thisLeader.credits = parseFloat(credits.toFixed(2));
-									leaderBoardData.push(thisLeader);
+		if($scope.leaderboardsShow) {
+			var tdObj = new Date();
+			$scope.showLeaders = true;
+			var tournamentClosed = false;
+			var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
+			getTournamentPromise.then(function(tournamentData) {
+				if(tournamentData.closed) {
+					tournamentClosed = true;
+				}
+				$scope.tournamentLeadersDataTournamentName = tournamentData.name;
+				var leaderBoardData = [];
+				tournamentData.customers.forEach(function(customer) {
+					var getCustomerPromise = customerMgmt.getCustomer(customer);
+					getCustomerPromise.then(function(customerData) {
+						var getCustomerTournamentCreditsPromise = tournamentMgmt.getCustomerTournamentCredits(tournyId + '-' + customerData.id);
+						getCustomerTournamentCreditsPromise.then(function(customerCredits) {
+							var creditsData = customerCredits[0];
+							if(!isNaN(creditsData.credits) &&  creditsData.credits >= 0) {
+								var thisLeader = {};
+								thisLeader.id = customerCredits.customerId;
+								thisLeader.fName = customerData.fName;
+								thisLeader.lName = customerData.lName;
+								thisLeader.city = customerData.city;
+								thisLeader.username = customerData.username;
+								thisLeader.credits = parseFloat(creditsData.credits.toFixed(2));
+								leaderBoardData.push(thisLeader);
+							} else {
+								var determineCustomerTournamentCreditsPromise = determineCustomerTournamentCredits(tournamentData, customerData.id);
+								determineCustomerTournamentCreditsPromise.then(function(credits) {
+									var updateTSCreditsPromise = tournamentMgmt.updateTSCredits(tournamentData.id, customerData.id, credits);
+									updateTSCreditsPromise.then(function(updateCustomerTournamentCreditsPromiseResponse) {
+										var thisLeader = {};
+										thisLeader.id = customerData.id;
+										thisLeader.fName = customerData.fName;
+										thisLeader.lName = customerData.lName;
+										thisLeader.city = customerData.city;
+										thisLeader.username = customerData.username;
+										thisLeader.credits = parseFloat(credits.toFixed(2));
+										leaderBoardData.push(thisLeader);
+									});
 								});
-							});
-						}
-						leaderBoardData.sort(dynamicSort("credits"));
-						leaderBoardData.reverse();
+							}
+							leaderBoardData.sort(dynamicSort("credits"));
+							leaderBoardData.reverse();
+						});
 					});
 				});
+				$scope.leadersData = leaderBoardData;
 			});
-			$scope.leadersData = leaderBoardData;
-		});
-		$scope.showTournamentDetails(tournyId);
-console.log('tournamentClosed: '+tournamentClosed);
-		setTimeout(function() { 
+			$scope.showTournamentDetails(tournyId);
 			if($routeParams.id === tournyId && !tournamentClosed) { // <-- no need to continue to perform this if the tournament results are unchanging
-				showTournamentLeaders(tournyId);
+				setTimeout(function() { 
+					showTournamentLeaders(tournyId);
+				}, 60000);
 			}
-		}, 60000);
+		}
 	}
 
 	function tournamentRegister(tournyId) {
@@ -1236,6 +1235,10 @@ console.log(response.data);
 			$scope.showActiveTournamentCredits = false;
 			$scope.showRegisterLink = true;
 		}
+	}
+
+	function goToTournament(tournamentId) {
+		$location.path("/tournament/" + tournamentId);
 	}
 
 	function changeActiveTournament(tournament) {

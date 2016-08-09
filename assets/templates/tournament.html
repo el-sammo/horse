@@ -13,6 +13,7 @@
 			<span 
 				class="footerLink reservationYellow" 
 				ng-click="changeActiveTournament(tournament)"
+				ng-show="!tournament.custom"
 				ng-repeat="tournament in currentTournaments" track by $index
 			>
 				{{tournament.name}}
@@ -747,7 +748,7 @@
 							>
 								<div class="row">
 									<div 
-										class="col-md-4"
+										class="col-md-3"
 										style="text-align: left;"
 									>
 										<span class="tournamentHead">Tournament</span>
@@ -765,6 +766,12 @@
 										<span class="tournamentHead">Entries</span>
 									</div>
 									<div 
+										class="col-md-1"
+										style="text-align: right;"
+									>
+										<span class="tournamentHead">Credits</span>
+									</div>
+									<div 
 										class="col-md-3"
 										style="text-align: right;"
 									>
@@ -777,7 +784,7 @@
 									ng-repeat="tournament in tournamentsData"
 								>
 									<div 
-										class="col-md-4"
+										class="col-md-3"
 										style="text-align: left; cursor: pointer;"
 										ng-click="showTournamentDetails(tournament.id)"
 									>
@@ -796,6 +803,13 @@
 										ng-click="showTournamentDetails(tournament.id)"
 									>
 										<span class="tournamentDetails">{{tournament.customersCount}}/{{tournament.max}}</span>
+									</div>
+									<div 
+										class="col-md-1"
+										style="text-align: right; cursor: pointer;"
+										ng-click="showTournamentDetails(tournament.id)"
+									>
+										<span class="tournamentDetails">{{tournament.credits}}</span>
 									</div>
 									<div 
 										class="col-md-3"
@@ -847,11 +861,11 @@
 								ng-show="showTournament"
 							>
 								<div class="row">
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<span class="tournamentHead">{{tournamentData.name}}</span>
 									</div>
 									<div 
-										class="col-md-5 col-md-offset-1"
+										class="col-md-3 col-md-offset-1"
 										style="text-align: right;"
 									>
 										<timer
@@ -866,13 +880,24 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-md-5">
+									<div class="col-md-6">
 										<span 
 											class="tournamentHead"
 											style="cursor: pointer;"
 											ng-click="tournamentRegister(tournamentData.id)"
 										>
 											Register
+										</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<span 
+											class="tournamentHead"
+											style="cursor: pointer;"
+											ng-click="goToTournament(tournamentData.id)"
+										>
+											Go To Tournament
 										</span>
 									</div>
 								</div>

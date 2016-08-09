@@ -10,7 +10,7 @@ var tablize = require('sd-datatables');
 module.exports = {
 
   attributes: {
-    assocTournyId: {
+    assocTrackId: {
       type: 'string',
       required: true
 		},
@@ -31,6 +31,10 @@ module.exports = {
       required: true
 		},
     siteFee: {
+      type: 'float',
+      required: true
+		},
+    credits: {
       type: 'float',
       required: true
 		},
