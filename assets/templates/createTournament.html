@@ -1,0 +1,39 @@
+<div class="modal-header" ng-show="! step">
+	<button type="button" class="close pull-right" ng-click="$close('discard')">x</button>
+  <h3 class="modal-title" id="nav-away-modal-title">
+		Create a Custom Tournament
+	</h3>
+</div>
+<div class="modal-body">
+	<form name="createTournamentForm">
+		<div class="row">
+			<div class="col-md-12">
+				<label for="fName">Tournament Name</label>
+				{{tournament.name}}
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button 
+		type="button" 
+		class="btn btn-primary pull-left" 
+		ng-click="$close('discard')"
+	>
+    <i class="fa fa-reply"></i> &nbsp; Close
+  </button>
+	<button 
+		type="button" 
+		class="btn btn-success pull-right" 
+		ng-disabled="
+			!tournament.name || 
+			!tournament.assocTrackId || 
+			!tournament.max || 
+			!tournament.entryFee ||
+			!tournament.pubPriv
+		"
+		ng-click="createTournament()"
+	>
+    <i class="fa fa-plus"></i> &nbsp; Create Tournament
+	</button>
+</div>

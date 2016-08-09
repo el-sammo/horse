@@ -64,6 +64,8 @@ function controller(
 		$scope.signUp = layoutMgmt.signUp;
 		$scope.logOut = layoutMgmt.logOut;
 
+		$scope.createTournament = layoutMgmt.createTournament;
+
 		$scope.showTrack = showTrack;
 		$scope.showTrackRace = showTrackRace;
 		$scope.showLeg = showLeg;
