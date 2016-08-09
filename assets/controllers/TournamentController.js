@@ -1114,8 +1114,13 @@ console.log('unScratchEntry() updateTrdDataPromise failed');
 	function showTournamentLeaders(tournyId) {
 		var tdObj = new Date();
 		$scope.showLeaders = true;
+		var tournamentClosed = false;
 		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 		getTournamentPromise.then(function(tournamentData) {
+			if(tournamentData.closed) {
+				tournamentClosed = true;
+			}
+console.log('tournamentClosed: '+tournamentClosed);
 			$scope.tournamentLeadersDataTournamentName = tournamentData.name;
 			var leaderBoardData = [];
 			tournamentData.customers.forEach(function(customer) {
@@ -1157,9 +1162,9 @@ console.log('unScratchEntry() updateTrdDataPromise failed');
 			$scope.leadersData = leaderBoardData;
 		});
 		$scope.showTournamentDetails(tournyId);
-
+console.log('tournamentClosed: '+tournamentClosed);
 		setTimeout(function() { 
-			if($routeParams.id === tournyId) {
+			if($routeParams.id === tournyId && !tournamentClosed) { // <-- no need to continue to perform this if the tournament results are unchanging
 				showTournamentLeaders(tournyId);
 			}
 		}, 60000);
