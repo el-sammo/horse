@@ -40,21 +40,26 @@
 					Results
 				</span>
 			</span>
-			<!--
 			<span 
 				class="footerLink reservationYellow pull-right" 
-				ng-show="showActiveTournamentCredits" 
+				ng-show="showSignup"
+				ng-click="signUp()"
 			>
-				{{activeTournamentCredits}}
+				Sign Up
+			</span>
+			<span 
+				class="footerLink pull-right"
+				ng-show="!showLogout"
+			>
+				/
 			</span>
 			<span 
 				class="footerLink reservationYellow pull-right" 
-				ng-show="showRegisterLink"
-				ng-click="tournamentRegister(activeTournament.id)"
+				ng-show="showLogin"
+				ng-click="logIn()"
 			>
-				Register for {{activeTournament.name}}
+				Log In
 			</span>
-			-->
 			<span 
 				class="footerLink reservationYellow pull-right" 
 				ng-show="showLogout"
