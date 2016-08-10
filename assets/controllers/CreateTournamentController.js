@@ -29,6 +29,14 @@
 		}
 
 		$scope.generalError = false;
+		$scope.insufficientFunds = false;
+		$scope.showAddFunds = false;
+		$scope.showCreateTournament = true;
+
+		$scope.addFunds = function() {
+			$scope.showCreateTournament = false;
+			$scope.showAddFunds = true;
+		}
 
 		$scope.tournament = {};
 
@@ -93,17 +101,23 @@
 			$scope.tournament.customers = [$scope.$parent.customerId];
 			$scope.tournament.pubPriv = $scope.selPubPriv;
 
-			var createTournamentPromise = tournamentMgmt.createCustomTournament($scope.tournament);
-			createTournamentPromise.then(function(ctpResponse) {
-				if(ctpResponse.data.success) {
-					$modalInstance.dismiss('done');
-					$window.location.href = location.origin + "/app/tournament/" + ctpResponse.data.tournamentData.id;
-				} else {
-					$scope.generalError = true;
-				}
-			});
-		}
+			var dTotal = parseFloat($scope.tournament.entryFee + $scope.tournament.siteFee);
 
+			if($scope.customer.dollars < dTotal) {
+				$scope.insufficientFunds = true;
+			} else {
+console.log('not too poor');
+				var createTournamentPromise = tournamentMgmt.createCustomTournament($scope.tournament);
+				createTournamentPromise.then(function(ctpResponse) {
+					if(ctpResponse.data.success) {
+						$modalInstance.dismiss('done');
+						$window.location.href = location.origin + "/app/tournament/" + ctpResponse.data.tournamentData.id;
+					} else {
+						$scope.generalError = true;
+					}
+				});
+			}
+		}
 	}
 
 }());

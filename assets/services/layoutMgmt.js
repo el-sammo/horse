@@ -43,6 +43,13 @@
 					controller: 'CreateTournamentController'
 				});
 			},
+			addFunds: function() {
+				$modal.open({
+					templateUrl: '/templates/addFunds.html',
+					backdrop: true,
+					controller: 'Add Funds Controller'
+				});
+			},
 //			tournyRegister: function(tournyId) {
 //				$modal.open({
 //					templateUrl: '/templates/tournyRegister.html',

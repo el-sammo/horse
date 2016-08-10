@@ -449,7 +449,26 @@ function scoreValidTournament(req, res, self) {
 function createValidCustomTournament(req, res, self) {
 	return TournamentsService.createCustomTournament(req.body).then(function(ictResponse) {
 		if(ictResponse.success) {
-			res.send({success: true, tournamentData: ictResponse.tournamentData});
+			return TournamentsService.getCustomerBalance(req.body.customers[0]).then(function(balanceData) {
+				var dTotal = parseFloat(req.body.entryFee + req.body.siteFee);
+				if(balanceData.balance >= dTotal) {
+					return TournamentsService.updateCustomerBalance(req.body.customers[0], balanceData.balance, dTotal, 'subtract').then(function(customerData) {
+						if(customerData.success) {
+							res.send({success: true, tournamentData: ictResponse.tournamentData});
+						} else {
+console.log(' ');
+console.log('error updating customer balance in createValidCustomTournament-TournamentsService.updateCustomerBalance');
+console.log(' ');
+							res.send({success: false});
+						}
+					});
+				} else {
+console.log(' ');
+console.log('customer balance('+balanceData.balance+') less than dTotal ('+dTotal+') - this should ***NEVER*** happen');
+console.log(' ');
+					res.send({success: false});
+				}
+			});
 		} else {
 			res.send({success: false});
 		}

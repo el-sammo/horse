@@ -63,6 +63,7 @@ function controller(
 		$scope.logIn = layoutMgmt.logIn;
 		$scope.signUp = layoutMgmt.signUp;
 		$scope.logOut = layoutMgmt.logOut;
+		$scope.addFunds = layoutMgmt.addFunds;
 
 		$scope.createTournament = layoutMgmt.createTournament;
 
@@ -367,7 +368,7 @@ function controller(
 			var updateTSCreditsPromise = tournamentMgmt.updateTSCredits(tournamentData.id, customerId, credits);
 			updateTSCreditsPromise.then(function(updateTSCreditsPromiseResponse) {
 			});
-			$scope.activeTournamentCredits = tournamentData.name +' Credits: '+(credits).toFixed(2);
+			$scope.activeTournamentCredits = ' Credits: '+(credits).toFixed(2);
 		});
 	}
 
