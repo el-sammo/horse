@@ -162,14 +162,13 @@ console.log('updateTournamentCustomersCredits() called');
 				return scoreTournamentPromise;
 			},
 
-			createTournament: function(tournamentData) {
-				var url = '/tournaments/create';
+			createCustomTournament: function(tournamentData) {
+				var url = '/tournaments/createCustomTournament';
 				return $http.post(url, tournamentData).success(
 					function(data, status, headers, config) {
 						if(status >= 400) {
 							return $q.reject(data);
 						}
-						mergeIntoTournament(data, true);
 						return tournament;
 					}
 				).catch(function(err) {

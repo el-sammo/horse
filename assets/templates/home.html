@@ -12,7 +12,8 @@
 			</span>
 			<span 
 				class="footerLink reservationYellow" 
-				ng-click="setActiveTournament(tournament)" 
+				ng-click="setActiveTournament(tournament)"
+				ng-show="!tournament.custom && tournament.name.indexOf('Daily') > -1"
 				ng-repeat="tournament in currentTournaments" track by $index
 			>
 				{{tournament.name}}

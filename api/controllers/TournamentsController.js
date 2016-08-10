@@ -74,7 +74,6 @@ module.exports = {
 	},
 	
 	leaders: function(req, res) {
-console.log('leaders() called');
 		if(req.params.id) {
 			return tournamentLeaders(req, res);
 		} else {
@@ -83,7 +82,6 @@ console.log('leaders() called');
 	},
 	
 	updateTCC: function(req, res) {
-console.log('updateTCC() called');
 		if(req.body) {
 			return updateTournamentCustomersCredits(req, res);
 		} else {
@@ -133,6 +131,50 @@ console.log('updateTCC() called');
 		}
 	},
 	
+	createCustomTournament: function(req, res) {
+		if(req.body) {
+			var missingPcs = [];
+			if(!req.body.assocTrackId) {
+				missingPcs.push('assocTrackId');
+			}
+			if(!req.body.name) {
+				missingPcs.push('name');
+			}
+			if(!req.body.tournyDate) {
+				missingPcs.push('tournyDate');
+			}
+			if(!req.body.max) {
+				missingPcs.push('max');
+			}
+			if(!req.body.entryFee) {
+				missingPcs.push('entryFee');
+			}
+			if(!req.body.siteFee) {
+				missingPcs.push('siteFee');
+			}
+			if(!req.body.startTime) {
+				missingPcs.push('startTime');
+			}
+			if(!req.body.customers) {
+				missingPcs.push('customers');
+			}
+			if(!req.body.credits) {
+				missingPcs.push('credits');
+			}
+			if(!req.body.pubPriv) {
+				missingPcs.push('pubPriv');
+			}
+			if(missingPcs.length) {
+console.log(' ');
+console.log('missingPcs:');
+console.log(missingPcs);
+			}
+			return createValidCustomTournament(req, res);
+		} else {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid createCustomTournament data'}));
+		}
+	},
+	
   datatables: function(req, res) {
     var options = req.query;
 
@@ -179,7 +221,7 @@ function tournamentRegister(req, res, self) {
 						if(customerData.success) {
 							tournamentData.customers.push(customerId);
 							return Tournaments.update({id: tournamentData.id}, {customers: tournamentData.customers}, false, false).then(function(result) {
-								return TournamentsService.addCustomer(tournamentData.id, customerId).then(function(tsData) {
+								return TournamentsService.addCustomer(tournamentData.id, customerId, tournamentData.credits).then(function(tsData) {
 									res.send(JSON.stringify(tsData));
 								});
 							}).catch(function(err) {
@@ -401,6 +443,39 @@ function scoreValidTournament(req, res, self) {
 		return {error: 'Server error'};
 		console.error(err);
 		throw err;
+	});
+}
+
+function createValidCustomTournament(req, res, self) {
+	return TournamentsService.createCustomTournament(req.body).then(function(ictResponse) {
+		if(ictResponse.success) {
+			return TournamentsService.getCustomerBalance(req.body.customers[0]).then(function(balanceData) {
+				var dTotal = parseFloat(req.body.entryFee + req.body.siteFee);
+				if(balanceData.balance >= dTotal) {
+					return TournamentsService.updateCustomerBalance(req.body.customers[0], balanceData.balance, dTotal, 'subtract').then(function(customerData) {
+						if(customerData.success) {
+							res.send({success: true, tournamentData: ictResponse.tournamentData});
+						} else {
+console.log(' ');
+console.log('error updating customer balance in createValidCustomTournament-TournamentsService.updateCustomerBalance');
+console.log(' ');
+							res.send({success: false});
+						}
+					});
+				} else {
+console.log(' ');
+console.log('customer balance('+balanceData.balance+') less than dTotal ('+dTotal+') - this should ***NEVER*** happen');
+console.log(' ');
+					res.send({success: false});
+				}
+			});
+		} else {
+			res.send({success: false});
+		}
+	}).catch(function(err) {
+    return {error: 'Server error'};
+    console.error(err);
+    throw err;
 	});
 }
 

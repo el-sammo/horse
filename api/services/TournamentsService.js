@@ -86,12 +86,15 @@ module.exports = {
 		});
 	},
 
-	addCustomer: function(tournamentId, customerId) {
+	addCustomer: function(tournamentId, customerId, tournamentCredits) {
+console.log(' ');
+console.log('tournamentCredits: '+tournamentCredits);
+		var credits = tournamentCredits || 500;
 		return TournamentStandings.find(
 			{tournamentId: tournamentId}
 		).then(function(tsDataResults) {
 			var tsData = tsDataResults[0];
-			tsData.customers.push({customerId: customerId, credits: 500});
+			tsData.customers.push({customerId: customerId, credits: credits});
 			return TournamentStandings.update(
 				{tournamentId: tournamentId},
 				{customers: tsData.customers},
@@ -136,6 +139,64 @@ console.log(updatedCustomers);
 			});
 		}).catch(function(err) {
 			return {success: false, reason: 'invalid tournamentId or customerId'};
+		});
+	},
+
+	createCustomTournament: function(tournamentData) {
+		var assocTrackId = tournamentData.assocTrackId;
+		var name = tournamentData.name;
+		var tournyDate = tournamentData.tournyDate;
+		var max = tournamentData.max;
+		var entryFee = tournamentData.entryFee;
+		var siteFee = tournamentData.siteFee;
+		var startTime = tournamentData.startTime;
+		var closed = false;
+		var customers = tournamentData.customers;
+		var credits = tournamentData.credits;
+		var pubPriv = tournamentData.pubPriv;
+		var custom = true;
+
+		return Tournaments.create({
+			assocTrackId: assocTrackId,
+			name: name,
+			tournyDate: tournyDate,
+			max: max,
+			entryFee: entryFee,
+			siteFee: siteFee,
+			startTime: startTime,
+			closed: closed,
+			customers: customers,
+			credits: credits,
+			pubPriv: pubPriv,
+			custom: custom
+		}).then(function(cctiResponse) {
+			var tournamentId = cctiResponse.id;
+			var newCustomers = [];
+			customers.forEach(function(customer) {
+				var newCustomer = {};
+				newCustomer.customerId = customer;
+				newCustomer.credits = credits;
+				newCustomers.push(newCustomer);
+			});
+			return TournamentStandings.create({
+				tournamentId: tournamentId,
+				customers: newCustomers
+			}).then(function(tsiResponse) {
+console.log(' ');
+console.log('tsiResponse:');
+console.log(tsiResponse);
+				return {success: true, tournamentData: cctiResponse};
+			}).catch(function(err) {
+console.log(' ');
+console.log('createCustomTournament - TournamentStandings.create err:');
+console.log(err);
+				return {success: false, reason: 'invalid tournamentId or customers'};
+			});
+		}).catch(function(err) {
+console.log(' ');
+console.log('createCustomTournament - Tournaments.create err:');
+console.log(err);
+			return {success: false, reason: 'invalid tournamentData'};
 		});
 	}
 }
