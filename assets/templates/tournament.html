@@ -476,7 +476,7 @@
 														<span class="raceDetails">{{singleDesc}}</span>
 													</div>
 													<div class="col-md-2">
-														<span class="raceDetails">ML</span>
+														<span class="raceDetails"># (PP)</span>
 													</div>
 													<div class="col-md-3">
 														<span class="raceDetails">Runner</span>
@@ -505,7 +505,7 @@
 														>
 														<span 
 															class="raceDetailsSmaller"
-															style="cursor: pointer;"
+															style="top: -3px; cursor: pointer; position: relative;"
 															ng-show="customer && customer.admin && entry.active"
 															ng-click="scratchEntry(entry.number)"
 														>
@@ -513,16 +513,12 @@
 														</span>
 														<span 
 															class="raceDetailsSmaller"
-															style="cursor: pointer;"
+															style="top: -3px; cursor: pointer; position: relative;"
 															ng-show="customer && customer.admin && !entry.active"
 															ng-click="unScratchEntry(entry.number)"
 														>
 															UNS
 														</span>
-														<entry-nums-posts
-															entry="entry"
-															race="race"
-														></entry-nums-posts>
 													</div>
 													<entries entry="entry"></entries>
 												</div>

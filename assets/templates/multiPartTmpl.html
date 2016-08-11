@@ -3,16 +3,21 @@
 	ng-show="wager === 'Exacta'"
 >
 	<div class="col-md-2">
-		<span class="raceDetails">1</span>
 		<span 
 			class="raceDetails"
-			style="left: 6px; position: relative;"
+			style="left: 4%; position: relative;"
+		>
+			1
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 12%; position: relative;"
 		>
 			2
 		</span>
 	</div>
 	<div class="col-md-2">
-		<span class="raceDetails">ML</span>
+		<span class="raceDetails"># (PP) (PP)</span>
 	</div>
 	<div class="col-md-3">
 		<span class="raceDetails">Runner</span>
@@ -29,22 +34,27 @@
 	ng-show="wager === 'Trifecta'"
 >
 	<div class="col-md-2">
-		<span class="raceDetails">1</span>
 		<span 
 			class="raceDetails"
-			style="left: 6px; position: relative;"
+			style="left: 4%; position: relative;"
+		>
+			1
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 12%; position: relative;"
 		>
 				2
 		</span>
 		<span 
 			class="raceDetails"
-			style="left: 12px; position: relative;"
+			style="left: 21%; position: relative;"
 		>
 			3
 		</span>
 	</div>
 	<div class="col-md-2">
-		<span class="raceDetails">ML</span>
+		<span class="raceDetails"># (PP)</span>
 	</div>
 	<div class="col-md-3">
 		<span class="raceDetails">Runner</span>
@@ -61,28 +71,33 @@
 	ng-show="wager === 'Superfecta'"
 >
 	<div class="col-md-2">
-		<span class="raceDetails">1</span>
 		<span 
 			class="raceDetails"
-			style="left: 6px; position: relative;"
+			style="left: 4%; position: relative;"
+		>
+			1
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 12%; position: relative;"
 		>
 				2
 		</span>
 		<span 
 			class="raceDetails"
-			style="left: 12px; position: relative;"
+			style="left: 21%; position: relative;"
 		>
 			3
 		</span>
 		<span 
 			class="raceDetails"
-			style="left: 18px; position: relative;"
+			style="left: 29%; position: relative;"
 		>
 			4
 		</span>
 	</div>
 	<div class="col-md-2">
-		<span class="raceDetails">ML</span>
+		<span class="raceDetails"># (PP)</span>
 	</div>
 	<div class="col-md-3">
 		<span class="raceDetails">Runner</span>
@@ -99,14 +114,39 @@
 	ng-show="wager === 'Pentafecta'"
 >
 	<div class="col-md-2">
-		<span class="raceDetails">1</span>
-		<span class="raceDetails">2</span>
-		<span class="raceDetails">3</span>
-		<span class="raceDetails">4</span>
-		<span class="raceDetails">5</span>
+		<span 
+			class="raceDetails"
+			style="left: 3%; position: relative;"
+		>
+			1
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 9%; position: relative;"
+		>
+			2
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 15%; position: relative;"
+		>
+			3
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 21%; position: relative;"
+		>
+			4
+		</span>
+		<span 
+			class="raceDetails"
+			style="left: 27%; position: relative;"
+		>
+			5
+		</span>
 	</div>
 	<div class="col-md-2">
-		<span class="raceDetails">ML</span>
+		<span class="raceDetails"># (PP)</span>
 	</div>
 	<div class="col-md-3">
 		<span class="raceDetails">Runner</span>
@@ -224,6 +264,7 @@
 	>
 		<input 
 			type="checkbox"
+			style="margin-left: 0px!important; margin-right: 0px!important"
 			ng-model="firstRunners[idx]"
 			ng-true-value="{{entry.number}}"
 			ng-false-value="false"
@@ -233,6 +274,7 @@
 		>
 		<input 
 			type="checkbox"
+			style="margin-left: 0px!important; margin-right: 0px!important"
 			ng-model="secondRunners[idx]"
 			ng-true-value="{{entry.number}}"
 			ng-false-value="false"
@@ -242,6 +284,7 @@
 		>
 		<input 
 			type="checkbox"
+			style="margin-left: 0px!important; margin-right: 0px!important"
 			ng-model="thirdRunners[idx]"
 			ng-true-value="{{entry.number}}"
 			ng-false-value="false"
@@ -251,6 +294,7 @@
 		>
 		<input 
 			type="checkbox"
+			style="margin-left: 0px!important; margin-right: 0px!important"
 			ng-model="fourthRunners[idx]"
 			ng-true-value="{{entry.number}}"
 			ng-false-value="false"
@@ -260,6 +304,7 @@
 		>
 		<input 
 			type="checkbox"
+			style="margin-left: 0px!important; margin-right: 0px!important"
 			ng-model="fifthRunners[idx]"
 			ng-true-value="{{entry.number}}"
 			ng-false-value="false"

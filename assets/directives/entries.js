@@ -21,6 +21,7 @@ function directive(_) {
 	function link(scope, element, attrs) {
 		scope.getStyle = getStyle;
 		scope.getClass = getClass;
+		scope.getNumberPost = getNumberPost;
 		scope.getMl = getMl;
 		scope.getName = getName;
 		scope.getJockey = getJockey;
@@ -44,6 +45,17 @@ function directive(_) {
 			return {
 				raceDetailsShade: true,
 			};
+		}
+
+		function getNumberPost(runner) {
+			var number = runner.number.toString();
+			var post = runner.post.toString();
+
+			if(post && (number !== post)) {
+				return number + ' (' + post + ')';
+			}
+
+			return number;
 		}
 
 		function getMl(runner) {
