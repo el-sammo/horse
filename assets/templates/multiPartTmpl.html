@@ -315,3 +315,143 @@
 	</div>
 	<entries entry="entry"></entries>
 </div>
+<div
+	class="row"
+	ng-show="wager === 'Exacta' && !race.closed"
+>
+	<div class="col-md-2">
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 1%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL1"
+			ng-click="allSelect(wagerRunners[0], 'v', 1)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 6%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL2"
+			ng-click="allSelect(wagerRunners[0], 'v', 2)"
+		>
+			All
+		</span>
+	</div>
+</div>
+<div
+	class="row"
+	ng-show="wager === 'Trifecta' && !race.closed"
+>
+	<div class="col-md-2">
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 1%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL1"
+			ng-click="allSelect(wagerRunners[0], 'v', 1)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 6%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL2"
+			ng-click="allSelect(wagerRunners[0], 'v', 2)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 11%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL3"
+			ng-click="allSelect(wagerRunners[0], 'v', 3)"
+		>
+			All
+		</span>
+	</div>
+</div>
+<div
+	class="row"
+	ng-show="wager === 'Superfecta' && !race.closed"
+>
+	<div class="col-md-2">
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 1%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL1"
+			ng-click="allSelect(wagerRunners[0], 'v', 1)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 6%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL2"
+			ng-click="allSelect(wagerRunners[0], 'v', 2)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 11%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL3"
+			ng-click="allSelect(wagerRunners[0], 'v', 3)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 16%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL4"
+			ng-click="allSelect(wagerRunners[0], 'v', 4)"
+		>
+			All
+		</span>
+	</div>
+</div>
+<div
+	class="row"
+	ng-show="wager === 'Pentafecta' && !race.closed"
+>
+	<div class="col-md-2">
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 0%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL1"
+			ng-click="allSelect(wagerRunners[0], 'v', 1)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 3%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL2"
+			ng-click="allSelect(wagerRunners[0], 'v', 2)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 6%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL3"
+			ng-click="allSelect(wagerRunners[0], 'v', 3)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 9%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL4"
+			ng-click="allSelect(wagerRunners[0], 'v', 4)"
+		>
+			All
+		</span>
+		<span 
+			class="raceDetailsSmaller"
+			style="top: -3px; left: 12%; cursor: pointer; position: relative;"
+			ng-model="selectAllVL4"
+			ng-click="allSelect(wagerRunners[0], 'v', 5)"
+		>
+			All
+		</span>
+	</div>
+</div>

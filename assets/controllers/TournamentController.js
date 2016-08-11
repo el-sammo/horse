@@ -94,6 +94,7 @@ function controller(
 		$scope.goToTournament = goToTournament;
 
 		$scope.convertPostTime = convertPostTime;
+		$scope.allSelect = allSelect;
 		$scope.formatPrice = formatPrice;
 		$scope.getTournamentMinToPost = getTournamentMinToPost;
 		$scope.getRaceMinToPost = getRaceMinToPost;
@@ -212,6 +213,7 @@ function controller(
 		$scope.leg8Runners = [];
 		$scope.leg9Runners = [];
 		$scope.leg10Runners = [];
+		$scope.allSelected = false;
 	}
 
 	///
@@ -850,6 +852,195 @@ function controller(
 
 	function formatPrice(price) {
 		return parseFloat(price).toFixed(2);
+	}
+
+	function allSelect(wagerRunners, type, layer) {
+console.log('allSelect() called with:');
+console.log(wagerRunners);
+		if(type === 'h') {
+			if(layer == 1) {
+				$scope.leg1Runners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.leg1Runners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 2) {
+				$scope.leg2Runners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.leg2Runners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 3) {
+				$scope.leg3Runners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.leg3Runners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 4) {
+				$scope.leg4Runners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.leg4Runners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 5) {
+				$scope.leg5Runners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.leg5Runners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 6) {
+				$scope.leg6Runners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.leg6Runners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+		}
+		if(type === 'v') {
+			if(layer == 1) {
+				$scope.firstRunners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.firstRunners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 2) {
+				$scope.secondRunners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.secondRunners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 3) {
+				$scope.thirdRunners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.thirdRunners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 4) {
+				$scope.fourthRunners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.fourthRunners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+			if(layer == 5) {
+				$scope.fifthRunners = [];
+				if($scope.allSelected) {
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = false;
+				} else {
+					wagerRunners.forEach(function(runner) {
+						if(runner.active) {
+							$scope.fifthRunners.push(runner.number);
+						}
+					});
+					updateSelectedRunnersDisplay();
+					$scope.allSelected = true;
+				}
+			}
+		}
+		if(type === 'wps') {
+			$scope.selectedRunners = [];
+			if($scope.allSelected) {
+				updateSelectedRunnersDisplay();
+				$scope.allSelected = false;
+			} else {
+				wagerRunners.forEach(function(runner) {
+					if(runner.active) {
+						$scope.selectedRunners.push(runner.number);
+					}
+				});
+				updateSelectedRunnersDisplay();
+				$scope.allSelected = true;
+			}
+		}
 	}
 
 	function setAmount(amount) {

@@ -16,3 +16,23 @@
 																</div>
 																<entries entry="entry"></entries>
 															</div>
+															<br / ng-show="legShow == 1">
+															<div 
+																class="row"
+																ng-show="legShow == 1"
+															>
+																<div class="col-md-2">
+																	<input 
+																		type="checkbox"
+																		ng-model="selectAllHL1"
+																		ng-show="!race.closed"
+																		ng-change="allSelect(wagerRunners[0], 'h', 1)"
+																	>
+																	<span 
+																		class="raceDetailsSmaller"
+																		style="top: -3px; cursor: pointer; position: relative;"
+																	>
+																		All
+																	</span>
+																</div>
+															</div>
