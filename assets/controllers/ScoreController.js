@@ -1060,12 +1060,15 @@
 			score.firstName = $scope.firstName;
 			score.firstJockey = $scope.firstJockey;
 			score.firstWinPrice = $scope.firstWinPrice;
+
 			if($scope.firstPlacePrice) {
 				score.firstPlacePrice = $scope.firstPlacePrice;
 			}
+
 			if($scope.firstShowPrice) {
 				score.firstShowPrice = $scope.firstShowPrice;
 			}
+
 			if($scope.secondNumber) {
 				score.secondNumber = $scope.secondNumber;
 				score.secondName = $scope.secondName;
@@ -1075,58 +1078,163 @@
 					score.secondShowPrice = $scope.secondShowPrice;
 				}
 				score.exacta = $scope.exacta;
-				score.exactaPrice = $scope.exactaPrice;
+				if($scope.exactaPrice1Base) {
+					score.exactaPrice = parseFloat($scope.exactaPrice1Base * 2);
+				}
+				if($scope.exactaPrice2Base) {
+					score.exactaPrice = parseFloat($scope.exactaPrice2Base);
+				}
 			}
+
 			if($scope.thirdNumber) {
 				score.thirdNumber = $scope.thirdNumber;
 				score.thirdName = $scope.thirdName;
 				score.thirdJockey = $scope.thirdJockey;
 				score.thirdShowPrice = $scope.thirdShowPrice;
 				score.trifecta = $scope.trifecta;
-				score.trifectaPrice = $scope.trifectaPrice;
+				if($scope.trifectaPricePoint2Base) {
+					score.trifectaPrice = parseFloat($scope.trifectaPricePoint2Base * 10);
+				}
+				if($scope.trifectaPricePoint5Base) {
+					score.trifectaPrice = parseFloat($scope.trifectaPricePoint5Base * 4);
+				}
+				if($scope.trifectaPrice1Base) {
+					score.trifectaPrice = parseFloat($scope.trifectaPrice1Base * 2);
+				}
+				if($scope.trifectaPrice2Base) {
+					score.trifectaPrice = parseFloat($scope.trifectaPrice2Base);
+				}
 			}
+
 			if($scope.fourthNumber) {
 				score.fourthNumber = $scope.fourthNumber;
 				score.fourthName = $scope.fourthName;
 				score.fourthJockey = $scope.fourthJockey;
 			}
+
 			if($scope.fifthNumber) {
 				score.fifthNumber = $scope.fifthNumber;
 				score.fifthName = $scope.fifthName;
 				score.fifthJockey = $scope.fifthJockey;
 			}
-			if($scope.superfectaPrice) {
+
+			if($scope.superfectaPricePoint1Base) {
 				score.superfecta = $scope.superfecta;
-				score.superfectaPrice = $scope.superfectaPrice;
+				score.superfectaPrice = parseFloat($scope.superfectaPricePoint1Base * 20);
 			}
-			if($scope.pentafectaPrice) {
+			if($scope.superfectaPricePoint2Base) {
+				score.superfecta = $scope.superfecta;
+				score.superfectaPrice = parseFloat($scope.superfectaPricePoint2Base * 10);
+			}
+			if($scope.superfectaPricePoint5Base) {
+				score.superfecta = $scope.superfecta;
+				score.superfectaPrice = parseFloat($scope.superfectaPricePoint5Base * 4);
+			}
+			if($scope.superfectaPrice1Base) {
+				score.superfecta = $scope.superfecta;
+				score.superfectaPrice = parseFloat($scope.superfectaPrice1Base * 2);
+			}
+			if($scope.superfectaPrice2Base) {
+				score.superfecta = $scope.superfecta;
+				score.superfectaPrice = parseFloat($scope.superfectaPrice2Base);
+			}
+
+			if($scope.pentafectaPricePoint1Base) {
 				score.pentafecta = $scope.pentafecta;
-				score.pentafectaPrice = $scope.pentafectaPrice;
+				score.pentafectaPrice = parseFloat($scope.pentafectaPricePoint1Base * 20);
+			}
+			if($scope.pentafectaPricePoint2Base) {
+				score.pentafecta = $scope.pentafecta;
+				score.pentafectaPrice = parseFloat($scope.pentafectaPricePoint2Base * 10);
+			}
+			if($scope.pentafectaPricePoint5Base) {
+				score.pentafecta = $scope.pentafecta;
+				score.pentafectaPrice = parseFloat($scope.pentafectaPricePoint5Base * 4);
+			}
+			if($scope.pentafectaPrice1Base) {
+				score.pentafecta = $scope.pentafecta;
+				score.pentafectaPrice = parseFloat($scope.pentafectaPrice1Base * 2);
+			}
+			if($scope.pentafectaPrice2Base) {
+				score.pentafecta = $scope.pentafecta;
+				score.pentafectaPrice = parseFloat($scope.pentafectaPrice2Base);
 			}
 
-			if($scope.dailyDoublePrice) {
+			if($scope.dailyDoublePrice1Base) {
 				score.dailyDouble = $scope.dailyDouble;
-				score.dailyDoublePrice = $scope.dailyDoublePrice;
+				score.dailyDoublePrice = parseFloat($scope.dailyDoublePrice1Base * 2);
+			}
+			if($scope.dailyDoublePrice2Base) {
+				score.dailyDouble = $scope.dailyDouble;
+				score.dailyDoublePrice = parseFloat($scope.dailyDoublePrice2Base);
 			}
 
-			if($scope.pick3Price) {
+			if($scope.pick3PricePoint2Base) {
 				score.pick3 = $scope.pick3;
-				score.pick3Price = $scope.pick3Price;
+				score.pick3Price = parseFloat($scope.pick3PricePoint2Base * 10);
+			}
+			if($scope.pick3PricePoint5Base) {
+				score.pick3 = $scope.pick3;
+				score.pick3Price = parseFloat($scope.pick3PricePoint5Base * 4);
+			}
+			if($scope.pick3Price1Base) {
+				score.pick3 = $scope.pick3;
+				score.pick3Price = parseFloat($scope.pick3Price1Base * 2);
+			}
+			if($scope.pick3Price2Base) {
+				score.pick3 = $scope.pick3;
+				score.pick3Price = parseFloat($scope.pick3Price2Base);
 			}
 
-			if($scope.pick4Price) {
+			if($scope.pick4PricePoint2Base) {
 				score.pick4 = $scope.pick4;
-				score.pick4Price = $scope.pick4Price;
+				score.pick4Price = parseFloat($scope.pick4PricePoint2Base * 10);
+			}
+			if($scope.pick4PricePoint5Base) {
+				score.pick4 = $scope.pick4;
+				score.pick4Price = parseFloat($scope.pick4PricePoint5Base * 4);
+			}
+			if($scope.pick4Price1Base) {
+				score.pick4 = $scope.pick4;
+				score.pick4Price = parseFloat($scope.pick4Price1Base * 2);
+			}
+			if($scope.pick4Price2Base) {
+				score.pick4 = $scope.pick4;
+				score.pick4Price = parseFloat($scope.pick4Price2Base);
 			}
 
-			if($scope.pick5Price) {
+			if($scope.pick5PricePoint2Base) {
 				score.pick5 = $scope.pick5;
-				score.pick5Price = $scope.pick5Price;
+				score.pick5Price = parseFloat($scope.pick5PricePoint2Base * 10);
+			}
+			if($scope.pick5PricePoint5Base) {
+				score.pick5 = $scope.pick5;
+				score.pick5Price = parseFloat($scope.pick5PricePoint5Base * 4);
+			}
+			if($scope.pick5Price1Base) {
+				score.pick5 = $scope.pick5;
+				score.pick5Price = parseFloat($scope.pick5Price1Base * 2);
+			}
+			if($scope.pick5Price2Base) {
+				score.pick5 = $scope.pick5;
+				score.pick5Price = parseFloat($scope.pick5Price2Base);
 			}
 
-			if($scope.pick6Price) {
+			if($scope.pick6PricePoint2Base) {
 				score.pick6 = $scope.pick6;
-				score.pick6Price = $scope.pick6Price;
+				score.pick6Price = parseFloat($scope.pick6PricePoint2Base * 10);
+			}
+			if($scope.pick6PricePoint5Base) {
+				score.pick6 = $scope.pick6;
+				score.pick6Price = parseFloat($scope.pick6PricePoint5Base * 4);
+			}
+			if($scope.pick6Price1Base) {
+				score.pick6 = $scope.pick6;
+				score.pick6Price = parseFloat($scope.pick6Price1Base * 2);
+			}
+			if($scope.pick6Price2Base) {
+				score.pick6 = $scope.pick6;
+				score.pick6Price = parseFloat($scope.pick6Price2Base);
 			}
 
 			if($scope.pick6ConsolationPrice) {
@@ -1179,7 +1287,6 @@
 				if(scoreTrdPromiseResponse.data.success) {
 					var tournamentId = scoreTrdPromiseResponse.data.acIds[0];
 					if(shouldScoreTournament) {
-console.log('shouldScoreTournament');
 						var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
 						scoreTournament.then(function(scoreTournamentResponse) {
 							$window.location.href = location.origin + "/app/";
