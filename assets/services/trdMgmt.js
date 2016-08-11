@@ -19,6 +19,7 @@
 		var trd;
 		var getTrdsByDatePromise;
 		var closeRacePromise;
+		var unCloseRacePromise;
 		var scratchEntryPromise;
 		var unScratchEntryPromise;
 
@@ -93,6 +94,19 @@
 				});
 
 				return closeRacePromise;
+			},
+
+			unCloseRace: function(trdId, raceNum, customerId) {
+				var url = '/trds/unCloseRace/' + trdId +'-' + raceNum +'-'+ customerId;
+				unCloseRacePromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('get ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return unCloseRacePromise;
 			},
 
 			scratchEntry: function(trdId, raceNum, entryNum, customerId) {

@@ -83,6 +83,7 @@ function controller(
 		$scope.showTournaments = showTournaments;
 		$scope.showConfirmation = showConfirmation;
 		$scope.closeRace = closeRace;
+		$scope.unCloseRace = unCloseRace;
 		$scope.scratchEntry = scratchEntry;
 		$scope.unScratchEntry = unScratchEntry;
 		$scope.showResults = showResults;
@@ -1234,6 +1235,21 @@ console.log(wagerRunners);
 				});
 			} else {
 console.log('closeRace() updateTrdDataPromise failed');
+			}
+		});
+	};
+
+	function unCloseRace(raceNum) {
+		var trackData = $scope.track;
+		var updateTrdDataPromise = trdMgmt.unCloseRace(trackData.id, raceNum, $scope.customerId || $scope.customer.id);
+		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+			if(updateTrdDataPromiseResponse.success) {
+				var unCloseWagersPromise = wagerMgmt.unCloseWagers($scope.track.id+'-'+raceNum);
+				unCloseWagersPromise.then(function(unCloseWagersPromiseResponse) {
+					alert('Race '+raceNum+' Unclosed');
+				});
+			} else {
+console.log('unCloseRace() updateTrdDataPromise failed');
 			}
 		});
 	};

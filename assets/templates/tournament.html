@@ -192,6 +192,15 @@
 								<span 
 									class="raceDetailsSmaller"
 									style="cursor: pointer;"
+									ng-click="unCloseRace(race.number)"
+									ng-if="customer.admin && !race.score && race.closed"
+								>
+									<br/>
+									Unclose
+								</span>
+								<span 
+									class="raceDetailsSmaller"
+									style="cursor: pointer;"
 									ng-click="scoreRace(track.id, race.number)"
 									ng-if="customer.admin && !race.score && race.closed"
 								>

@@ -54,6 +54,20 @@ module.exports = {
 		}
 	},
 	
+	unCloseRace: function(req, res) {
+		if(req.params.id) {
+			var rpPcs = req.params.id.split('-');
+			var trackId = rpPcs[0];
+			var raceNum = rpPcs[1];
+			var customerId = rpPcs[2];
+			if(trackId && raceNum && customerId === '5765aec37e7e6e33c9203f4d') {
+				return unCloseValidRace(req, res);
+			} else {
+				return res.send(JSON.stringify({success: false, failMsg: 'Invalid Close Race Data'}));
+			}
+		}
+	},
+	
 	scratchEntry: function(req, res) {
 		if(req.params.id) {
 			var rpPcs = req.params.id.split('-');
@@ -723,6 +737,36 @@ function closeValidRace(req, res, self) {
 		trackData.races.forEach(function(race) {
 			if(race.number == raceNum) {
 				race.closed = true;
+			}
+			updatedRaces.push(race);
+		});
+		return Trds.update(
+			{id: trackData.id}, 
+			{races: updatedRaces},
+			false,
+			false
+		).then(function(updatedData) {
+			return res.send(JSON.stringify({success: true, updatedData: updatedData}));
+		});
+	}).catch(function(err) {
+		res.json({error: 'Server error'}, 500);
+		console.error(err);
+		throw err;
+	});
+}
+
+function unCloseValidRace(req, res, self) {
+	var rpPcs = req.params.id.split('-');
+	var trackId = rpPcs[0];
+	var raceNum = rpPcs[1];
+	return Trds.find({
+		id: trackId
+	}).then(function(trdData) {
+		var trackData = trdData[0];
+		var updatedRaces = [];
+		trackData.races.forEach(function(race) {
+			if(race.number == raceNum) {
+				race.closed = false;
 			}
 			updatedRaces.push(race);
 		});
