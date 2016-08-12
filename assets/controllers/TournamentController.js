@@ -65,6 +65,7 @@ function controller(
 		$scope.logOut = layoutMgmt.logOut;
 		$scope.addFunds = layoutMgmt.addFunds;
 
+		$scope.account = account;
 		$scope.createTournament = layoutMgmt.createTournament;
 
 		$scope.showTrack = showTrack;
@@ -388,6 +389,14 @@ function controller(
 	///
 	// View methods
 	///
+
+	function account() {
+		if(!$scope.customerId) {
+			layoutMgmt.logIn();
+		} else {
+			$location.path('/account');
+		}
+	}
 
 	function showTrack(trackId) {
 		$scope.marketingShow = false;

@@ -53,8 +53,9 @@
 				return registerTournamentPromise;
 			},
 
-			getTournamentsByCustomerId: function(data) {
-				var url = '/tournaments/byCustomerId/' + data;
+			getTournamentsByCustomerId: function(customerId) {
+console.log('getTournamentsByCustomerId() called');
+				var url = '/tournaments/byCustomerId/' + customerId;
 				getTournamentsByCustomerIdPromise = $http.get(url).then(function(res) {
 					return res.data;
 				}).catch(function(err) {

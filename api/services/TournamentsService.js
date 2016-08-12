@@ -16,11 +16,11 @@ module.exports = {
 		return Customers.find(
 			{id: customerId}
 		).then(function(customerData) {
-			var balance = 0;
-			if(customerData[0].balance) {
-				balance = customerData[0].dollars;
+			var dollars = 0;
+			if(customerData[0].dollars) {
+				dollars = customerData[0].dollars;
 			}
-			return {success: true, balance: balance};
+			return {success: true, balance: dollars};
 		}).catch(function(err) {
 			return {success: false, reason: 'invalid customerId'};
 		});

@@ -10,15 +10,15 @@
 	app.controller('AccountController', controller);
 	
 	controller.$inject = [
-		'$scope', '$http', 'messenger', '$rootScope',
-		'$window', 'payMethodMgmt', 'layoutMgmt', 'customerMgmt',
-		'accountMgmt', 'reservationMgmt', 'deviceMgr'
+		'$scope', '$http', '$rootScope', '$window',
+		'messenger', 'payMethodMgmt', 'layoutMgmt', 'customerMgmt',
+		'accountMgmt', 'deviceMgr', 'tournamentMgmt'
 	];
 
 	function controller(
-		$scope, $http, messenger, $rootScope,
-		$window, payMethodMgmt, layoutMgmt, customerMgmt,
-		accountMgmt, reservationMgmt, deviceMgr
+		$scope, $http, $rootScope, $window, 
+		messenger, payMethodMgmt, layoutMgmt, customerMgmt,
+		accountMgmt, deviceMgr, tournamentMgmt
 	) {
 
 		if(deviceMgr.isBigScreen()) {
@@ -26,6 +26,12 @@
 		} else {
 			$scope.bigScreen = false;
 		}
+
+		$scope.logOut = layoutMgmt.logOut;
+
+		$scope.showLogin = false;
+		$scope.showLogout = true;
+		$scope.showSignup = false;
 
 		$scope.addPM = payMethodMgmt.modals.add;
 		$scope.removePM = payMethodMgmt.modals.remove;
@@ -39,6 +45,31 @@
 				$window.location.href = '/';
 				return;
 			}
+
+			var dateObj = new Date();
+			var year = dateObj.getFullYear();
+			var month = (dateObj.getMonth() + 1);
+			var date = dateObj.getDate();
+
+			if(month < 10) {
+				month = '0' + month;
+			}
+
+			if(date < 10) {
+				date = '0' + date;
+			}
+
+			var todayDate = year + month + date;
+
+			var getCurrentTournamentsPromise = tournamentMgmt.getTournamentsByDate(todayDate);
+			getCurrentTournamentsPromise.then(function(tournamentsData) {
+				var dateObj = new Date();
+				var nowMills = dateObj.getTime();
+				tournamentsData.forEach(function(tournament) {
+					tournament.mtp = parseInt((tournament.startTime - nowMills) / 1000);
+				});
+				$scope.currentTournaments = tournamentsData;
+			});
 
 			var customerId = sessionData.customerId;
 
@@ -61,25 +92,26 @@ console.log(response);
 
 			customerMgmt.getCustomer(customerId).then(function(customer) {
 				$scope.customer = customer;
-				var taxExempt = '';
-				if(customer.taxExempt) {
-					var taxExempt = 'Tax Exempt';
-				}
-				$scope.taxExempt = taxExempt;
 
-				var getCustomerReservationsPromise = reservationMgmt.getReservationsByCustomerId(customer.id);
-				getCustomerReservationsPromise.then(function(reservationData) {
-
-					var completedHistory = [];
-					reservationData.forEach(function(reservation) {
-						if(reservation.createdAt) {
-							reservation.reservationDate = reservation.createdAt.substr(0,10);
-						}
-						reservation.total = parseFloat(reservation.total).toFixed(2);
-						completedHistory.push(reservation);
-					});
-					$scope.reservations = completedHistory;
-				});
+//				var getCustomerTournamentsPromise = tournamentMgmt.getTournamentsByCustomerId(customer.id);
+//				getCustomerTournamentsPromise.then(function(tournamentsData) {
+//
+//					var completedHistory = [];
+//					tournamentsData.forEach(function(tournament) {
+//						if(tournament.createdAt) {
+//							tournament.tournamentDate = tournament.createdAt.substr(0,10);
+//						}
+//						tournament.totalFee = parseFloat(tournament.entryFee + tournament.siteFee);
+//						tournament.result = 0;
+//						tournament.results.forEach(function(result) {
+//							if(result.customerId === customerId) {
+//								tournament.result = result.amount;
+//							}
+//						});
+//						completedHistory.push(tournament);
+//					});
+//					$scope.tournaments = completedHistory;
+//				});
 			});
 		});
 

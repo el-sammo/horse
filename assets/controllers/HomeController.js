@@ -53,6 +53,7 @@ function controller(
 		$scope.signUp = layoutMgmt.signUp;
 		$scope.logOut = layoutMgmt.logOut;
 
+		$scope.account = account;
 		$scope.showTournamentDetails = showTournamentDetails;
 		$scope.showTournamentLeaders = showTournamentLeaders;
 		$scope.tournamentRegister = tournamentRegister;
@@ -180,6 +181,14 @@ function controller(
 	// View methods
 	///
 
+
+	function account() {
+		if(!$scope.customerId) {
+			layoutMgmt.logIn();
+		} else {
+			$location.path('/account');
+		}
+	}
 
 	function showTournamentDetails(tournyId) {
 		var dateObj = new Date();
