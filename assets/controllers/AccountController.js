@@ -39,6 +39,10 @@
 
 		$scope.logOut = layoutMgmt.logOut;
 
+		$scope.setActiveTournament = function(tournament) {
+			$window.location.href = location.origin + "/app/tournament/" + tournament.id;
+		}
+
 		var sessionPromise = customerMgmt.getSession();
 		sessionPromise.then(function(sessionData) {
 			if(!sessionData.customerId) {
