@@ -893,44 +893,112 @@
 								ng-show="showTournament"
 							>
 								<div class="row">
-									<div class="col-md-6">
-										<span class="tournamentHead">{{tournamentData.name}}</span>
+									<div class="col-md-3">
+										<div class="row">
+											<span class="tournamentHead">
+												{{tournamentData.name}}
+											</span>
+										</div>
+										<div class="row">
+											<span 
+												class="tournamentHead"
+												style="cursor: pointer;"
+												ng-if="!customerRegisteredActiveTournament"
+												ng-click="tournamentRegister(tournamentData.id)"
+											>
+												Register
+											</span>
+										</div>
+										<div class="row">
+											<span 
+												class="tournamentHead"
+												style="cursor: pointer;"
+												ng-if="customerRegisteredActiveTournament"
+												ng-click="tournamentUnregister(tournamentData.id)"
+											>
+												Unregister
+											</span>
+										</div>
+										<div class="row">
+											<span 
+												class="tournamentHead"
+												style="cursor: pointer;"
+												ng-click="goToTournament(tournamentData.id)"
+											>
+												Go To Tournament
+											</span>
+										</div>
 									</div>
 									<div 
-										class="col-md-3 col-md-offset-1"
+										class="col-md-6 col-md-offset-1"
 										style="text-align: right;"
 									>
-										<timer
-											ng-if="showTournamentTimer"
-											class="tournamentHead"
-											countdown="tournamentCountdownTimer"
-											max-time-unit="'hour'" 
-											interval="1000"
+										<div class="row">
+											<timer
+												ng-if="showTournamentTimer"
+												class="tournamentHead"
+												countdown="tournamentCountdownTimer"
+												max-time-unit="'hour'" 
+												interval="1000"
+											>
+												{{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}
+											</timer>
+										</div>
+										<div 
+											class="row"
 										>
-											{{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}
-										</timer>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<span 
-											class="tournamentHead"
-											style="cursor: pointer;"
-											ng-click="tournamentRegister(tournamentData.id)"
+											<div 
+												class="col-md-12 whiteBottom"
+											>
+												<span
+													class="tournamentHead"
+													ng-if="!tournamentData.closed"
+												>
+													Expected Payouts
+												</span>
+												<span
+													class="tournamentHead"
+													ng-if="tournamentData.closed"
+												>
+													Guaranteed Payouts
+												</span>
+											</div>
+										</div>
+										<div 
+											class="row"
 										>
-											Register
-										</span>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<span 
-											class="tournamentHead"
-											style="cursor: pointer;"
-											ng-click="goToTournament(tournamentData.id)"
+											<div class="col-md-3">
+												<span class="tournamentDetails">
+													Rank
+												</span>
+											</div>
+											<div 
+												class="col-md-9"
+												style="text-align: right;"
+											>
+												<span class="tournamentDetails">
+													Payout
+												</span>
+											</div>
+										</div>
+										<div 
+											class="row"
+											ng-repeat="payout in tournamentPayoutStructure"
 										>
-											Go To Tournament
-										</span>
+											<div class="col-md-3">
+												<span class="tournamentDetails">
+													{{payout.finishingRank}}
+												</span>
+											</div>
+											<div 
+												class="col-md-9"
+												style="text-align: right;"
+											>
+												<span class="tournamentDetails">
+													${{payout.payout}}
+												</span>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div 

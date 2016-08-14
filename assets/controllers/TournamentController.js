@@ -14,6 +14,7 @@ controller.$inject = [
 	'$modal', '$timeout', '$window',
 	'signupPrompter', 'deviceMgr', 'layoutMgmt',
 	'customerMgmt', 'trdMgmt', 'wagerMgmt', 'tournamentMgmt',
+	'clientConfig',
 	'messenger', 
 	'lodash',
 ];
@@ -23,6 +24,7 @@ function controller(
 	$modal, $timeout, $window,
 	signupPrompter, deviceMgr, layoutMgmt, 
 	customerMgmt, trdMgmt, wagerMgmt, tournamentMgmt,
+	clientConfig,
 	messenger, 
 	_
 ) {
@@ -31,7 +33,7 @@ function controller(
 	///
 
 	var todayDate;
-	var legMap, partMap, amountMap, wagerAbbrevMap poolMap;
+	var legMap, partMap, amountMap, wagerAbbrevMap;
 
 
 	///
@@ -91,6 +93,7 @@ function controller(
 		$scope.showTournamentDetails = showTournamentDetails;
 		$scope.showTournamentLeaders = showTournamentLeaders;
 		$scope.tournamentRegister = tournamentRegister;
+		$scope.tournamentUnregister = tournamentUnregister;
 		$scope.setActiveTournament = setActiveTournament;
 		$scope.changeActiveTournament = changeActiveTournament;
 		$scope.goToTournament = goToTournament;
@@ -1322,8 +1325,56 @@ console.log('unScratchEntry() updateTrdDataPromise failed');
 		var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
 		getTournamentPromise.then(function(tournamentData) {
 			$scope.tournamentData = tournamentData;
-			$scope.tournamentCountdownTimer = parseInt((tournamentData.startTime - nowMills) / 1000);
-			$scope.showTournamentTimer = true;
+			if($scope.customerId || $scope.customer.id) {
+				var customerFound = '';
+				var thisCustomerId = $scope.customerId || $scope.customer.id;
+				$scope.tournamentData.customers.forEach(function(customer) {
+					if(customer === thisCustomerId) {
+						customerFound = 'yeppers';
+					}
+				});
+				if(customerFound === 'yeppers') {
+					$scope.customerRegisteredActiveTournament = true;
+				} else {
+					$scope.customerRegisteredActiveTournament = false;
+				}
+console.log('$scope.customerRegisteredActiveTournament: '+$scope.customerRegisteredActiveTournament);
+			}
+			var entryCount = tournamentData.customers.length;
+			$scope.tournamentData.entryCount = entryCount;
+			$scope.tournamentData.prizePool = parseFloat(entryCount * tournamentData.entryFee);
+			if(entryCount < 3) {
+				$scope.payoutMap = clientConfig.payoutStructure[0];
+			}
+			if(entryCount > 2 && entryCount < 11) {
+				$scope.payoutMap = clientConfig.payoutStructure[1];
+			}
+			if(entryCount > 10 && entryCount < 31) {
+				$scope.payoutMap = clientConfig.payoutStructure[2];
+			}
+			if(entryCount > 30 && entryCount < 41) {
+				$scope.payoutMap = clientConfig.payoutStructure[3];
+			}
+			if(entryCount > 40 && entryCount < 51) {
+				$scope.payoutMap = clientConfig.payoutStructure[4];
+			}
+			if(entryCount > 50 && entryCount < 61) {
+				$scope.payoutMap = clientConfig.payoutStructure[5];
+			}
+			if((tournamentData.startTime - nowMills) > 0) {
+				$scope.tournamentCountdownTimer = parseInt((tournamentData.startTime - nowMills) / 1000);
+				$scope.showTournamentTimer = true;
+			}
+			var tournamentPayoutStructure = [];
+			var finishingRank = 1;
+			$scope.payoutMap.forEach(function(payout) {
+				var thisPayout = {};
+				thisPayout.finishingRank = finishingRank;
+				thisPayout.payout = ($scope.tournamentData.prizePool * payout).toFixed(2);
+				tournamentPayoutStructure.push(thisPayout);
+				finishingRank ++;
+			});
+			$scope.tournamentPayoutStructure = tournamentPayoutStructure;
 		});
 		if(!$scope.showLeaders) {
 			$scope.showTournament = true;
@@ -1417,6 +1468,35 @@ console.log(response.data);
 		}
 	}
 
+	function tournamentUnregister(tournyId) {
+console.log('tournamentUnregister() called');
+//		if(!$scope.customerId) {
+//			layoutMgmt.logIn();
+//		} else {
+//			var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
+//			registerTournamentPromise.then(function(response) {
+//				if(response.data.success) {
+//					var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
+//					getTournamentPromise.then(function(tournamentData) {
+//						showLeaderboards();
+//						showTournamentLeaders(tournamentData.id);
+//						$scope.showRegisterLink = false;
+//						$scope.showActiveTournamentCredits = true;
+//						updateActiveTournamentBalance(tournamentData, $scope.customerId);
+//					});
+//				} else {
+//console.log('response.data:');
+//console.log(response.data);
+//					if(response.data.failMsg.indexOf('Insufficient Funds') > -1) {
+//						var fmPcs = response.data.failMsg.split(' ');
+//						$scope.registerFailMsg = 'Your real money account balance ($'+$scope.customer.dollars+') is less than the total entry fee ($'+fmPcs[2]+').';
+//						$scope.registerFailAction = 'addFunds';
+//					}
+//				}
+//			});
+//		}
+	}
+
 	function setActiveTournament(tournament) {
 		$scope.activeTournament = tournament;
 		var dateObj = new Date();
@@ -1429,6 +1509,7 @@ console.log(response.data);
 				races.push(race);
 			});
 			trdData.races = races;
+			races.sort(dynamicSort("number"));
 			$scope.track = trdData;
 			$scope.activeTournamentId = tournament.id;
 			$scope.showTrack($scope.track.id);
