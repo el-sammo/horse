@@ -436,6 +436,10 @@ function scoreValidTournament(req, res, self) {
 	).then(function(scoreResponse) {
 // TODO
 // update tournamentstandings
+		return TournamentsService.getFinalStandings(tournamentId, scoreResponse[0].credits, scoreResponse[0].entryFee, scoreResponse[0].customers).then(function(gFSResponse) {
+console.log('gFSResponse:');
+console.log(gFSResponse);
+		});
 // then
 // award prize pool
 		res.send(JSON.stringify(scoreResponse[0]));

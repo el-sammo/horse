@@ -1276,9 +1276,11 @@
 
 			var shouldScoreTournament = false;
 			var racesCount = $scope.trdData.races.length;
-			if(score.raceNum == racesCount) {
+			if(parseInt(score.raceNum) == racesCount) {
 				shouldScoreTournament = true;
 			}
+
+			shouldScoreTournament = true; // <-- debug code
 
 			$scope.trdData.races = newRaces;
 
@@ -1289,10 +1291,12 @@
 					if(shouldScoreTournament) {
 						var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
 						scoreTournament.then(function(scoreTournamentResponse) {
-							$window.location.href = location.origin + "/app/";
+console.log('scoreTournamentResponse:');
+console.log(scoreTournamentResponse);
+//							$window.location.href = location.origin + "/app/";
 						});
 					} else {
-						$window.location.href = location.origin + "/app/";
+//						$window.location.href = location.origin + "/app/";
 					}
 				} else {
 console.log('response:');
