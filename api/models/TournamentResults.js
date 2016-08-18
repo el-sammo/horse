@@ -10,12 +10,28 @@ var tablize = require('sd-datatables');
 module.exports = {
 
   attributes: {
+    customerId: {
+      type: 'string',
+      required: true
+		},
     tournamentId: {
       type: 'string',
       required: true
 		},
-    customerId: {
+    tournamentName: {
       type: 'string',
+      required: true
+		},
+    tournamentDate: {
+      type: 'integer',
+      required: true
+		},
+    tournamentEntryFee: {
+      type: 'float',
+      required: true
+		},
+    tournamentSiteFee: {
+      type: 'float',
       required: true
 		},
     credits: {

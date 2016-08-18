@@ -76,12 +76,24 @@ module.exports = {
 		});
 	},
 
-	getFinalStandings: function(tournamentId, startingCredits, entryFee, customerIds) {
+	getFinalStandings: function(
+		tournamentId,
+		tournamentName,
+		tournamentDate,
+		startingCredits,
+		entryFee,
+		siteFee,
+		customerIds
+	) {
 		var updatedCustomersCredits = [];
 		var customerIdsCount = customerIds.length;
 		customerIds.forEach(function(customerId) {
 			var thisCustomer = {};
-			getCustomerCredits(tournamentId, customerId, startingCredits).then(function(customerCredits) {
+			getCustomerCredits(
+				tournamentId,
+				customerId,
+				startingCredits
+			).then(function(customerCredits) {
 				thisCustomer.customerId = customerId;
 				thisCustomer.credits = customerCredits.credits;
 			}).then(function() {
@@ -94,17 +106,40 @@ module.exports = {
 					var prizePool = parseFloat(parseFloat(entryFee) * customerIdsCount);
 					var rank = 1;
 					updatedCustomersCredits.forEach(function(customerCredit) {
+						var customerFinalStanding = {};
+						customerFinalStanding.customerId = customerCredit.customerId;
+						customerFinalStanding.rank = rank;
+						customerFinalStanding.credits = customerCredit.credits;
 						var payout = getPayout(rank, prizePool, customerIdsCount);
-console.log('payout: '+payout);
+
+						customerFinalStanding.payout = payout;
+//console.log(' ');
+//console.log('customerFinalStanding:');
+//console.log(customerFinalStanding);
+
+						TournamentResults.create({
+							tournamentId: tournamentId,
+							tournamentName: tournamentName,
+							tournamentDate: tournamentDate,
+							tournamentEntryFee: entryFee,
+							tournamentSiteFee: siteFee,
+							customerId: customerCredit.customerId,
+							credits: customerCredit.credits,
+							payout: payout
+						}).catch(function(err) {
+console.log(' ');
+console.log('getFinalStandings - TournamentResults.create err:');
+console.log(err);
+						});
+
+						if(rank == customerIdsCount) {
+//console.log(' ');
+//console.log('done');
+//console.log(' ');
+						}
+
 						rank ++;
 					});
-//					TournamentResults.insert({
-//						tournamentId: tournamentId,
-//						customerId: updatedCustomersCredits.customerId,
-//						credits: updatedCustomersCredits.credits,
-//						payout: payout
-//					});
-//					return {success: true, finalStandings: updatedCustomersCredits};
 				}
 			});
 		});

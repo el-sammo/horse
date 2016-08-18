@@ -434,15 +434,19 @@ function scoreValidTournament(req, res, self) {
 		false,
 		false
 	).then(function(scoreResponse) {
+		var tournamentData = scoreResponse[0];
 // TODO
 // update tournamentstandings
-		return TournamentsService.getFinalStandings(tournamentId, scoreResponse[0].credits, scoreResponse[0].entryFee, scoreResponse[0].customers).then(function(gFSResponse) {
-console.log('gFSResponse:');
-console.log(gFSResponse);
-		});
-// then
-// award prize pool
-		res.send(JSON.stringify(scoreResponse[0]));
+		TournamentsService.getFinalStandings(
+			tournamentId,
+			tournamentData.name,
+			tournamentData.tournyDate,
+			tournamentData.credits,
+			tournamentData.entryFee,
+			tournamentData.siteFee,
+			tournamentData.customers
+		);
+		res.send(JSON.stringify(tournamentData));
 	}).catch(function(err) {
 		return {error: 'Server error'};
 		console.error(err);
