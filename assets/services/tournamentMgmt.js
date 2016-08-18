@@ -18,6 +18,7 @@
 	) {
 		var tournament;
 		var registerTournamentPromise;
+		var getTournamentResultsByCustomerIdPromise;
 		var getTournamentsByCustomerIdPromise;
 		var getTournamentsByDatePromise;
 		var getLeadersPromise;
@@ -65,6 +66,20 @@ console.log('getTournamentsByCustomerId() called');
 				});
 
 				return getTournamentsByCustomerIdPromise;
+			},
+
+			getTournamentResultsByCustomerId: function(customerId) {
+console.log('getTournamentResultsByCustomerId() called');
+				var url = '/tournaments/resultsByCustomerId/' + customerId;
+				getTournamentResultsByCustomerIdPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return getTournamentResultsByCustomerIdPromise;
 			},
 
 			getTournamentsByDate: function(date) {

@@ -97,25 +97,10 @@ console.log(response);
 			customerMgmt.getCustomer(customerId).then(function(customer) {
 				$scope.customer = customer;
 
-//				var getCustomerTournamentsPromise = tournamentMgmt.getTournamentsByCustomerId(customer.id);
-//				getCustomerTournamentsPromise.then(function(tournamentsData) {
-//
-//					var completedHistory = [];
-//					tournamentsData.forEach(function(tournament) {
-//						if(tournament.createdAt) {
-//							tournament.tournamentDate = tournament.createdAt.substr(0,10);
-//						}
-//						tournament.totalFee = parseFloat(tournament.entryFee + tournament.siteFee);
-//						tournament.result = 0;
-//						tournament.results.forEach(function(result) {
-//							if(result.customerId === customerId) {
-//								tournament.result = result.amount;
-//							}
-//						});
-//						completedHistory.push(tournament);
-//					});
-//					$scope.tournaments = completedHistory;
-//				});
+				var getTournamentResultsByCustomerIdPromise = tournamentMgmt.getTournamentResultsByCustomerId(customer.id);
+				getTournamentResultsByCustomerIdPromise.then(function(resultsData) {
+					$scope.results = resultsData;
+				});
 			});
 		});
 

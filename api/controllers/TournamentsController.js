@@ -97,6 +97,14 @@ module.exports = {
 		}
 	},
 	
+	resultsByCustomerId: function(req, res) {
+		if(req.params.id) {
+			return getResultsByCustomerId(req, res);
+		} else {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid updateTCC data'}));
+		}
+	},
+	
 	closeTournament: function(req, res) {
 		if(req.params.id) {
 			return closeValidTournament(req, res);
@@ -383,6 +391,22 @@ console.log(acIds);
 			console.error(err);
 			throw err;
 		});
+	}).catch(function(err) {
+    return {error: 'Server error'};
+    console.error(err);
+    throw err;
+	});
+}
+
+function getResultsByCustomerId(req, res, self) {
+	var customerId = req.params.id;
+	return TournamentsService.getTournamentResultsByCustomerId(customerId).then(function(gtrResponse) {
+console.log(' ');
+console.log('gtrResponse:');
+console.log(gtrResponse);
+		if(gtrResponse.success) {
+			res.send(JSON.stringify(gtrResponse.resultsData));
+		}
 	}).catch(function(err) {
     return {error: 'Server error'};
     console.error(err);

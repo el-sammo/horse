@@ -131,7 +131,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4 col-md-offset-1">
+					<div class="col-md-5 col-md-offset-1">
 						<div class="row" id="historyHead">
 							<h3>Tournament History</h3>
 						</div>
@@ -139,13 +139,19 @@
 							<div class="col-md-12">
 								<div id="historyBody">
 									<div class="row">
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<span class="historyBody">Date</span>
 										</div>
 										<div class="col-md-5">
-											<span class="historyBody">Entry Fee</span>
+											<span class="historyBody">Tournament</span>
 										</div>
-										<div class="col-md-3" 
+										<div 
+											class="col-md-2"
+											style="text-align: right;"
+										>
+											<span class="historyBody">Fee</span>
+										</div>
+										<div class="col-md-2" 
 											style="text-align: right;"
 										>
 											<span class="historyBody">Result</span>
@@ -153,38 +159,51 @@
 									</div>
 									<div 
 										class="row" 
-										ng-repeat="tournament in tournaments"
+										ng-repeat="result in results"
 									>
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<span>
 												<a 
-													href="/app/tournament/{{tournament.id}}" 
+													href="/app/tournament/{{result.tournamentId}}" 
 													class="orderHistoryLinkWhite reservationYellow"
 												>
-													{{tournament.tournamentDate}}
+													{{result.tournamentDate}}
 												</a>
 											</span>
 										</div>
 										<div class="col-md-5">
 											<span>
 												<a 
-													href="/app/tournament/{{tournament.id}}" 
+													href="/app/tournament/{{result.tournamentId}}" 
 													class="orderHistoryLinkWhite reservationYellow"
 												>
-													{{tournament.totalFee}}
+													{{result.tournamentName}}
 												</a>
 											</span>
 										</div>
 										<div 
-											class="col-md-3" 
+											class="col-md-2" 
 											style="text-align: right;"
 										>
 											<span>
 												<a 
-													href="/app/tournament/{{tournament.id}}" 
+													href="/app/tournament/{{result.tournamentId}}" 
 													class="orderHistoryLinkWhite reservationYellow"
 												>
-													${{tournament.result}}
+													${{result.tournamentEntryFee + result.tournamentSiteFee}}
+												</a>
+											</span>
+										</div>
+										<div 
+											class="col-md-2" 
+											style="text-align: right;"
+										>
+											<span>
+												<a 
+													href="/app/tournament/{{result.tournamentId}}" 
+													class="orderHistoryLinkWhite reservationYellow"
+												>
+													${{result.payout}}
 												</a>
 											</span>
 										</div>
@@ -193,7 +212,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3 col-md-offset-1">
+					<div class="col-md-2 col-md-offset-1">
 						<div class="row" id="managementHead">
 							<h3>Account Management</h3>
 						</div>

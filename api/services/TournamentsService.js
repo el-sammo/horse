@@ -155,6 +155,18 @@ console.log(err);
 		});
 	},
 
+	getTournamentResultsByCustomerId: function(customerId) {
+console.log(' ');
+console.log('TournamentsService.getTournamentResultsByCustomerId() called with '+customerId);
+		return TournamentResults.find(
+			{customerId: customerId}
+		).then(function(resultsData) {
+			return {success: true, resultsData: resultsData};
+		}).catch(function(err) {
+			return {success: false, reason: 'invalid customerId'};
+		});
+	},
+
 	addCustomer: function(tournamentId, customerId, tournamentCredits) {
 console.log(' ');
 console.log('tournamentCredits: '+tournamentCredits);
