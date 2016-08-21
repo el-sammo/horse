@@ -89,6 +89,8 @@ function controller(
 		$scope.unCloseRace = unCloseRace;
 		$scope.scratchEntry = scratchEntry;
 		$scope.unScratchEntry = unScratchEntry;
+		$scope.favoriteEntry = favoriteEntry;
+		$scope.unFavoriteEntry = unFavoriteEntry;
 		$scope.showResults = showResults;
 		$scope.showTournamentDetails = showTournamentDetails;
 		$scope.showTournamentLeaders = showTournamentLeaders;
@@ -1271,7 +1273,7 @@ console.log('unCloseRace() updateTrdDataPromise failed');
 		var trdId = $scope.track.id;
 		var raceNum = $scope.raceNum;
 		var updateTrdDataPromise = trdMgmt.scratchEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
-updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
 			if(updateTrdDataPromiseResponse.success) {
 				alert(entryNum+' Scratched');
 			} else {
@@ -1284,11 +1286,37 @@ console.log('scratchEntry() updateTrdDataPromise failed');
 		var trdId = $scope.track.id;
 		var raceNum = $scope.raceNum;
 		var updateTrdDataPromise = trdMgmt.unScratchEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
-updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
 			if(updateTrdDataPromiseResponse.success) {
 				alert(entryNum+' Unscratched');
 			} else {
 console.log('unScratchEntry() updateTrdDataPromise failed');
+			}
+		});
+	};
+
+	function favoriteEntry(entryNum) {
+		var trdId = $scope.track.id;
+		var raceNum = $scope.raceNum;
+		var updateTrdDataPromise = trdMgmt.favoriteEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
+		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+			if(updateTrdDataPromiseResponse.success) {
+				alert(entryNum+' indicated as favorite');
+			} else {
+console.log('favoriteEntry() updateTrdDataPromise failed');
+			}
+		});
+	};
+
+	function unFavoriteEntry(entryNum) {
+		var trdId = $scope.track.id;
+		var raceNum = $scope.raceNum;
+		var updateTrdDataPromise = trdMgmt.unFavoriteEntry(trdId, raceNum, entryNum, $scope.customerId || $scope.customer.id);
+		updateTrdDataPromise.then(function(updateTrdDataPromiseResponse) {
+			if(updateTrdDataPromiseResponse.success) {
+				alert(entryNum+' NOT indicated as favorite');
+			} else {
+console.log('unFavoriteEntry() updateTrdDataPromise failed');
 			}
 		});
 	};
@@ -1326,19 +1354,18 @@ console.log('unScratchEntry() updateTrdDataPromise failed');
 		getTournamentPromise.then(function(tournamentData) {
 			$scope.tournamentData = tournamentData;
 			if($scope.customerId || $scope.customer.id) {
-				var customerFound = '';
+				var customerFound = false;
 				var thisCustomerId = $scope.customerId || $scope.customer.id;
 				$scope.tournamentData.customers.forEach(function(customer) {
 					if(customer === thisCustomerId) {
-						customerFound = 'yeppers';
+						customerFound = true;
 					}
 				});
-				if(customerFound === 'yeppers') {
+				if(customerFound) {
 					$scope.customerRegisteredActiveTournament = true;
 				} else {
 					$scope.customerRegisteredActiveTournament = false;
 				}
-console.log('$scope.customerRegisteredActiveTournament: '+$scope.customerRegisteredActiveTournament);
 			}
 			var entryCount = tournamentData.customers.length;
 			$scope.tournamentData.entryCount = entryCount;

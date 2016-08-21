@@ -22,6 +22,8 @@
 		var unCloseRacePromise;
 		var scratchEntryPromise;
 		var unScratchEntryPromise;
+		var favoriteEntryPromise;
+		var unFavoriteEntryPromise;
 
 		var service = {
 			getTrd: function(trdId) {
@@ -133,6 +135,32 @@
 				});
 
 				return unScratchEntryPromise;
+			},
+
+			favoriteEntry: function(trdId, raceNum, entryNum, customerId) {
+				var url = '/trds/favoriteEntry/' + trdId +'-'+ raceNum +'-'+ entryNum +'-'+ customerId;
+				favoriteEntryPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('get ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return favoriteEntryPromise;
+			},
+
+			unFavoriteEntry: function(trdId, raceNum, entryNum, customerId) {
+				var url = '/trds/unFavoriteEntry/' + trdId +'-'+ raceNum +'-'+ entryNum +'-'+ customerId;
+				unFavoriteEntryPromise = $http.get(url).then(function(res) {
+					return res.data;
+				}).catch(function(err) {
+					console.log('get ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return unFavoriteEntryPromise;
 			},
 
 			scoreTrd: function(scoreData) {

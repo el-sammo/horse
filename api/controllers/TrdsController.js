@@ -98,6 +98,36 @@ module.exports = {
 		}
 	},
 	
+	favoriteEntry: function(req, res) {
+		if(req.params.id) {
+			var rpPcs = req.params.id.split('-');
+			var trackId = rpPcs[0];
+			var raceNum = rpPcs[1];
+			var entryNum = rpPcs[2];
+			var customerId = rpPcs[3];
+			if(trackId && raceNum && entryNum && customerId === '5765aec37e7e6e33c9203f4d') {
+				return favoriteValidEntry(req, res);
+			} else {
+				return res.send(JSON.stringify({success: false, failMsg: 'Invalid Favorite Entry Data'}));
+			}
+		}
+	},
+	
+	unFavoriteEntry: function(req, res) {
+		if(req.params.id) {
+			var rpPcs = req.params.id.split('-');
+			var trackId = rpPcs[0];
+			var raceNum = rpPcs[1];
+			var entryNum = rpPcs[2];
+			var customerId = rpPcs[3];
+			if(trackId && raceNum && entryNum && customerId === '5765aec37e7e6e33c9203f4d') {
+				return unFavoriteValidEntry(req, res);
+			} else {
+				return res.send(JSON.stringify({success: false, failMsg: 'Invalid UnFavorite Entry Data'}));
+			}
+		}
+	},
+	
 	score: function(req, res) {
 		if(req.body && req.body.trdData && req.body.trdData.id && req.body.customerId && req.body.customerId === '5765aec37e7e6e33c9203f4d') {
 			return scoreRace(req, res);
@@ -839,6 +869,82 @@ function unScratchValidEntry(req, res, self) {
 				race.entries.forEach(function(entry) {
 					if(entry.number.toString() === entryNum.toString()) {
 						entry.active = true;
+					}
+					updatedEntries.push(entry);
+				});
+				race.entries = updatedEntries;
+			}
+			updatedRaces.push(race);
+		});
+		return Trds.update(
+			{id: trackData.id}, 
+			{races: updatedRaces},
+			false,
+			false
+		).then(function(updatedData) {
+			return res.send(JSON.stringify({success: true, updatedData: updatedData}));
+		});
+	}).catch(function(err) {
+		res.json({error: 'Server error'}, 500);
+		console.error(err);
+		throw err;
+	});
+}
+
+function favoriteValidEntry(req, res, self) {
+	var rpPcs = req.params.id.split('-');
+	var trackId = rpPcs[0];
+	var raceNum = rpPcs[1];
+	var entryNum = rpPcs[2];
+	return Trds.find({
+		id: trackId
+	}).then(function(trdData) {
+		var trackData = trdData[0];
+		var updatedRaces = [];
+		trackData.races.forEach(function(race) {
+			if(race.number == raceNum) {
+				updatedEntries = [];
+				race.entries.forEach(function(entry) {
+					if(entry.number.toString() === entryNum.toString()) {
+						entry.favorite = true;
+					}
+					updatedEntries.push(entry);
+				});
+				race.entries = updatedEntries;
+			}
+			updatedRaces.push(race);
+		});
+		return Trds.update(
+			{id: trackData.id}, 
+			{races: updatedRaces},
+			false,
+			false
+		).then(function(updatedData) {
+			return res.send(JSON.stringify({success: true, updatedData: updatedData}));
+		});
+	}).catch(function(err) {
+		res.json({error: 'Server error'}, 500);
+		console.error(err);
+		throw err;
+	});
+}
+
+function unFavoriteValidEntry(req, res, self) {
+	var rpPcs = req.params.id.split('-');
+	var trackId = rpPcs[0];
+	var raceNum = rpPcs[1];
+	var entryNum = rpPcs[2];
+	return Trds.find({
+		id: trackId
+	}).then(function(trdData) {
+		var trackData = trdData[0];
+		var updatedRaces = [];
+		trackData.races.forEach(function(race) {
+			if(race.number == raceNum) {
+				updatedEntries = [];
+				race.entries.forEach(function(entry) {
+					if(entry.number.toString() === entryNum.toString()) {
+						entry.favorite = false;
 					}
 					updatedEntries.push(entry);
 				});

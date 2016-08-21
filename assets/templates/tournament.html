@@ -514,7 +514,7 @@
 														<span 
 															class="raceDetailsSmaller"
 															style="top: -3px; cursor: pointer; position: relative;"
-															ng-show="customer && customer.admin && entry.active"
+															ng-show="customer && customer.admin && entry.active && !race.closed"
 															ng-click="scratchEntry(entry.number)"
 														>
 															SCR
@@ -522,10 +522,26 @@
 														<span 
 															class="raceDetailsSmaller"
 															style="top: -3px; cursor: pointer; position: relative;"
-															ng-show="customer && customer.admin && !entry.active"
+															ng-show="customer && customer.admin && !entry.active && !race.closed"
 															ng-click="unScratchEntry(entry.number)"
 														>
 															UNS
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															style="top: -3px; cursor: pointer; position: relative;"
+															ng-show="customer && customer.admin && !entry.favorite && !race.closed"
+															ng-click="favoriteEntry(entry.number)"
+														>
+															FAV
+														</span>
+														<span 
+															class="raceDetailsSmaller"
+															style="top: -3px; cursor: pointer; position: relative;"
+															ng-show="customer && customer.admin && entry.favorite && !race.closed"
+															ng-click="unFavoriteEntry(entry.number)"
+														>
+															UFV
 														</span>
 													</div>
 													<entries entry="entry"></entries>

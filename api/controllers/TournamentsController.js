@@ -401,9 +401,6 @@ console.log(acIds);
 function getResultsByCustomerId(req, res, self) {
 	var customerId = req.params.id;
 	return TournamentsService.getTournamentResultsByCustomerId(customerId).then(function(gtrResponse) {
-console.log(' ');
-console.log('gtrResponse:');
-console.log(gtrResponse);
 		if(gtrResponse.success) {
 			res.send(JSON.stringify(gtrResponse.resultsData));
 		}

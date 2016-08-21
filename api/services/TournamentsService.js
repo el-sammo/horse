@@ -156,8 +156,6 @@ console.log(err);
 	},
 
 	getTournamentResultsByCustomerId: function(customerId) {
-console.log(' ');
-console.log('TournamentsService.getTournamentResultsByCustomerId() called with '+customerId);
 		return TournamentResults.find(
 			{customerId: customerId}
 		).then(function(resultsData) {
@@ -168,8 +166,6 @@ console.log('TournamentsService.getTournamentResultsByCustomerId() called with '
 	},
 
 	addCustomer: function(tournamentId, customerId, tournamentCredits) {
-console.log(' ');
-console.log('tournamentCredits: '+tournamentCredits);
 		var credits = tournamentCredits || 500;
 		return TournamentStandings.find(
 			{tournamentId: tournamentId}
@@ -263,9 +259,6 @@ console.log(updatedCustomers);
 				tournamentId: tournamentId,
 				customers: newCustomers
 			}).then(function(tsiResponse) {
-console.log(' ');
-console.log('tsiResponse:');
-console.log(tsiResponse);
 				return {success: true, tournamentData: cctiResponse};
 			}).catch(function(err) {
 console.log(' ');
