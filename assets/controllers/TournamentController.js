@@ -1502,33 +1502,29 @@ console.log(response.data);
 		}
 	}
 
-	function tournamentUnregister(tournyId) {
-console.log('tournamentUnregister() called');
-//		if(!$scope.customerId) {
-//			layoutMgmt.logIn();
-//		} else {
-//			var registerTournamentPromise = tournamentMgmt.registerTournament(tournyId, $scope.customerId);
-//			registerTournamentPromise.then(function(response) {
-//				if(response.data.success) {
-//					var getTournamentPromise = tournamentMgmt.getTournament(tournyId);
-//					getTournamentPromise.then(function(tournamentData) {
-//						showLeaderboards();
-//						showTournamentLeaders(tournamentData.id);
-//						$scope.showRegisterLink = false;
-//						$scope.showActiveTournamentCredits = true;
-//						updateActiveTournamentBalance(tournamentData, $scope.customerId);
-//					});
-//				} else {
-//console.log('response.data:');
-//console.log(response.data);
-//					if(response.data.failMsg.indexOf('Insufficient Funds') > -1) {
-//						var fmPcs = response.data.failMsg.split(' ');
-//						$scope.registerFailMsg = 'Your real money account balance ($'+$scope.customer.dollars+') is less than the total entry fee ($'+fmPcs[2]+').';
-//						$scope.registerFailAction = 'addFunds';
-//					}
-//				}
-//			});
-//		}
+	function tournamentUnregister(tournamentData) {
+		if(!$scope.customerId) {
+			layoutMgmt.logIn();
+		} else {
+			var unRegisterTournamentPromise = tournamentMgmt.unRegisterTournament(tournamentData.id, $scope.customerId);
+			unRegisterTournamentPromise.then(function(response) {
+				if(response.data.success) {
+					$scope.showRegisterLink = true;
+// TODO: why isn't $scope.showRegisterLink updating here?
+console.log('$scope:');
+console.log($scope);
+console.log('successfully unregistered from tournament '+tournamentData.id);
+				} else {
+console.log('response.data:');
+console.log(response.data);
+					if(response.data.failMsg.indexOf('Insufficient Funds') > -1) {
+						var fmPcs = response.data.failMsg.split(' ');
+						$scope.registerFailMsg = 'Your real money account balance ($'+$scope.customer.dollars+') is less than the total entry fee ($'+fmPcs[2]+').';
+						$scope.registerFailAction = 'addFunds';
+					}
+				}
+			});
+		}
 	}
 
 	function setActiveTournament(tournament) {

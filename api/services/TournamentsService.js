@@ -26,12 +26,12 @@ module.exports = {
 		});
 	},
 
-	updateCustomerBalance: function(customerId, previousBalance, wagerAmount, doWhat) {
+	updateCustomerBalance: function(customerId, previousBalance, amount, doWhat) {
 		if(doWhat === 'subtract') {
-			var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(wagerAmount));
+			var newBalance = parseFloat(parseFloat(previousBalance) - parseFloat(amount));
 		}
 		if(doWhat === 'add') {
-			var newBalance = parseFloat(parseFloat(previousBalance) + parseFloat(wagerAmount));
+			var newBalance = parseFloat(parseFloat(previousBalance) + parseFloat(amount));
 		}
 		return Customers.update(
 			{id: customerId},
@@ -207,18 +207,12 @@ console.log('getFinalStandings - TournamentResults.create err:');
 			{tournamentId: tournamentId}
 		).then(function(tsDataResults) {
 			var tsData = tsDataResults[0];
-console.log(' ');
-console.log('tsData:');
-console.log(tsData);
 			var updatedCustomers = [];
 			tsData.customers.forEach(function(customer) {
 				if(customer.customerId !== customerId) {
 					updatedCustomers.push(customer)
 				}
 			});
-console.log(' ');
-console.log('updatedCustomers:');
-console.log(updatedCustomers);
 			return TournamentStandings.update(
 				{tournamentId: tournamentId},
 				{customers: updatedCustomers},

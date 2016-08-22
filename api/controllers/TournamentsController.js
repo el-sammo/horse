@@ -138,7 +138,7 @@ module.exports = {
 		}
 	},
 	
-	unregister: function(req, res) {
+	unRegister: function(req, res) {
 		var rpiPcs = req.params.id.split('-');
 		if(rpiPcs.length > 1) {
 			return tournamentUnregister(req, res);
@@ -293,7 +293,7 @@ function tournamentUnregister(req, res, self) {
 				if(customerData.success) {
 					var newCustomers = [];
 					tournamentData.customers.forEach(function(customer) {
-						if(customer.customerId !== customerId) {
+						if(customer !== customerId) {
 							newCustomers.push(customer);
 						}
 					});
