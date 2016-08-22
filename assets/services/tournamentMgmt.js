@@ -26,6 +26,7 @@
 		var updateTournamentCustomersCreditsPromise;
 		var updateTSCreditsPromise;
 		var closeTournamentPromise;
+		var unCloseTournamentPromise;
 		var scoreTournamentPromise;
 
 		var service = {
@@ -163,6 +164,19 @@ console.log('updateTournamentCustomersCredits() called');
 				});
 
 				return closeTournamentPromise;
+			},
+
+			unCloseTournament: function(trackId) {
+				var url = '/tournaments/unCloseTournament/' + trackId;
+				unCloseTournamentPromise = $http.get(url).then(function(response) {
+					return response.data;
+				}).catch(function(err) {
+					console.log('GET ' + url + ': ajax failed');
+					console.error(err);
+					return $q.reject(err);
+				});
+
+				return unCloseTournamentPromise;
 			},
 
 			scoreTournament: function(tournamentId) {

@@ -1299,6 +1299,8 @@
 				shouldScoreTournament = true;
 			}
 
+//			shouldScoreTournament = true // <-- debug code
+
 			$scope.trdData.races = newRaces;
 
 			var scoreTrdPromise = trdMgmt.scoreTrd({trdData: $scope.trdData, trId: $scope.trId, raceNum: $scope.raceNum, customerId: $scope.customerId});
@@ -1306,12 +1308,9 @@
 				if(scoreTrdPromiseResponse.data.success) {
 					var tournamentId = scoreTrdPromiseResponse.data.acIds[0];
 					if(shouldScoreTournament) {
-console.log('scoreTournament triggered');
 						var scoreTournament = tournamentMgmt.scoreTournament(tournamentId);
 						scoreTournament.then(function(scoreTournamentResponse) {
-console.log('scoreTournamentResponse:');
-console.log(scoreTournamentResponse);
-//							$window.location.href = location.origin + "/app/";
+							$window.location.href = location.origin + "/app/";
 						});
 					} else {
 						$window.location.href = location.origin + "/app/";

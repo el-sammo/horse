@@ -126,10 +126,25 @@ module.exports = {
 							customerId: customerCredit.customerId,
 							credits: customerCredit.credits,
 							payout: payout
+						}).then(function() {
+							if(payout > 0) {
+								TournamentsService.getCustomerBalance(customerCredit.customerId).then(function(balanceData) {
+									TournamentsService.updateCustomerBalance(customerCredit.customerId, balanceData.balance, payout, 'add').then(function(updatedCustomerData) {
+									}).catch(function(err) {
+console.log(' ');
+console.log('getFinalStandings - updateCustomerBalance err:');
+										console.log(err);
+									});
+								}).catch(function(err) {
+console.log(' ');
+console.log('getFinalStandings - getCustomerBalance err:');
+									console.log(err);
+								});
+							}
 						}).catch(function(err) {
 console.log(' ');
 console.log('getFinalStandings - TournamentResults.create err:');
-console.log(err);
+							console.log(err);
 						});
 
 						if(rank == customerIdsCount) {

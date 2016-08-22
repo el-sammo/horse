@@ -113,6 +113,14 @@ module.exports = {
 		}
 	},
 	
+	unCloseTournament: function(req, res) {
+		if(req.params.id) {
+			return unCloseValidTournament(req, res);
+		} else {
+			return res.send(JSON.stringify({success: false, failMsg: 'Invalid track data'}));
+		}
+	},
+	
 	scoreTournament: function(req, res) {
 		if(req.params.id) {
 			return scoreValidTournament(req, res);
@@ -426,24 +434,34 @@ function updateTournamentStandingsCustomerCredits(req, res, self) {
 }
 
 function closeValidTournament(req, res, self) {
-	var trackId = req.params.id;
-	return TournamentsService.getTournamentByTrackId(trackId).then(function(gtResponse) {
-		return Tournaments.update(
-			{id: gtResponse.tournamentData.id},
-			{closed: true},
-			false,
-			false
-		).then(function(updateResponse) {
-			res.send(JSON.stringify(updateResponse[0]));
-		}).catch(function(err) {
-			return {error: 'Server error'};
-			console.error(err);
-			throw err;
-		});
+	var tournamentId = req.params.id;
+	return Tournaments.update(
+		{id: tournamentId},
+		{closed: true},
+		false,
+		false
+	).then(function(updateResponse) {
+		res.send(JSON.stringify(updateResponse[0]));
 	}).catch(function(err) {
-    return {error: 'Server error'};
-    console.error(err);
-    throw err;
+		return {error: 'Server error'};
+		console.error(err);
+		throw err;
+	});
+}
+
+function unCloseValidTournament(req, res, self) {
+	var tournamentId = req.params.id;
+	return Tournaments.update(
+		{id: tournamentId},
+		{closed: false},
+		false,
+		false
+	).then(function(updateResponse) {
+		res.send(JSON.stringify(updateResponse[0]));
+	}).catch(function(err) {
+		return {error: 'Server error'};
+		console.error(err);
+		throw err;
 	});
 }
 

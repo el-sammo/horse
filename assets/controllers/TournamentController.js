@@ -1238,7 +1238,7 @@ console.log(wagerRunners);
 				var closeWagersPromise = wagerMgmt.closeWagers($scope.track.id+'-'+raceNum);
 				closeWagersPromise.then(function(closeWagersPromiseResponse) {
 					if(raceNum < 2) {
-						var closeTournamentPromise = tournamentMgmt.closeTournament($scope.track.id);
+						var closeTournamentPromise = tournamentMgmt.closeTournament($scope.activeTournament.id);
 						closeTournamentPromise.then(function(closeTournamentPromiseResponse) {
 							alert('Race '+raceNum+' Closed');
 							$location.path("/tournament/" + $scope.activeTournamentId);
@@ -1261,7 +1261,14 @@ console.log('closeRace() updateTrdDataPromise failed');
 			if(updateTrdDataPromiseResponse.success) {
 				var unCloseWagersPromise = wagerMgmt.unCloseWagers($scope.track.id+'-'+raceNum);
 				unCloseWagersPromise.then(function(unCloseWagersPromiseResponse) {
-					alert('Race '+raceNum+' Unclosed');
+					if(raceNum == 1) {
+						var unCloseTournamentPromise = tournamentMgmt.unCloseTournament($scope.activeTournament.id);
+						unCloseTournamentPromise.then(function(unCloseTournamentPromiseResponse) {
+							alert('Race '+raceNum+' Unclosed (and associated tournament)');
+						});
+					} else {
+						alert('Race '+raceNum+' Unclosed');
+					}
 				});
 			} else {
 console.log('unCloseRace() updateTrdDataPromise failed');
