@@ -50,14 +50,21 @@ module.exports = {
 	},
 
 	sendConfirmationToCustomer: function(req, res) {
+console.log('sendConfirmationToCustomer() called');
 		if(env && env === 'production') {
 			var customerId = req.params.id;
 	
 			promise = Customers.find(customerId);
 	
-			promise.then(function(customer) {
+			return promise.then(function(customer) {
 				var customer = customer[0];
-				sendMail(customer.email, 'Thanks for Checking Out Tickets Tycoon!', 'signup', customer);
+				return sendMail(customer.email, 'Thanks for Joining Fantasy Horse Daily!', 'signup', customer).then(function(sendMailResponse) {
+console.log(' ');
+console.log('sendMailResponse:');
+console.log(sendMailResponse);
+// TODO: not properly returning to caller
+					return sendMailResponse;
+				});
 			});
 		}
 	},
@@ -98,12 +105,13 @@ module.exports = {
 };
 
 function sendMail(email, subject, template, data) {
+console.log('sendMail() called');
 	var p = Promise.defer();
 
 	var transporter = nodemailer.createTransport(directTransport());
 
 	var mailOptions = {
-			from: 'Tickets Tycoon <info@ticketstycoon.com>',
+			from: 'Fantasy Horse Daily <info@fantasyhorsedaily.com>',
 			to: email,
 			subject: subject,
 			text: '',
@@ -151,14 +159,14 @@ function sendMail(email, subject, template, data) {
 
 	if(template === 'signup') {
 		mailOptions = {
-			from: 'Tickets Tycoon <info@ticketstycoon.com>',
+			from: 'Fantasy Horse Daily <info@fantasyhorsedaily.com>',
 			to: email,
 			subject: subject,
 			text: (
-				'Thanks for checking out Tickets Tycoon, '+data.username+'.  We\'re glad you found us!'
+				'Thanks for joining Fantasy Horse Daily, '+data.fName+'.  We\'re glad you found us!'
 			),
 			html: (
-				'Thanks for joining <b>Tickets Tycoon</b>, '+data.username+'.  We\'re glad you ' +
+				'Thanks for joining <b>Fantasy Horse Daily</b>, '+data.fName+'.  We\'re glad you ' +
 				'found us!'
 			),
 		};

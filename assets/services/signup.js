@@ -110,7 +110,10 @@
 					customerId: customerData.id
 				});
 console.log('preparing to send email to customer with id: '+customerData.id);				
-				$http.post('/mail/sendConfirmationToCustomer/' + customerData.id);
+				$http.get('/mail/sendConfirmationToCustomer/' + customerData.id).then(function(mailResponse) {
+console.log('mailResponse:');
+console.log(mailResponse);
+				});
 			}).catch(function(err) {
 				// if customers ajax fails...
 				console.log('LayoutMgmtController: customer-create ajax failed');
