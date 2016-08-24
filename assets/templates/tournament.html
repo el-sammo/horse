@@ -767,21 +767,155 @@
 										<div 
 											class="row" 
 											ng-repeat="leader in leadersData track by $index"
+											ng-init="leaderWagersId = 'lw' + leader.id"
 										>
-											<div class="col-md-1">
-												<span class="tournamentDetails">{{$index + 1}}</span>
-											</div>
-											<div class="col-md-5">
-												<span class="tournamentDetails">{{leader.fName}} {{leader.lName}}</span>
-											</div>
-											<div class="col-md-3">
-												<span class="tournamentDetails">{{leader.city}}</span>
-											</div>
-											<div 
-												class="col-md-2"
-												style="text-align: right;"
-											>
-												<span class="tournamentDetails">{{leader.credits}}</span>
+											<div class="col-md-11">
+												<div class="row">
+													<div class="col-md-1">
+														<span 
+															class="tournamentDetails"
+															style="cursor: pointer;"
+															ng-click="leaderWagersShow(leader.id)"
+														>
+															{{$index + 1}}
+														</span>
+													</div>
+													<div class="col-md-5">
+														<span 
+															class="tournamentDetails"
+															style="cursor: pointer;"
+															ng-click="leaderWagersShow(leader.id)"
+														>
+															{{leader.fName}} {{leader.lName}}
+														</span>
+													</div>
+													<div class="col-md-3">
+														<span 
+															class="tournamentDetails"
+															style="cursor: pointer;"
+															ng-click="leaderWagersShow(leader.id)"
+														>
+															{{leader.city}}
+														</span>
+													</div>
+													<div 
+														class="col-md-2"
+														style="text-align: right;"
+													>
+														<span 
+															class="tournamentDetails"
+															style="cursor: pointer;"
+															ng-click="leaderWagersShow(leader.id)"
+														>
+															{{leader.credits}}
+														</span>
+													</div>
+												</div>
+												<div 
+													class="row"
+													ng-show="showLeaderWagersId === leaderWagersId"
+												>
+													<div class="col-md-11">
+														<div class="row">
+															<div class="col-md-1">
+																<span class="historyDetailsHead">
+																	Race
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+															>
+																<span class="historyDetailsHead">
+																	Amount
+																</span>
+															</div>
+															<div class="col-md-1">
+																<span class="historyDetailsHead">
+																	Type
+																</span>
+															</div>
+															<div class="col-md-3">
+																<span class="historyDetailsHead">
+																	Selection(s)
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+															>
+																<span class="historyDetailsHead">
+																	Total
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+															>
+																<span class="historyDetailsHead">
+																	Result
+																</span>
+															</div>
+														</div>
+														<div 
+															class="row"
+															ng-repeat="wager in leaderWagers"
+														>
+															<div class="col-md-1">
+																<span 
+																	class="historyDetails"
+																	style="white-space: nowrap;"
+																>
+																	{{wager.race}}
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+															>
+																<span class="historyDetails">
+																	{{wager.amount}}
+																</span>
+															</div>
+															<div class="col-md-1">
+																<span class="historyDetails">
+																	{{wager.type}}
+																</span>
+															</div>
+															<div class="col-md-3">
+																<span class="historyDetails">
+																	{{wager.selection}}
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+															>
+																<span class="historyDetails">
+																	{{wager.total}}
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+																ng-show="wager.result !== 'Pending' && wager.result !== 'Cancel'"
+															>
+																<span class="historyDetails">
+																	{{wager.result}}
+																</span>
+															</div>
+															<div 
+																class="col-md-2"
+																style="text-align: right;"
+																ng-show="wager.result === 'Pending'"
+															>
+																<span class="historyDetails">
+																	Pending
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -1049,14 +1183,14 @@
 									<div class="col-md-3 whiteBottom">
 										<span 
 											class="boxHead ticketTabOff" 
-											ng-click="showHistory()"
+											ng-click="showHistory(customerId)"
 											ng-show="tabShow !== 'wagerHistory'"
 										>
 											Ticket History
 										</span>
 										<span 
 											class="boxHead ticketTabOn" 
-											ng-click="showHistory()"
+											ng-click="showHistory(customerId)"
 											ng-show="tabShow === 'wagerHistory'"
 										>
 											Ticket History

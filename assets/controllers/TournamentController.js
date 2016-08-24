@@ -59,6 +59,7 @@ function controller(
 
 		$scope.leaderboardsShow = false;
 		$scope.horseCenterShow = true;
+		$scope.showLeaderWagersId = '';
 
 		$scope.wagerData = {};
 
@@ -83,6 +84,7 @@ function controller(
 		$scope.showHistory = showHistory;
 		$scope.showHorseCenter = showHorseCenter;
 		$scope.showLeaderboards = showLeaderboards;
+		$scope.leaderWagersShow = leaderWagersShow;
 		$scope.showTournaments = showTournaments;
 		$scope.showConfirmation = showConfirmation;
 		$scope.closeRace = closeRace;
@@ -258,7 +260,7 @@ function controller(
 				}
 			});
 		}
-		$scope.showHistory();
+		$scope.showHistory($scope.customerId);
 	}
 
 	function onGetTournaments(currentTournamentsData) {
@@ -500,7 +502,11 @@ function controller(
 		$scope.amountOptions = amountMap[min];
 		$scope.wagerData.amount = amountMap[min][0];
 
-		$scope.showHistory();
+		if($scope.customerId) {	
+			$scope.showHistory($scope.customerId);
+		} else {
+			$scope.showHistory();
+		}
 	}
 
 	function updateSelectedRunnersDisplay() {
@@ -1142,22 +1148,15 @@ console.log(wagerRunners);
 		$location.path('/scoreRace/' + trdId + '-' + raceNum);
 	}
 
-	function showHistory() {
-		if(!$scope.customerId && !$scope.customer) {
+	function showHistory(customerId) {
+		if(!customerId) {
 			$scope.wagerHistory = [{race: 'No Wagers'}];
 			$scope.tabShow = 'wagerHistory';
 		} else {
 			$scope.tabShow = 'wagerHistory';
-			var customerId = $scope.customerId || $scope.customer.id;
-			var dateObj = new Date();
-			var thisYear = dateObj.getFullYear();
-			var thisMonth = dateObj.getMonth();
-			var thisDay = dateObj.getDate();
-			var todayDate = new Date(thisYear, thisMonth, thisDay);
-			var todayMill = todayDate.getTime();
-			var params = customerId + '-' + todayMill + '-' + $routeParams.id;
-			var getWagersByCustomerIdSinceMillisecondsPromise = wagerMgmt.getWagersByCustomerIdSinceMilliseconds(params);
-			getWagersByCustomerIdSinceMillisecondsPromise.then(function(wagerHistory) {
+			var params = $routeParams.id + '-' + customerId;
+			var getCustomerWagersByTournamentIdPromise = wagerMgmt.getCustomerWagersByTournamentId(params);
+			getCustomerWagersByTournamentIdPromise.then(function(wagerHistory) {
 				if(wagerHistory.length > 0) {
 					var formattedHistory = [];
 					wagerHistory.forEach(function(wager) {
@@ -1435,7 +1434,7 @@ console.log('unFavoriteEntry() updateTrdDataPromise failed');
 							var creditsData = customerCredits[0];
 							if(!isNaN(creditsData.credits) &&  creditsData.credits >= 0) {
 								var thisLeader = {};
-								thisLeader.id = customerCredits.customerId;
+								thisLeader.id = customer;
 								thisLeader.fName = customerData.fName;
 								thisLeader.lName = customerData.lName;
 								thisLeader.city = customerData.city;
@@ -1448,7 +1447,7 @@ console.log('unFavoriteEntry() updateTrdDataPromise failed');
 									var updateTSCreditsPromise = tournamentMgmt.updateTSCredits(tournamentData.id, customerData.id, credits);
 									updateTSCreditsPromise.then(function(updateCustomerTournamentCreditsPromiseResponse) {
 										var thisLeader = {};
-										thisLeader.id = customerData.id;
+										thisLeader.id = customer;
 										thisLeader.fName = customerData.fName;
 										thisLeader.lName = customerData.lName;
 										thisLeader.city = customerData.city;
@@ -1472,6 +1471,36 @@ console.log('unFavoriteEntry() updateTrdDataPromise failed');
 				}, 60000);
 			}
 		}
+	}
+
+	function leaderWagersShow(leaderId) {
+		var getCustomerWagersByTournamentIdPromise = wagerMgmt.getCustomerWagersByTournamentId($routeParams.id + '-' + leaderId);
+		getCustomerWagersByTournamentIdPromise.then(function(wagerHistory) {
+			var formattedLeaderWagerHistory = [];
+			wagerHistory.forEach(function(wager) {
+				var thisWager = {};
+				var trackRaceIdPcs = wager.trackRaceId.split('-');
+				thisWager.race = wager.tournamentName.substr(0,3) + '-' + trackRaceIdPcs[1];
+				thisWager.type = wager.wagerAbbrev;
+				thisWager.total = wager.wagerTotal;
+				if(wager.raceClosed) {
+					thisWager.amount = wager.wagerAmount;
+					thisWager.selection = wager.wagerSelections;
+					if(wager.scored) {
+						thisWager.result = wager.result;
+					} else {
+						thisWager.result = '***';
+					}
+				} else {
+					thisWager.amount = '***';
+					thisWager.selection = '***';
+					thisWager.result = '***';
+				}
+				formattedLeaderWagerHistory.push(thisWager);
+			});
+			$scope.leaderWagers = formattedLeaderWagerHistory;
+		});
+		$scope.showLeaderWagersId = 'lw' + leaderId;
 	}
 
 	function tournamentRegister(tournyId) {
